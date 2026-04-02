@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clinica Sorriso - Call Center IA Dashboard</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/lucide-static@0.263.1/font/lucide.min.css" rel="stylesheet">
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon">🦷</span>
+        <div>
+          <h1>Clinica Sorriso</h1>
+          <span class="logo-subtitle">Call Center IA</span>
+        </div>
+      </div>
+      <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" data-page="dashboard">
+        <span class="nav-icon">📊</span>
+        <span class="nav-text">Dashboard</span>
+      </a>
+      <a href="#" class="nav-item" data-page="agents">
+        <span class="nav-icon">🤖</span>
+        <span class="nav-text">Agentes</span>
+      </a>
+      <a href="#" class="nav-item" data-page="calls">
+        <span class="nav-icon">📞</span>
+        <span class="nav-text">Chamadas</span>
+      </a>
+      <a href="#" class="nav-item" data-page="whatsapp">
+        <span class="nav-icon">💬</span>
+        <span class="nav-text">WhatsApp</span>
+      </a>
+      <a href="#" class="nav-item" data-page="architecture">
+        <span class="nav-icon">🏗️</span>
+        <span class="nav-text">Arquitetura</span>
+      </a>
+      <a href="#" class="nav-item" data-page="settings">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-text">Configuracoes</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="system-status">
+        <span class="status-dot online"></span>
+        <span class="nav-text">Sistema Online</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+    <!-- Header -->
+    <header class="top-header">
+      <div class="header-left">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+        <h2 id="pageTitle">Dashboard</h2>
+      </div>
+      <div class="header-right">
+        <div class="header-time" id="headerTime"></div>
+        <div class="notification-bell" id="notifBell">
+          🔔
+          <span class="notif-badge" id="notifBadge">3</span>
+        </div>
+        <div class="user-avatar">AG</div>
+      </div>
+    </header>
+
+    <!-- Dashboard Page -->
+    <section class="page active" id="page-dashboard">
+      <!-- KPI Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon calls">📞</div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpiTotalCalls">247</span>
+            <span class="kpi-label">Chamadas Hoje</span>
+          </div>
+          <span class="kpi-trend up">+12%</span>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon whatsapp">💬</div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpiWhatsapp">183</span>
+            <span class="kpi-label">Mensagens WhatsApp</span>
+          </div>
+          <span class="kpi-trend up">+8%</span>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon resolved">✅</div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpiResolved">89%</span>
+            <span class="kpi-label">Resolucao IA</span>
+          </div>
+          <span class="kpi-trend up">+3%</span>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon time">⏱️</div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpiAvgTime">1m42s</span>
+            <span class="kpi-label">Tempo Medio</span>
+          </div>
+          <span class="kpi-trend down">-15%</span>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon active-now">🟢</div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpiActiveCalls">5</span>
+            <span class="kpi-label">Chamadas Ativas</span>
+          </div>
+          <span class="kpi-trend neutral">agora</span>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon escalated">🔺</div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpiEscalated">14</span>
+            <span class="kpi-label">Escaladas p/ Humano</span>
+          </div>
+          <span class="kpi-trend down">-5%</span>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3>Volume de Atendimentos (Ultimas 24h)</h3>
+          <canvas id="chartVolume"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Distribuicao por Agente</h3>
+          <canvas id="chartAgents"></canvas>
+        </div>
+      </div>
+
+      <!-- Agent Status + Recent Activity -->
+      <div class="bottom-grid">
+        <div class="card agent-status-card">
+          <h3>Status dos Agentes</h3>
+          <div class="agent-status-list" id="agentStatusList">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+        <div class="card recent-activity-card">
+          <h3>Atividade Recente</h3>
+          <div class="activity-list" id="activityList">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Agents Page -->
+    <section class="page" id="page-agents">
+      <div class="agents-grid">
+        <!-- Recepcionista -->
+        <div class="agent-card">
+          <div class="agent-card-header recepcionista">
+            <div class="agent-avatar">👋</div>
+            <div class="agent-badge online">Online</div>
+          </div>
+          <div class="agent-card-body">
+            <h3>Recepcionista</h3>
+            <p class="agent-model">claude-sonnet-4-6</p>
+            <p class="agent-desc">Porta de entrada de todas as ligacoes. Identifica a necessidade e roteia para o agente correto.</p>
+            <div class="agent-stats">
+              <div class="agent-stat">
+                <span class="stat-value">142</span>
+                <span class="stat-label">Atendimentos hoje</span>
+              </div>
+              <div class="agent-stat">
+                <span class="stat-value">98%</span>
+                <span class="stat-label">Roteamento correto</span>
+              </div>
+              <div class="agent-stat">
+                <span class="stat-value">12s</span>
+                <span class="stat-label">Tempo medio</span>
+              </div>
+            </div>
+            <div class="agent-channels">
+              <span class="channel-tag voice">📞 Voz</span>
+            </div>
+            <div class="agent-routing">
+              <h4>Regras de Roteamento</h4>
+              <ul>
+                <li><span class="route-keyword">boleto, pagamento, fatura</span> → Cobranca</li>
+                <li><span class="route-keyword">problema, reclamacao, suporte</span> → SAC</li>
+                <li><span class="route-keyword">agendar, horario, marcar</span> → Agendamento</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cobranca -->
+        <div class="agent-card">
+          <div class="agent-card-header cobranca">
+            <div class="agent-avatar">💰</div>
+            <div class="agent-badge online">Online</div>
+          </div>
+          <div class="agent-card-body">
+            <h3>Cobranca</h3>
+            <p class="agent-model">claude-sonnet-4-6</p>
+            <p class="agent-desc">Especializado em cobranca e negociacao de pagamentos. Tom respeitoso, nunca ameacador.</p>
+            <div class="agent-stats">
+              <div class="agent-stat">
+                <span class="stat-value">38</span>
+                <span class="stat-label">Atendimentos hoje</span>
+              </div>
+              <div class="agent-stat">
+                <span class="stat-value">72%</span>
+                <span class="stat-label">Negociacoes fechadas</span>
+              </div>
+              <div class="agent-stat">
+                <span class="stat-value">3m20s</span>
+                <span class="stat-label">Tempo medio</span>
+              </div>
+            </div>
+            <div class="agent-channels">
+              <span class="channel-tag voice">📞 Voz</span>
+              <span class="channel-tag whatsapp">💬 WhatsApp</span>
+            </div>
+            <div class="agent-rules">
+              <h4>Regras Criticas</h4>
+              <ul>
+                <li>Nunca mencionar SPC/Serasa como ameaca</li>
+                <li>Respeitar opt-out imediatamente</li>
+                <li>Horario: 9h-18h (seg-sex), 9h-13h (sab)</li>
+                <li>Max 2 tentativas por numero em 48h</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- SAC -->
+        <div class="agent-card">
+          <div class="agent-card-header sac">
+            <div class="agent-avatar">🎧</div>
+            <div class="agent-badge online">Online</div>
+          </div>
+          <div class="agent-card-body">
+            <h3>SAC</h3>
+            <p class="agent-model">claude-haiku-4-5</p>
+            <p class="agent-desc">Suporte ao cliente. Resolve duvidas, registra reclamacoes, abre tickets quando necessario.</p>
+            <div class="agent-stats">
+              <div class="agent-stat">
+                <span class="stat-value">89</span>
+                <span class="stat-label">Atendimentos hoje</span>
+              </div>
+              <div class="agent-stat">
+                <span class="stat-value">85%</span>
+                <span class="stat-label">Resolucao 1o contato</span>
+              </div>
+              <div class="agent-stat">
+                <span class="stat-value">2m15s</span>
+                <span class="stat-label">Tempo medio</span>
+              </div>
+            </div>
+            <div class="agent-channels">
+              <span class="channel-tag voice">📞 Voz</span>
+              <span class="channel-tag whatsapp">💬 WhatsApp</span>
+            </div>
+            <div class="agent-rules">
+              <h4>Regras de Escalacao</h4>
+              <ul>
+                <li>Confianca &lt; 70% → escalar</li>
+                <li>Cliente irritado (advogado, Procon) → escalar imediato</li>
+                <li>Cancelamento → escalar</li>
+                <li>Reembolso &gt; R$200 → escalar</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Agendamento -->
+        <div class="agent-card">
+          <div class="agent-card-header agendamento">
+            <div class="agent-avatar">📅</div>
+            <div class="agent-badge online">Online</div>
+          </div>
+          <div class="agent-card-body">
+            <h3>Agendamento</h3>
+            <p class="agent-model">claude-haiku-4-5</p>
+            <p class="agent-desc">Marca, remarca e cancela agendamentos. Envia confirmacoes e lembretes automaticos.</p>
+            <div class="agent-stats">
+              <div class="agent-stat">
+                <span class="stat-value">56</span>
+                <span class="stat-label">Agendamentos hoje</span>
+              </div>
+              <div class="agent-stat">
+                <span class="stat-value">94%</span>
+                <span class="stat-label">Confirmacao</span>
+              </div>
+              <div class="agent-stat">
+                <span class="stat-value">1m50s</span>
+                <span class="stat-label">Tempo medio</span>
+              </div>
+            </div>
+            <div class="agent-channels">
+              <span class="channel-tag voice">📞 Voz</span>
+              <span class="channel-tag whatsapp">💬 WhatsApp</span>
+            </div>
+            <div class="agent-services">
+              <h4>Servicos Disponiveis</h4>
+              <div class="service-tags">
+                <span class="service-tag">Limpeza (30min)</span>
+                <span class="service-tag">Clareamento (60min)</span>
+                <span class="service-tag">Avaliacao (20min)</span>
+                <span class="service-tag">Ortodontia (45min)</span>
+                <span class="service-tag">Extracao (40min)</span>
+                <span class="service-tag">Canal (90min)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calls Page -->
+    <section class="page" id="page-calls">
+      <div class="page-toolbar">
+        <div class="toolbar-left">
+          <div class="filter-group">
+            <select id="callFilterAgent">
+              <option value="all">Todos os Agentes</option>
+              <option value="recepcionista">Recepcionista</option>
+              <option value="cobranca">Cobranca</option>
+              <option value="sac">SAC</option>
+              <option value="agendamento">Agendamento</option>
+            </select>
+            <select id="callFilterStatus">
+              <option value="all">Todos os Status</option>
+              <option value="active">Ativa</option>
+              <option value="completed">Concluida</option>
+              <option value="escalated">Escalada</option>
+              <option value="missed">Perdida</option>
+            </select>
+          </div>
+        </div>
+        <div class="toolbar-right">
+          <span class="live-indicator">🔴 AO VIVO</span>
+        </div>
+      </div>
+
+      <!-- Active Calls -->
+      <div class="card">
+        <h3>Chamadas Ativas</h3>
+        <div class="active-calls-grid" id="activeCallsGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Call Log -->
+      <div class="card">
+        <h3>Historico de Chamadas</h3>
+        <table class="data-table" id="callLogTable">
+          <thead>
+            <tr>
+              <th>Horario</th>
+              <th>Numero</th>
+              <th>Agente</th>
+              <th>Duracao</th>
+              <th>Status</th>
+              <th>Resumo</th>
+            </tr>
+          </thead>
+          <tbody id="callLogBody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- WhatsApp Page -->
+    <section class="page" id="page-whatsapp">
+      <div class="whatsapp-layout">
+        <!-- Conversation List -->
+        <div class="wa-sidebar">
+          <div class="wa-sidebar-header">
+            <h3>Conversas</h3>
+            <span class="wa-count" id="waCount">12 ativas</span>
+          </div>
+          <div class="wa-search">
+            <input type="text" placeholder="Buscar conversa..." id="waSearch">
+          </div>
+          <div class="wa-conversation-list" id="waConversationList">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+        <!-- Chat View -->
+        <div class="wa-chat">
+          <div class="wa-chat-header" id="waChatHeader">
+            <div class="wa-contact-info">
+              <span class="wa-contact-name">Selecione uma conversa</span>
+            </div>
+          </div>
+          <div class="wa-messages" id="waMessages">
+            <div class="wa-empty-state">
+              <span class="wa-empty-icon">💬</span>
+              <p>Selecione uma conversa para ver as mensagens</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture Page -->
+    <section class="page" id="page-architecture">
+      <div class="arch-container">
+        <h3>Arquitetura do Sistema</h3>
+        <div class="arch-diagram">
+          <!-- Flow diagram using CSS -->
+          <div class="arch-layer">
+            <div class="arch-label">Canais de Entrada</div>
+            <div class="arch-nodes">
+              <div class="arch-node input-node">
+                <span class="arch-node-icon">📞</span>
+                <span class="arch-node-title">Twilio</span>
+                <span class="arch-node-desc">Numero +55 brasileiro</span>
+              </div>
+              <div class="arch-node input-node">
+                <span class="arch-node-icon">💬</span>
+                <span class="arch-node-title">WhatsApp</span>
+                <span class="arch-node-desc">Baileys (open-source)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-arrow">▼</div>
+
+          <div class="arch-layer">
+            <div class="arch-label">Pipeline de Voz</div>
+            <div class="arch-nodes">
+              <div class="arch-node middleware-node">
+                <span class="arch-node-icon">🎙️</span>
+                <span class="arch-node-title">Vapi</span>
+                <span class="arch-node-desc">STT (Deepgram) + TTS (ElevenLabs)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-arrow">▼</div>
+
+          <div class="arch-layer">
+            <div class="arch-label">Reverse Proxy</div>
+            <div class="arch-nodes">
+              <div class="arch-node proxy-node">
+                <span class="arch-node-icon">🔒</span>
+                <span class="arch-node-title">Caddy v2</span>
+                <span class="arch-node-desc">TLS automatico + Let's Encrypt</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-arrow">▼</div>
+
+          <div class="arch-layer">
+            <div class="arch-label">Motor de IA</div>
+            <div class="arch-nodes">
+              <div class="arch-node core-node">
+                <span class="arch-node-icon">🧠</span>
+                <span class="arch-node-title">OpenClaw</span>
+                <span class="arch-node-desc">Docker | Gateway :18800 | Voz :3334</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-arrow">▼</div>
+
+          <div class="arch-layer">
+            <div class="arch-label">Agentes IA</div>
+            <div class="arch-nodes agents-row">
+              <div class="arch-node agent-node recep">
+                <span class="arch-node-icon">👋</span>
+                <span class="arch-node-title">Recepcionista</span>
+                <span class="arch-node-desc">Sonnet 4.6</span>
+              </div>
+              <div class="arch-node agent-node cobr">
+                <span class="arch-node-icon">💰</span>
+                <span class="arch-node-title">Cobranca</span>
+                <span class="arch-node-desc">Sonnet 4.6</span>
+              </div>
+              <div class="arch-node agent-node sacc">
+                <span class="arch-node-icon">🎧</span>
+                <span class="arch-node-title">SAC</span>
+                <span class="arch-node-desc">Haiku 4.5</span>
+              </div>
+              <div class="arch-node agent-node agen">
+                <span class="arch-node-icon">📅</span>
+                <span class="arch-node-title">Agendamento</span>
+                <span class="arch-node-desc">Haiku 4.5</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-arrow">▼</div>
+
+          <div class="arch-layer">
+            <div class="arch-label">Knowledge Base</div>
+            <div class="arch-nodes">
+              <div class="arch-node kb-node">
+                <span class="arch-node-icon">📚</span>
+                <span class="arch-node-title">SOUL.md + Knowledge Files</span>
+                <span class="arch-node-desc">info-empresa.md | faq.md | politica-cobranca.md | servicos-agendamento.md</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Infrastructure Details -->
+        <div class="infra-grid">
+          <div class="infra-card">
+            <h4>🖥️ VPS</h4>
+            <ul>
+              <li>Ubuntu 24.04 LTS</li>
+              <li>Docker + Docker Compose</li>
+              <li>UFW: portas 22, 80, 443</li>
+              <li>CPU: 1.5 cores alocados</li>
+              <li>RAM: 3GB limite</li>
+            </ul>
+          </div>
+          <div class="infra-card">
+            <h4>🐳 Container</h4>
+            <ul>
+              <li>Imagem: openclaw/openclaw:latest</li>
+              <li>read_only + cap_drop ALL</li>
+              <li>no-new-privileges</li>
+              <li>Gateway: porta 18800</li>
+              <li>Voice: porta 3334</li>
+            </ul>
+          </div>
+          <div class="infra-card">
+            <h4>🌐 Dominios</h4>
+            <ul>
+              <li>callcenter.dominio.com → :18800</li>
+              <li>voice.dominio.com → :3334</li>
+              <li>TLS via Let's Encrypt</li>
+              <li>Caddy v2 reverse proxy</li>
+            </ul>
+          </div>
+          <div class="infra-card">
+            <h4>🔐 Seguranca</h4>
+            <ul>
+              <li>Nunca inventar informacoes</li>
+              <li>Nunca compartilhar dados entre clientes</li>
+              <li>Detectar prompt injection</li>
+              <li>Log de toda interacao</li>
+              <li>Opt-out imediato</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Settings Page -->
+    <section class="page" id="page-settings">
+      <div class="settings-grid">
+        <div class="card settings-card">
+          <h3>Configuracao dos Agentes (openclaw.json)</h3>
+          <div class="config-editor">
+            <pre id="configPreview">{
+  "agents": {
+    "defaults": { "model": "claude-sonnet-4-6" },
+    "list": [
+      { "id": "recepcionista", "workspace": "/app/data/workspace-recepcionista", "model": "claude-sonnet-4-6" },
+      { "id": "cobranca", "workspace": "/app/data/workspace-cobranca", "model": "claude-sonnet-4-6" },
+      { "id": "sac", "workspace": "/app/data/workspace-sac", "model": "claude-haiku-4-5" },
+      { "id": "agendamento", "workspace": "/app/data/workspace-agendamento", "model": "claude-haiku-4-5" }
+    ]
+  },
+  "bindings": [
+    { "agentId": "recepcionista", "match": { "channel": "voice", "direction": "inbound" } },
+    { "agentId": "sac", "match": { "channel": "whatsapp" } }
+  ]
+}</pre>
+          </div>
+        </div>
+
+        <div class="card settings-card">
+          <h3>Variaveis de Ambiente</h3>
+          <div class="env-list">
+            <div class="env-item">
+              <span class="env-key">OPENCLAW_GATEWAY_TOKEN</span>
+              <span class="env-value">••••••••••••••••</span>
+              <span class="env-status configured">Configurado</span>
+            </div>
+            <div class="env-item">
+              <span class="env-key">ANTHROPIC_API_KEY</span>
+              <span class="env-value">••••••••••••••••</span>
+              <span class="env-status configured">Configurado</span>
+            </div>
+            <div class="env-item">
+              <span class="env-key">VAPI_API_KEY</span>
+              <span class="env-value">••••••••••••••••</span>
+              <span class="env-status configured">Configurado</span>
+            </div>
+            <div class="env-item">
+              <span class="env-key">TWILIO_ACCOUNT_SID</span>
+              <span class="env-value">••••••••••••••••</span>
+              <span class="env-status pending">Pendente</span>
+            </div>
+            <div class="env-item">
+              <span class="env-key">TWILIO_AUTH_TOKEN</span>
+              <span class="env-value">••••••••••••••••</span>
+              <span class="env-status pending">Pendente</span>
+            </div>
+            <div class="env-item">
+              <span class="env-key">TWILIO_PHONE_NUMBER</span>
+              <span class="env-value">••••••••••••••••</span>
+              <span class="env-status pending">Pendente</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card settings-card">
+          <h3>Servicos Externos</h3>
+          <div class="services-status">
+            <div class="service-item">
+              <span class="service-icon">📞</span>
+              <div class="service-info">
+                <span class="service-name">Twilio</span>
+                <span class="service-desc">Telefonia + numero brasileiro</span>
+              </div>
+              <span class="service-status pending">A configurar</span>
+            </div>
+            <div class="service-item">
+              <span class="service-icon">🎙️</span>
+              <div class="service-info">
+                <span class="service-name">Vapi</span>
+                <span class="service-desc">STT + TTS middleware</span>
+              </div>
+              <span class="service-status pending">A configurar</span>
+            </div>
+            <div class="service-item">
+              <span class="service-icon">🗣️</span>
+              <div class="service-info">
+                <span class="service-name">Deepgram</span>
+                <span class="service-desc">Speech-to-Text (Nova-3, pt-BR)</span>
+              </div>
+              <span class="service-status connected">Via Vapi</span>
+            </div>
+            <div class="service-item">
+              <span class="service-icon">🔊</span>
+              <div class="service-info">
+                <span class="service-name">ElevenLabs</span>
+                <span class="service-desc">Text-to-Speech (voz feminina BR)</span>
+              </div>
+              <span class="service-status connected">Via Vapi</span>
+            </div>
+            <div class="service-item">
+              <span class="service-icon">🧠</span>
+              <div class="service-info">
+                <span class="service-name">Anthropic (Claude)</span>
+                <span class="service-desc">Motor de IA dos agentes</span>
+              </div>
+              <span class="service-status connected">Conectado</span>
+            </div>
+            <div class="service-item">
+              <span class="service-icon">💬</span>
+              <div class="service-info">
+                <span class="service-name">WhatsApp (Baileys)</span>
+                <span class="service-desc">Canal de mensagens</span>
+              </div>
+              <span class="service-status pending">QR Code pendente</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
