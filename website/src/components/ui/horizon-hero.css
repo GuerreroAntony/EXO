@@ -1,0 +1,231 @@
+/* === EXO Horizon Hero === */
+
+.exo-hero-container {
+  position: relative;
+  width: 100%;
+  background: #000;
+  overflow: hidden;
+}
+
+.exo-hero-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  clip-path: inset(0);
+}
+
+/* Hide canvas + fixed elements once we scroll past the hero container */
+.exo-hero-container ~ * {
+  position: relative;
+  z-index: 10;
+}
+
+/* Horizon glow via CSS */
+.exo-hero-container::before {
+  content: '';
+  position: fixed;
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70vw;
+  height: 35vh;
+  background: radial-gradient(ellipse at center, rgba(15, 45, 90, 0.12) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Cover the vanishing point streak */
+.exo-hero-container::after {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 35vh;
+  background: linear-gradient(to bottom, transparent 0%, #020508 30%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Side menu */
+.exo-side-menu {
+  position: fixed;
+  left: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.exo-menu-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.exo-menu-icon span {
+  display: block;
+  width: 24px;
+  height: 1.5px;
+  background: rgba(255, 255, 255, 0.4);
+  transition: all 0.3s ease;
+}
+
+.exo-menu-icon:hover span {
+  background: rgba(59, 130, 246, 0.8);
+}
+
+.exo-vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Main content */
+.exo-hero-content {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.exo-hero-title {
+  font-size: clamp(5rem, 14vw, 13rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  color: white;
+  text-align: center;
+  text-shadow: 0 0 120px rgba(59, 130, 246, 0.25);
+  user-select: none;
+}
+
+.title-char {
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+
+.exo-hero-subtitle {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.subtitle-line {
+  font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 300;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+}
+
+/* Scroll progress */
+.exo-scroll-progress {
+  position: fixed;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.exo-scroll-text {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.25);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.exo-progress-track {
+  width: 120px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.exo-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #06b6d4);
+  border-radius: 1px;
+  transition: width 0.1s ease-out;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+}
+
+.exo-section-counter {
+  font-size: 11px;
+  font-family: monospace;
+  color: rgba(255, 255, 255, 0.2);
+  letter-spacing: 0.1em;
+}
+
+/* Scroll sections */
+.exo-scroll-sections {
+  position: relative;
+  z-index: 5;
+  pointer-events: none;
+  margin-top: 100vh; /* push below the fixed hero */
+}
+
+.exo-content-section {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.exo-content-section .exo-hero-title {
+  font-size: clamp(4rem, 12vw, 11rem);
+  text-shadow: 0 0 120px rgba(59, 130, 246, 0.25);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .exo-side-menu {
+    left: 1rem;
+  }
+
+  .exo-hero-title {
+    font-size: clamp(3rem, 15vw, 8rem);
+  }
+
+  .exo-content-section .exo-hero-title {
+    font-size: clamp(2.5rem, 14vw, 7rem);
+  }
+
+  .subtitle-line {
+    font-size: 0.85rem;
+  }
+
+  .exo-scroll-progress {
+    bottom: 1.5rem;
+  }
+
+  .exo-progress-track {
+    width: 80px;
+  }
+}
