@@ -72,7 +72,7 @@ function PillarSection({ section, opacity, x, side, pointerEvents }: {
   const isRight = side === "right";
   return (
     <div
-      className={`absolute z-30 ${isRight ? "left-[50%] pl-[5%] right-[3%]" : "left-[6%] pr-[5%] right-[50%]"}`}
+      className={`absolute z-30 hidden lg:block ${isRight ? "left-[50%] right-0 pr-[5%] pl-[4%]" : "left-0 right-[50%] pl-[5%] pr-[4%]"}`}
       style={{ opacity, transform: `translateX(${x}px)`, pointerEvents: pointerEvents ? "auto" : "none", top: "50%", marginTop: "-200px" }}
     >
       <div className="w-full max-w-lg">
@@ -158,7 +158,7 @@ export function ScrollingHero() {
   const phase4 = scrollY > 5500 ? Math.min((scrollY - 5500) / 800, 1) : 0;
   const globeToRight = phase3 * 8; // moves slightly right for CC/Influencers
   const globeToLeft = phase4 * -46; // crosses to left for DW/Robótica
-  const globeX = 15 + globeToRight + globeToLeft;
+  const globeX = 10 + globeToRight + globeToLeft;
   const globeScale = 1 + phase3 * 0.8;
 
   // ── Cards ──
@@ -209,29 +209,31 @@ export function ScrollingHero() {
           </p>
         </div>
 
-        {/* ── Description text (left of globe, between logo and pillar sections) ── */}
+        {/* ── Description text (left of globe) ── */}
         <div
-          className="absolute z-20 pointer-events-none left-[6%] right-[52%] flex flex-col justify-center"
+          className="absolute z-20 pointer-events-none hidden lg:block"
           style={{
             opacity: Math.min(Math.max((phase1 - 0.4) * 3, 0), 1) * (1 - phase3),
             top: "50%",
+            left: "max(3rem, calc((100vw - 1200px) / 2 + 1rem))",
+            right: "52%",
             transform: "translateY(-50%)",
             willChange: "opacity",
           }}
         >
-          <p className="text-[clamp(2rem,4vw,3.5rem)] font-bold text-white leading-[1.1]">
+          <p className="text-[clamp(1.8rem,3.5vw,3.2rem)] font-bold text-white leading-[1.1] tracking-tight">
             Empresa global
             <br />
-            e multi-setor.
+            <span className="text-white/50">e multi-setor.</span>
           </p>
-          <p className="mt-5 text-[17px] text-white/40 leading-relaxed max-w-md">
+          <p className="mt-5 text-[16px] text-white/35 leading-relaxed">
             Levamos inteligência artificial para operações de vendas, atendimento, marketing e finanças em qualquer lugar do mundo.
           </p>
         </div>
 
         {/* ── Pillar Cards ── */}
         <div
-          className="absolute z-20 bottom-[7%] left-0 right-0 flex justify-center px-8"
+          className="absolute z-20 bottom-[5%] left-0 right-0 flex justify-center px-[5%]"
           style={{
             opacity: cardsOpacity,
             transform: `translateY(${cardsY}px)`,
@@ -239,13 +241,13 @@ export function ScrollingHero() {
             willChange: "transform, opacity",
           }}
         >
-          <div className="flex gap-3 max-w-3xl w-full">
+          <div className="flex gap-4 max-w-5xl w-full">
             {pillars.map((item) => {
               const Icon = item.icon;
               return (
                 <Link key={item.label} href={item.href} className="group flex-1">
                   <div
-                    className={`relative flex flex-col items-center justify-center gap-3 px-5 py-6 rounded-2xl border ${item.border} bg-white/[0.03] backdrop-blur-2xl transition-all duration-500 group-hover:bg-white/[0.07] group-hover:scale-[1.03] overflow-hidden h-[120px]`}
+                    className={`relative flex flex-col items-center justify-center gap-2.5 px-4 py-5 rounded-2xl border ${item.border} bg-white/[0.03] backdrop-blur-2xl transition-all duration-500 group-hover:bg-white/[0.07] group-hover:scale-[1.03] overflow-hidden`}
                     style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.3)" }}
                   >
                     <div className="absolute top-0 left-4 right-4 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: `linear-gradient(90deg, transparent, ${item.color}40, transparent)` }} />

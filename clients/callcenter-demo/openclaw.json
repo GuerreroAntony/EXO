@@ -1,0 +1,81 @@
+{
+  "agents": {
+    "defaults": {
+      "model": "claude-sonnet-4-6"
+    },
+    "list": [
+      {
+        "id": "recepcionista",
+        "workspace": "/app/data/workspace-recepcionista",
+        "model": "claude-sonnet-4-6"
+      },
+      {
+        "id": "cobranca",
+        "workspace": "/app/data/workspace-cobranca",
+        "model": "claude-sonnet-4-6"
+      },
+      {
+        "id": "sac",
+        "workspace": "/app/data/workspace-sac",
+        "model": "claude-haiku-4-5"
+      },
+      {
+        "id": "agendamento",
+        "workspace": "/app/data/workspace-agendamento",
+        "model": "claude-haiku-4-5"
+      }
+    ]
+  },
+  "bindings": [
+    {
+      "agentId": "recepcionista",
+      "match": { "channel": "voice", "direction": "inbound" }
+    },
+    {
+      "agentId": "sac",
+      "match": { "channel": "whatsapp", "peer": { "kind": "direct" } }
+    },
+    {
+      "agentId": "cobranca",
+      "match": { "channel": "whatsapp", "keywords": ["boleto", "fatura", "pagamento", "divida", "atraso", "cobran"] }
+    },
+    {
+      "agentId": "agendamento",
+      "match": { "channel": "whatsapp", "keywords": ["agendar", "marcar", "horario", "consulta", "remarcar", "cancelar"] }
+    }
+  ],
+  "channels": {
+    "whatsapp": {
+      "provider": "baileys",
+      "allowFrom": ["*"]
+    }
+  },
+  "plugins": {
+    "entries": {
+      "voice-call": {
+        "enabled": true,
+        "config": {
+          "provider": "twilio",
+          "fromNumber": "${TWILIO_PHONE_NUMBER}",
+          "twilio": {
+            "accountSid": "${TWILIO_ACCOUNT_SID}",
+            "authToken": "${TWILIO_AUTH_TOKEN}"
+          },
+          "serve": {
+            "port": 3334,
+            "path": "/voice/webhook"
+          },
+          "inboundPolicy": "allow",
+          "allowFrom": ["*"],
+          "streaming": {
+            "enabled": true,
+            "sttProvider": "deepgram",
+            "ttsProvider": "elevenlabs"
+          },
+          "maxDurationSeconds": 300,
+          "staleCallReaperSeconds": 360
+        }
+      }
+    }
+  }
+}
