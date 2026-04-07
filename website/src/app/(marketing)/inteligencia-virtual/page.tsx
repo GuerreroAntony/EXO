@@ -1,13 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Eye, MessageCircle, BarChart3, Cpu, ArrowRight } from "lucide-react";
+import { Sparkles, Image, MessageCircle, TrendingUp, ArrowRight } from "lucide-react";
 
 const capabilities = [
-  { icon: MessageCircle, name: "Linguagem Natural", desc: "Compreensão e geração de texto em português com contexto profundo." },
-  { icon: Eye, name: "Visão Computacional", desc: "Análise de imagens, documentos e vídeo em tempo real." },
-  { icon: BarChart3, name: "Análise Preditiva", desc: "Modelos que antecipam tendências e anomalias nos seus dados." },
-  { icon: Cpu, name: "Modelos Customizados", desc: "IA treinada especificamente para sua vertical e seus dados." },
+  { icon: Sparkles, name: "Personalidade Única", desc: "Cada influencer tem uma identidade, tom de voz e estilo visual criados sob medida para a sua marca." },
+  { icon: Image, name: "Conteúdo Automatizado", desc: "Posts, stories e respostas geradas por IA que mantêm a consistência e frequência sem esforço humano." },
+  { icon: MessageCircle, name: "Engajamento 24/7", desc: "Responde comentários, DMs e interage com seguidores em tempo real, sem pausas." },
+  { icon: TrendingUp, name: "Escala sem Limites", desc: "Um influencer virtual pode estar em múltiplas plataformas ao mesmo tempo, crescendo sem restrições." },
 ];
 
 export default function InteligenciaVirtualPage() {
@@ -30,10 +30,10 @@ export default function InteligenciaVirtualPage() {
               transition={{ duration: 1, delay: 0.1 }}
               className="mt-6 text-5xl sm:text-6xl lg:text-7xl font-black tracking-[-0.03em] text-white leading-[0.95]"
             >
-              Cognição
+              Influência
               <br />
               <span className="bg-gradient-to-r from-cyan-400 to-emerald-300 bg-clip-text text-transparent">
-                sem limites.
+                que nunca para.
               </span>
             </motion.h1>
             <motion.p
@@ -42,8 +42,8 @@ export default function InteligenciaVirtualPage() {
               transition={{ duration: 0.8, delay: 0.3 }}
               className="mt-8 text-lg text-white/60 max-w-xl leading-relaxed font-light"
             >
-              IA que não só entende — raciocina, prevê e aprende. Estendemos a
-              capacidade cognitiva da sua equipe para além do humanamente possível.
+              Crie influencers virtuais com personalidade própria que produzem conteúdo,
+              engajam seguidores e representam sua marca 24 horas por dia.
             </motion.p>
           </div>
         </section>
@@ -74,8 +74,8 @@ export default function InteligenciaVirtualPage() {
 
         <section className="py-32 bg-black text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <a href="#" className="group btn-glass px-10 py-4 rounded-full text-sm font-medium tracking-wide inline-flex items-center gap-3">
-              Explorar Influencers Virtuais
+            <a href="/demo" className="group btn-glass px-10 py-4 rounded-full text-sm font-medium tracking-wide inline-flex items-center gap-3">
+              Criar meu Influencer Virtual
               <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </a>
           </motion.div>

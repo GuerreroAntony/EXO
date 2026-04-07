@@ -22,7 +22,7 @@ import {
 import { GlowCard } from "@/components/ui/spotlight-card";
 import { ScrollReveal } from "@/components/ScrollReveal";
 
-const PRICE_PER_AGENT = 497;
+const PRICE_PER_AGENT = 500;
 
 const includedAgents = [
   { icon: Phone, name: "Recepcionista", desc: "Atende e roteia chamadas" },
@@ -49,9 +49,8 @@ const features = [
 export default function CallCenterPage() {
   const [agentCount, setAgentCount] = useState(1);
 
-  const discount = agentCount >= 5 ? 0.15 : agentCount >= 3 ? 0.10 : 0;
   const totalPrice = agentCount * PRICE_PER_AGENT;
-  const finalPrice = Math.round(totalPrice * (1 - discount));
+  const finalPrice = totalPrice;
 
   return (
     <main className="bg-black min-h-screen">
@@ -129,19 +128,6 @@ export default function CallCenterPage() {
                       </button>
                     </div>
 
-                    {/* Discount badge */}
-                    {discount > 0 && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-center mb-6"
-                      >
-                        <span className="inline-block px-3 py-1 text-[11px] font-mono tracking-wider text-green-400/80 bg-green-400/[0.06] border border-green-400/[0.12] rounded-full">
-                          {Math.round(discount * 100)}% de desconto aplicado
-                        </span>
-                      </motion.div>
-                    )}
-
                     {/* Included modules */}
                     <div className="border-t border-white/[0.06] pt-8 mt-4">
                       <p className="text-[11px] font-mono text-white/30 uppercase tracking-wider mb-5">
@@ -187,16 +173,6 @@ export default function CallCenterPage() {
                         </span>
                       </div>
 
-                      {discount > 0 && (
-                        <div className="flex justify-between text-sm mb-2">
-                          <span className="text-green-400/70">
-                            Desconto ({Math.round(discount * 100)}%)
-                          </span>
-                          <span className="text-green-400/70 font-mono">
-                            − R$ {(totalPrice - finalPrice).toLocaleString("pt-BR")}
-                          </span>
-                        </div>
-                      )}
 
                       {/* Total */}
                       <div className="border-t border-white/[0.06] pt-6 mt-6">

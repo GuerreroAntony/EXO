@@ -83,15 +83,15 @@ const STEP_LABELS = [
   "Personalizar",
   "Canais",
   "Conhecimento",
-  "Revisao",
+  "Revisão",
 ];
 
 const SETORES = [
   { value: "", label: "Selecione..." },
-  { value: "saude", label: "Saude" },
-  { value: "educacao", label: "Educacao" },
+  { value: "saude", label: "Saúde" },
+  { value: "educacao", label: "Educação" },
   { value: "varejo", label: "Varejo" },
-  { value: "servicos", label: "Servicos" },
+  { value: "servicos", label: "Serviços" },
   { value: "financeiro", label: "Financeiro" },
   { value: "tecnologia", label: "Tecnologia" },
   { value: "outro", label: "Outro" },
@@ -113,7 +113,7 @@ const AGENTES_META: {
 }[] = [
   { id: "recepcionista", label: "Recepcionista", desc: "Atende e roteia chamadas", icon: Bot },
   { id: "sac", label: "SAC", desc: "Suporte ao cliente", icon: MessageSquare },
-  { id: "cobranca", label: "Cobranca", desc: "Negociacao de pagamentos", icon: CreditCard },
+  { id: "cobranca", label: "Cobrança", desc: "Negociação de pagamentos", icon: CreditCard },
   { id: "agendamento", label: "Agendamento", desc: "Marca e confirma consultas", icon: Calendar },
 ];
 
@@ -124,11 +124,11 @@ const CANAIS: {
   icon: React.ComponentType<{ size?: number; className?: string }>;
 }[] = [
   { id: "whatsapp", label: "WhatsApp", desc: "Atendimento via WhatsApp Business", icon: MessageCircle },
-  { id: "voz", label: "Voz", desc: "Ligacoes telefonicas com IA", icon: Phone },
+  { id: "voz", label: "Voz", desc: "Ligações telefônicas com IA", icon: Phone },
 ];
 
 const TONES: { id: ToneId; label: string }[] = [
-  { id: "amigavel", label: "Amigavel" },
+  { id: "amigavel", label: "Amigável" },
   { id: "profissional", label: "Profissional" },
   { id: "formal", label: "Formal" },
 ];
@@ -169,15 +169,19 @@ const slideVariants = {
 /* ------------------------------------------------------------------ */
 
 const inputClass =
-  "w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-white/30 transition-colors";
+  "w-full bg-white/[0.08] border border-white/[0.15] rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-[#5B9BF3]/50 focus:bg-white/[0.10] transition-colors";
 
 const labelClass =
-  "block text-[12px] font-mono text-white/40 uppercase tracking-wider mb-2";
+  "block text-[12px] font-mono text-white/60 uppercase tracking-wider mb-2";
 
 function ProgressBar({ current }: { current: number }) {
   const progress = ((current - 1) / (TOTAL_STEPS - 1)) * 100;
   return (
-    <div className="mb-8">
+    <div className="mb-8 relative bg-white/[0.06] border border-white/[0.10] rounded-2xl backdrop-blur-xl px-6 py-4 shadow-lg shadow-black/20">
+      <div
+        className="absolute top-0 left-[10%] right-[10%] h-px pointer-events-none"
+        style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent)" }}
+      />
       <div className="flex justify-between mb-3">
         {STEP_LABELS.map((label, i) => {
           const step = i + 1;
@@ -188,10 +192,10 @@ function ProgressBar({ current }: { current: number }) {
               key={label}
               className={`text-[10px] font-mono uppercase tracking-wider transition-colors ${
                 isActive
-                  ? "text-white"
+                  ? "text-white font-semibold"
                   : isDone
                     ? "text-[#5B9BF3]"
-                    : "text-white/20"
+                    : "text-white/25"
               }`}
             >
               {label}
@@ -199,9 +203,9 @@ function ProgressBar({ current }: { current: number }) {
           );
         })}
       </div>
-      <div className="h-1 bg-white/[0.08] rounded-full overflow-hidden">
+      <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
         <motion.div
-          className="h-full bg-[#5B9BF3] rounded-full"
+          className="h-full bg-gradient-to-r from-[#5B9BF3] to-[#7BB5FF] rounded-full"
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.4, ease: "easeInOut" }}
         />
@@ -370,9 +374,9 @@ function Step1({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Bem-vindo a EXO</h1>
+        <h1 className="text-3xl font-bold text-white mb-2">Bem-vindo à EXO</h1>
         <p className="text-white/50 text-sm">
-          Vamos configurar sua operacao em poucos minutos.
+          Vamos configurar sua operação em poucos minutos.
         </p>
       </div>
 
@@ -438,7 +442,7 @@ function Step2({
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-white mb-2">
-          Quais agentes voce precisa?
+          Quais agentes você precisa?
         </h1>
         <p className="text-white/50 text-sm">
           Selecione os agentes que deseja ativar.
@@ -652,7 +656,7 @@ function Step4({
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-white mb-2">
-          Como seus clientes vao falar com voce?
+          Como seus clientes vão falar com você?
         </h1>
         <p className="text-white/50 text-sm">
           Conecte os canais de atendimento.
@@ -682,6 +686,75 @@ function Step5({
   data: FormData;
   onChange: (patch: Partial<FormData>) => void;
 }) {
+  const sectorQuestions: Record<string, { label: string; placeholder: string; key: string }[]> = {
+    saude: [
+      { label: "Horário de funcionamento", placeholder: "Ex: Segunda a sexta das 8h às 18h, sábados das 8h às 12h", key: "horario" },
+      { label: "Endereço da clínica", placeholder: "Ex: Av. Paulista, 1000 - São Paulo, SP", key: "endereco" },
+      { label: "Serviços oferecidos", placeholder: "Ex: Limpeza, restauração, implante, ortodontia, clareamento", key: "servicos" },
+      { label: "Convênios aceitos", placeholder: "Ex: Amil Dental, Bradesco Saúde, SulAmérica", key: "convenios" },
+      { label: "Formas de pagamento", placeholder: "Ex: PIX, cartão até 12x, boleto", key: "pagamento" },
+    ],
+    educacao: [
+      { label: "Horário de funcionamento", placeholder: "Ex: Segunda a sexta das 7h às 19h", key: "horario" },
+      { label: "Endereço", placeholder: "Ex: Rua da Escola, 500 - São Paulo, SP", key: "endereco" },
+      { label: "Cursos oferecidos", placeholder: "Ex: Inglês, Espanhol, Programação, Música", key: "servicos" },
+      { label: "Faixa etária atendida", placeholder: "Ex: Crianças a partir de 6 anos e adultos", key: "publico" },
+      { label: "Formas de pagamento", placeholder: "Ex: PIX, cartão, boleto mensal", key: "pagamento" },
+    ],
+    varejo: [
+      { label: "Horário de funcionamento", placeholder: "Ex: Segunda a sábado das 9h às 21h", key: "horario" },
+      { label: "Endereço / loja online", placeholder: "Ex: Shopping Center Norte, loja 42 / www.minhaloja.com.br", key: "endereco" },
+      { label: "Produtos principais", placeholder: "Ex: Roupas femininas, acessórios, calçados", key: "servicos" },
+      { label: "Política de troca e devolução", placeholder: "Ex: Troca em até 30 dias com etiqueta", key: "politica" },
+      { label: "Formas de pagamento", placeholder: "Ex: PIX, cartão até 10x, boleto", key: "pagamento" },
+    ],
+    servicos: [
+      { label: "Horário de atendimento", placeholder: "Ex: Segunda a sexta das 8h às 18h", key: "horario" },
+      { label: "Endereço / área de atuação", placeholder: "Ex: Atendemos toda a Grande São Paulo", key: "endereco" },
+      { label: "Serviços oferecidos", placeholder: "Ex: Consultoria, manutenção, instalação", key: "servicos" },
+      { label: "Prazo médio de atendimento", placeholder: "Ex: Orçamento em 24h, execução em até 5 dias úteis", key: "prazo" },
+      { label: "Formas de pagamento", placeholder: "Ex: PIX, cartão, transferência", key: "pagamento" },
+    ],
+    financeiro: [
+      { label: "Horário de atendimento", placeholder: "Ex: Segunda a sexta das 9h às 17h", key: "horario" },
+      { label: "Serviços oferecidos", placeholder: "Ex: Contabilidade, assessoria fiscal, folha de pagamento", key: "servicos" },
+      { label: "Documentos necessários", placeholder: "Ex: CNPJ, contrato social, últimos 3 balanços", key: "documentos" },
+      { label: "Formas de pagamento", placeholder: "Ex: Boleto mensal, PIX", key: "pagamento" },
+    ],
+    tecnologia: [
+      { label: "Horário de suporte", placeholder: "Ex: 24/7 via chat, comercial das 9h às 18h", key: "horario" },
+      { label: "Produtos / serviços", placeholder: "Ex: SaaS de gestão, app mobile, integrações API", key: "servicos" },
+      { label: "Planos e preços", placeholder: "Ex: Free, Pro R$99/mês, Enterprise sob consulta", key: "precos" },
+      { label: "Canais de suporte", placeholder: "Ex: Chat, email, telefone, ticket", key: "suporte" },
+    ],
+    outro: [
+      { label: "Horário de funcionamento", placeholder: "Ex: Segunda a sexta das 8h às 18h", key: "horario" },
+      { label: "Endereço", placeholder: "Endereço ou área de atuação", key: "endereco" },
+      { label: "Serviços oferecidos", placeholder: "Descreva seus principais serviços", key: "servicos" },
+      { label: "Formas de pagamento", placeholder: "Ex: PIX, cartão, boleto", key: "pagamento" },
+    ],
+  };
+
+  const questions = sectorQuestions[data.setor] || sectorQuestions.outro;
+
+  // Parse knowledge into structured answers
+  const parseAnswers = (): Record<string, string> => {
+    try {
+      return JSON.parse(data.knowledge || "{}");
+    } catch {
+      // Legacy free-text format
+      return { _freetext: data.knowledge };
+    }
+  };
+
+  const answers = parseAnswers();
+
+  const updateAnswer = (key: string, value: string) => {
+    const current = parseAnswers();
+    current[key] = value;
+    onChange({ knowledge: JSON.stringify(current) });
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -689,34 +762,60 @@ function Step5({
           Ensine seus agentes
         </h1>
         <p className="text-white/50 text-sm">
-          Adicione informacoes para os agentes usarem nas conversas.
+          Preencha as informações que seus agentes vão usar nas conversas.
         </p>
       </div>
 
-      <div>
-        <label className={labelClass}>Informacoes da empresa</label>
-        <textarea
-          value={data.knowledge}
-          onChange={(e) => onChange({ knowledge: e.target.value })}
-          placeholder="Horario de funcionamento, endereco, servicos oferecidos..."
-          rows={4}
-          className={inputClass + " resize-none"}
-        />
+      {/* Guided questions by sector */}
+      <div className="space-y-4">
+        {questions.map((q) => (
+          <div key={q.key}>
+            <label className={labelClass}>{q.label}</label>
+            <input
+              type="text"
+              value={answers[q.key] || ""}
+              onChange={(e) => updateAnswer(q.key, e.target.value)}
+              placeholder={q.placeholder}
+              className={inputClass}
+            />
+          </div>
+        ))}
       </div>
 
+      {/* FAQ section */}
       <div>
         <label className={labelClass}>Perguntas frequentes</label>
+        <p className="text-xs text-white/30 mb-2">Uma pergunta e resposta por linha. Ex: "Aceitam convênio? Sim, aceitamos Amil e Bradesco."</p>
         <textarea
           value={data.faq}
           onChange={(e) => onChange({ faq: e.target.value })}
-          placeholder={"Quais formas de pagamento aceitam?\nQual o prazo de entrega?"}
+          placeholder={"Qual o horário de funcionamento? De segunda a sexta, das 8h às 18h.\nAceitam convênio? Sim, aceitamos Amil e Bradesco."}
           rows={4}
           className={inputClass + " resize-none"}
         />
       </div>
 
+      {/* File upload area (coming soon) */}
+      <div>
+        <label className={labelClass}>Documentos</label>
+        <div className="border-2 border-dashed border-white/[0.08] rounded-2xl p-8 text-center hover:border-white/[0.15] transition-colors cursor-not-allowed">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-white/[0.04] flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/30"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <div>
+              <p className="text-sm text-white/40">Arraste PDFs, DOCs ou planilhas aqui</p>
+              <p className="text-xs text-white/20 mt-1">O sistema vai extrair as informações automaticamente</p>
+            </div>
+            <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/[0.04] text-[10px] font-mono uppercase text-white/25 tracking-wider border border-white/[0.06]">
+              Em breve
+            </span>
+          </div>
+        </div>
+      </div>
+
       <p className="text-xs text-white/30 italic">
-        Voce pode editar isso depois no dashboard.
+        Você pode editar tudo isso depois na Base de Conhecimento do dashboard.
       </p>
     </div>
   );
@@ -743,7 +842,7 @@ function Step6({
       <div>
         <h1 className="text-3xl font-bold text-white mb-2">Tudo pronto!</h1>
         <p className="text-white/50 text-sm">
-          Revise suas configuracoes antes de ativar.
+          Revise suas configurações antes de ativar.
         </p>
       </div>
 
@@ -1034,34 +1133,61 @@ export default function OnboardingPage() {
     );
 
     try {
-      // 1. Create organization
-      const { data: org, error: orgError } = await supabase
-        .from("organizations")
-        .insert({
-          name: formData.empresa,
-          slug: formData.empresa
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, "-")
-            .replace(/^-|-$/g, ""),
-        })
-        .select()
-        .single();
-
-      if (orgError || !org) {
-        console.error("Failed to create organization:", orgError);
-        setIsProvisioning(false);
-        return;
-      }
-
-      // 2. Update user profile with org id
+      // 1. Get or create organization
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (user) {
+
+      let orgId: string;
+
+      // Check if user already has an organization
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("organization_id")
+        .eq("id", user?.id ?? "")
+        .single();
+
+      if (profile?.organization_id) {
+        // Update existing org with new name
         await supabase
-          .from("profiles")
-          .update({ organization_id: org.id })
-          .eq("id", user.id);
+          .from("organizations")
+          .update({
+            name: formData.empresa,
+            slug: formData.empresa
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/^-|-$/g, "") + "-" + Date.now().toString(36),
+          })
+          .eq("id", profile.organization_id);
+        orgId = profile.organization_id;
+      } else {
+        // Create new organization
+        const { data: org, error: orgError } = await supabase
+          .from("organizations")
+          .insert({
+            name: formData.empresa,
+            slug: formData.empresa
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/^-|-$/g, "") + "-" + Date.now().toString(36),
+          })
+          .select()
+          .single();
+
+        if (orgError || !org) {
+          console.error("Failed to create organization:", orgError);
+          setIsProvisioning(false);
+          return;
+        }
+        orgId = org.id;
+
+        // Link user to org
+        if (user) {
+          await supabase
+            .from("profiles")
+            .update({ organization_id: orgId })
+            .eq("id", user.id);
+        }
       }
 
       // 3. Provision each agent
@@ -1093,14 +1219,15 @@ export default function OnboardingPage() {
         const { data: prov, error: provError } = await supabase
           .from("agent_provisioning")
           .insert({
-            organization_id: org.id,
+            organization_id: orgId,
             agent_type: agentId,
             agent_name: config.name,
             system_prompt: systemPrompt,
             first_message: firstMessage,
             voice_id: config.voiceId || null,
+            voice_name: config.voiceName || null,
             tone: config.tone,
-            channels: formData.canais,
+            config_json: { channels: formData.canais },
             status: "pending",
           })
           .select()
@@ -1122,7 +1249,7 @@ export default function OnboardingPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             provisioning_id: prov.id,
-            organization_id: org.id,
+            organization_id: orgId,
             agent_type: agentId,
             agent_name: config.name,
             system_prompt: systemPrompt,
@@ -1185,60 +1312,73 @@ export default function OnboardingPage() {
     <>
       {isProvisioning && <ProvisioningOverlay statuses={provisionStatuses} />}
 
-      <div className="w-full max-w-lg mx-auto">
+      <div className="w-full max-w-2xl mx-auto">
         <ProgressBar current={currentStep} />
 
-        <div className="relative overflow-hidden">
-          <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
-              key={currentStep}
-              custom={direction}
-              variants={slideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-            >
-              {renderStep()}
-            </motion.div>
-          </AnimatePresence>
-        </div>
+        <div className="relative bg-white/[0.07] border border-white/[0.12] rounded-3xl backdrop-blur-2xl p-8 sm:p-10 shadow-2xl shadow-black/50">
+          {/* Top highlight — liquid glass */}
+          <div
+            className="absolute top-0 left-[8%] right-[8%] h-px pointer-events-none"
+            style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)" }}
+          />
+          {/* Inner glow */}
+          <div
+            className="absolute inset-0 rounded-3xl pointer-events-none"
+            style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -1px 0 rgba(0,0,0,0.3)" }}
+          />
 
-        {/* Navigation */}
-        <div className="flex items-center justify-between mt-10">
-          {currentStep > 1 ? (
-            <button
-              type="button"
-              onClick={prev}
-              className="flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors cursor-pointer"
-            >
-              <ArrowLeft size={16} />
-              Voltar
-            </button>
-          ) : (
-            <div />
-          )}
+          <div className="relative overflow-hidden">
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.div
+                key={currentStep}
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+              >
+                {renderStep()}
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-          {currentStep < TOTAL_STEPS ? (
-            <button
-              type="button"
-              onClick={next}
-              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/[0.08] text-sm font-medium text-white hover:bg-white/[0.12] transition-colors cursor-pointer"
-            >
-              Proximo
-              <ArrowRight size={16} />
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={activate}
-              disabled={isProvisioning}
-              className="flex items-center gap-2 px-8 py-3 rounded-xl bg-[#5B9BF3] text-sm font-semibold text-white hover:bg-[#5B9BF3]/90 transition-colors shadow-lg shadow-[#5B9BF3]/20 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Zap size={16} />
-              Ativar Agentes
-            </button>
-          )}
+          {/* Navigation */}
+          <div className="flex items-center justify-between mt-10 pt-6 border-t border-white/[0.06]">
+            {currentStep > 1 ? (
+              <button
+                type="button"
+                onClick={prev}
+                className="flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors cursor-pointer"
+              >
+                <ArrowLeft size={16} />
+                Voltar
+              </button>
+            ) : (
+              <div />
+            )}
+
+            {currentStep < TOTAL_STEPS ? (
+              <button
+                type="button"
+                onClick={next}
+                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#5B9BF3] text-sm font-medium text-white hover:bg-[#5B9BF3]/90 transition-colors cursor-pointer shadow-lg shadow-[#5B9BF3]/20"
+              >
+                Próximo
+                <ArrowRight size={16} />
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={activate}
+                disabled={isProvisioning}
+                className="flex items-center gap-2 px-8 py-3 rounded-xl bg-[#5B9BF3] text-sm font-semibold text-white hover:bg-[#5B9BF3]/90 transition-colors shadow-lg shadow-[#5B9BF3]/20 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Zap size={16} />
+                Ativar Agentes
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </>

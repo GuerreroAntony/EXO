@@ -1,0 +1,23 @@
+# Dashboard do OpenClaw
+callcenter.DOMINIO.com {
+	reverse_proxy localhost:18800
+	encode gzip
+
+	header {
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+}
+
+# Webhook de voz (Vapi / Twilio)
+voice.DOMINIO.com {
+	reverse_proxy localhost:3334
+	encode gzip
+
+	header {
+		X-Content-Type-Options "nosniff"
+		-Server
+	}
+}

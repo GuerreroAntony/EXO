@@ -118,7 +118,7 @@ export default function AgentesPage() {
         subtitle="Gerencie seus agentes de IA"
         action={
           <Link
-            href="/onboarding"
+            href="/dashboard/agentes/novo"
             className="flex items-center gap-2 px-4 py-2.5 bg-[#5B9BF3] hover:bg-[#5B9BF3]/80 text-white text-sm font-medium rounded-xl transition-colors"
           >
             <Plus size={16} />
@@ -134,8 +134,8 @@ export default function AgentesPage() {
       ) : !hasAny ? (
         <div className="text-center py-20">
           <Bot className="w-10 h-10 text-white/10 mx-auto mb-4" />
-          <p className="text-white/30">Nenhum agente configurado</p>
-          <p className="text-sm text-white/15 mt-1">
+          <p className="text-[#666]">Nenhum agente configurado</p>
+          <p className="text-sm text-[#444] mt-1">
             Os dados aparecerão aqui quando houver atividade.
           </p>
         </div>
@@ -145,7 +145,7 @@ export default function AgentesPage() {
           {provisioned.map((agent, i) => {
             const Icon = typeIcons[agent.agent_type] ?? Bot;
             const colorClass =
-              typeColors[agent.agent_type] ?? "text-white/50 bg-white/5";
+              typeColors[agent.agent_type] ?? "text-[#999] bg-white/5";
 
             return (
               <motion.div
@@ -153,7 +153,7 @@ export default function AgentesPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="bg-white/[0.04] border border-white/[0.08] rounded-2xl p-5 hover:bg-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
+                className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl p-5 hover:bg-[#1e1e1e] hover:border-[#333] transition-all duration-300"
               >
                 {/* Header */}
                 <div className="flex items-start gap-3.5 mb-4">
@@ -169,7 +169,7 @@ export default function AgentesPage() {
                       </h3>
                       <StatusDot status={agent.status} />
                     </div>
-                    <p className="text-[11px] font-mono text-white/40 uppercase tracking-wider">
+                    <p className="text-[11px] font-mono text-[#888] uppercase tracking-wider">
                       {agent.agent_type}
                     </p>
                   </div>
@@ -179,7 +179,7 @@ export default function AgentesPage() {
                 <div className="flex flex-wrap items-center gap-2 mb-4">
                   <StatusBadge status={agent.status} />
                   {agent.tone && (
-                    <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-white/[0.06] text-white/50">
+                    <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-[#1e1e1e] text-[#999]">
                       {agent.tone}
                     </span>
                   )}
@@ -188,7 +188,7 @@ export default function AgentesPage() {
                 {/* Details */}
                 <div className="space-y-2 mb-4">
                   {agent.phone_number && (
-                    <div className="flex items-center gap-2 text-sm text-white/60">
+                    <div className="flex items-center gap-2 text-sm text-[#aaa]">
                       <span className="text-base leading-none">🇧🇷</span>
                       <span className="font-mono text-[13px]">
                         {formatPhone(agent.phone_number)}
@@ -196,8 +196,8 @@ export default function AgentesPage() {
                     </div>
                   )}
                   {agent.voice_name && (
-                    <p className="text-[13px] text-white/40">
-                      Voz: <span className="text-white/60">{agent.voice_name}</span>
+                    <p className="text-[13px] text-[#888]">
+                      Voz: <span className="text-[#aaa]">{agent.voice_name}</span>
                     </p>
                   )}
                   {agent.vapi_assistant_id && (
@@ -208,7 +208,7 @@ export default function AgentesPage() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-2 pt-3 border-t border-white/[0.06]">
+                <div className="flex items-center gap-2 pt-3 border-t border-[#252525]">
                   {agent.vapi_assistant_id && (
                     <a
                       href={`https://vapi.ai/assistant/${agent.vapi_assistant_id}`}
@@ -221,7 +221,7 @@ export default function AgentesPage() {
                     </a>
                   )}
                   <button
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-white/50 bg-white/[0.04] rounded-lg hover:bg-white/[0.08] transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-[#999] bg-[#1a1a1a] rounded-lg hover:bg-[#222] transition-colors"
                   >
                     <Pencil size={12} />
                     Editar
@@ -241,7 +241,7 @@ export default function AgentesPage() {
                 duration: 0.5,
                 delay: (provisioned.length + i) * 0.08,
               }}
-              className="bg-white/[0.04] border border-white/[0.08] rounded-2xl p-5 hover:bg-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
+              className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl p-5 hover:bg-[#1e1e1e] hover:border-[#333] transition-all duration-300"
             >
               <div className="flex items-start gap-3.5 mb-4">
                 <div className="w-11 h-11 rounded-xl bg-[#5B9BF3]/10 flex items-center justify-center shrink-0">
@@ -254,18 +254,18 @@ export default function AgentesPage() {
                     </h3>
                     <StatusBadge status={agent.status} />
                   </div>
-                  <p className="text-[11px] font-mono text-white/40 uppercase tracking-wider">
+                  <p className="text-[11px] font-mono text-[#888] uppercase tracking-wider">
                     {agent.tipo}
                   </p>
                 </div>
               </div>
-              <p className="text-sm text-white/50 mb-4">{agent.descricao}</p>
+              <p className="text-sm text-[#999] mb-4">{agent.descricao}</p>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   {(agent.canais ?? []).map((ch) => (
                     <span
                       key={ch}
-                      className="flex items-center gap-1 text-[11px] text-white/30 bg-white/[0.04] rounded-lg px-2.5 py-1"
+                      className="flex items-center gap-1 text-[11px] text-[#666] bg-[#1a1a1a] rounded-lg px-2.5 py-1"
                     >
                       {ch === "Voz" ? (
                         <Phone size={12} />
@@ -276,7 +276,7 @@ export default function AgentesPage() {
                     </span>
                   ))}
                 </div>
-                <span className="text-[11px] font-mono text-white/30">
+                <span className="text-[11px] font-mono text-[#666]">
                   {agent.atendimentos_count ?? 0} atendimentos
                 </span>
               </div>

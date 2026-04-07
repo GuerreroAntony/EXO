@@ -29,7 +29,7 @@ interface KPICardProps {
 }
 
 export default function KPICard({ title, value, icon: Icon, trend, trendValue, delay = 0, sparklineData }: KPICardProps) {
-  const trendColor = trend === "up" ? "text-emerald-400" : trend === "down" ? "text-red-400" : "text-white/30";
+  const trendColor = trend === "up" ? "text-emerald-400" : trend === "down" ? "text-red-400" : "text-[#666]";
   const TrendIcon = trend === "up" ? TrendingUp : trend === "down" ? TrendingDown : Minus;
 
   return (
@@ -37,7 +37,7 @@ export default function KPICard({ title, value, icon: Icon, trend, trendValue, d
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
-      className="bg-white/[0.04] border border-white/[0.08] rounded-2xl backdrop-blur p-5"
+      className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl backdrop-blur p-5"
     >
       <div className="flex items-start justify-between mb-4">
         <div className="w-10 h-10 rounded-xl bg-[#5B9BF3]/10 flex items-center justify-center">
@@ -51,7 +51,7 @@ export default function KPICard({ title, value, icon: Icon, trend, trendValue, d
       <div className="flex items-end justify-between">
         <div>
           <p className="text-2xl font-bold text-white mb-1">{value}</p>
-          <p className="text-xs text-white/40 font-mono uppercase tracking-wider">{title}</p>
+          <p className="text-xs text-[#888] font-mono uppercase tracking-wider">{title}</p>
         </div>
         {sparklineData && <Sparkline data={sparklineData} />}
       </div>

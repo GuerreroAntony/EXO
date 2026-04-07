@@ -485,7 +485,7 @@ export const Component = () => {
   const splitTitle = (text: string) =>
     text.split("").map((char, i) => (
       <span key={i} className="title-char inline-block">
-        {char === " " ? "\u00A0" : char}
+        {char === " " ? " " : char}
       </span>
     ));
 

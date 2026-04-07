@@ -120,7 +120,7 @@ export default function FinanceiroPage() {
         />
       </div>
 
-      <h3 className="text-[12px] font-mono text-white/40 uppercase tracking-wider mb-4">Faturas</h3>
+      <h3 className="text-[12px] font-mono text-[#888] uppercase tracking-wider mb-4">Faturas</h3>
 
       {loading ? (
         <div className="text-center py-20">
@@ -129,8 +129,8 @@ export default function FinanceiroPage() {
       ) : faturas.length === 0 ? (
         <div className="text-center py-20">
           <DollarSign className="w-10 h-10 text-white/10 mx-auto mb-4" />
-          <p className="text-white/30">Nenhum registro encontrado</p>
-          <p className="text-sm text-white/15 mt-1">Os dados aparecerão aqui quando houver atividade.</p>
+          <p className="text-[#666]">Nenhum registro encontrado</p>
+          <p className="text-sm text-[#444] mt-1">Os dados aparecerão aqui quando houver atividade.</p>
         </div>
       ) : (
         <DataTable columns={columns} data={faturas} emptyMessage="Nenhuma fatura encontrada" />

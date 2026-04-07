@@ -24,23 +24,23 @@ export default function DataTable<T extends Record<string, unknown>>({
 }: DataTableProps<T>) {
   if (data.length === 0) {
     return (
-      <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl backdrop-blur p-12 flex flex-col items-center justify-center text-center">
+      <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl backdrop-blur p-12 flex flex-col items-center justify-center text-center">
         <Inbox size={40} className="text-white/10 mb-3" />
-        <p className="text-sm text-white/30">{emptyMessage}</p>
+        <p className="text-sm text-[#666]">{emptyMessage}</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl backdrop-blur overflow-hidden">
+    <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl backdrop-blur overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-white/5">
+            <tr className="border-b border-[#1e1e1e]">
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className="text-left text-[11px] font-mono uppercase text-white/30 tracking-wider px-5 py-3"
+                  className="text-left text-[11px] font-mono uppercase text-[#666] tracking-wider px-5 py-3"
                 >
                   {col.label}
                 </th>
@@ -52,10 +52,10 @@ export default function DataTable<T extends Record<string, unknown>>({
               <tr
                 key={i}
                 onClick={onRowClick ? () => onRowClick(row) : undefined}
-                className={`border-b border-white/5 last:border-b-0 hover:bg-white/[0.02] transition-colors ${onRowClick ? "cursor-pointer" : ""}`}
+                className={`border-b border-[#1e1e1e] last:border-b-0 hover:bg-[#141414] transition-colors ${onRowClick ? "cursor-pointer" : ""}`}
               >
                 {columns.map((col) => (
-                  <td key={col.key} className="text-sm text-white/70 px-5 py-3.5">
+                  <td key={col.key} className="text-sm text-[#bbb] px-5 py-3.5">
                     {col.render ? col.render(row) : String(row[col.key] ?? "")}
                   </td>
                 ))}

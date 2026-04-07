@@ -10,7 +10,7 @@ const products = [
   {
     icon: Bot,
     title: "Call Center IA",
-    starting: "R$ 497",
+    starting: "R$ 500",
     unit: "/agente/mês",
     desc: "Monte sua equipe de atendentes virtuais. Escolha quantos agentes sua operação precisa.",
     features: ["Voz + WhatsApp", "24/7 sem fila", "Escalação para humanos", "Analytics em tempo real"],
