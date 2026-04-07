@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Bot, Brain, Users, Cog } from "lucide-react";
-import { GlowCard } from "@/components/ui/spotlight-card";
 import { ScrollReveal } from "@/components/ScrollReveal";
 
 const products = [
@@ -55,18 +54,18 @@ const products = [
 
 export default function PrecosPage() {
   return (
-    <main className="bg-black min-h-screen pt-36 pb-20">
+    <main className="bg-black min-h-screen pt-40 pb-32">
       <div className="max-w-6xl mx-auto px-6">
         {/* Header */}
         <ScrollReveal>
-          <div className="text-center mb-20">
+          <div className="text-center mb-24">
             <p className="text-[11px] font-mono tracking-[0.3em] uppercase text-white/30">
               Preços
             </p>
-            <h1 className="mt-4 text-4xl sm:text-5xl font-bold text-white tracking-[-0.03em]">
+            <h1 className="mt-4 text-5xl lg:text-6xl font-bold text-white tracking-tight">
               Pague pelo que usar.
             </h1>
-            <p className="mt-4 text-white/35 font-light max-w-lg mx-auto">
+            <p className="mt-4 text-white/30 font-light max-w-lg mx-auto">
               Cada vertical tem seu próprio modelo de preço.
               Comece pequeno e escale quando quiser.
             </p>
@@ -84,15 +83,15 @@ export default function PrecosPage() {
               transition={{ duration: 0.5, delay: i * 0.1 }}
             >
               <Link href={product.href} className="group block h-full">
-                <GlowCard className="h-full">
+                <div className="h-full bg-white/[0.02] border border-white/[0.06] rounded-2xl hover:bg-white/[0.04] hover:border-white/[0.12] hover:-translate-y-0.5 transition-all duration-500">
                   <div className="p-8 sm:p-10 flex flex-col h-full">
                     {/* Icon + title */}
                     <div className="flex items-center gap-4 mb-6">
-                      <div className="w-12 h-12 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:border-[#5B9BF3]/25 transition-all duration-500">
-                        <product.icon className="w-5 h-5 text-white/30 group-hover:text-[#5B9BF3] transition-colors duration-500" />
+                      <div className="w-12 h-12 rounded-xl bg-white/[0.06] flex items-center justify-center">
+                        <product.icon className="w-5 h-5 text-white/30" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-semibold text-white">{product.title}</h3>
+                        <h3 className="text-xl font-semibold text-white tracking-tight">{product.title}</h3>
                         {!product.available && product.starting === "Em breve" && (
                           <span className="text-[10px] font-mono uppercase tracking-wider text-white/20">Soon</span>
                         )}
@@ -101,7 +100,7 @@ export default function PrecosPage() {
 
                     {/* Price */}
                     <div className="mb-4">
-                      <span className="text-3xl font-bold text-white">{product.starting}</span>
+                      <span className="text-4xl font-bold text-white">{product.starting}</span>
                       <span className="text-sm text-white/30 ml-1">{product.unit}</span>
                     </div>
 
@@ -112,7 +111,7 @@ export default function PrecosPage() {
                     <div className="space-y-2.5 flex-1">
                       {product.features.map((f) => (
                         <div key={f} className="flex items-center gap-2.5">
-                          <div className="w-1 h-1 rounded-full bg-[#5B9BF3]/50" />
+                          <div className="w-1 h-1 rounded-full bg-white/20" />
                           <span className="text-sm text-white/40">{f}</span>
                         </div>
                       ))}
@@ -121,10 +120,10 @@ export default function PrecosPage() {
                     {/* CTA */}
                     <div className="mt-8">
                       <span
-                        className={`w-full py-3 rounded-xl text-sm font-medium flex items-center justify-center gap-2 transition-all duration-500 ${
+                        className={`w-full py-4 rounded-full text-sm font-medium flex items-center justify-center gap-2 transition-all duration-500 ${
                           product.available
-                            ? "bg-white text-black group-hover:bg-white/90"
-                            : "bg-white/[0.06] text-white/40 border border-white/[0.06]"
+                            ? "bg-white text-black"
+                            : "border border-white/[0.08] text-white/40"
                         }`}
                       >
                         {product.cta}
@@ -132,7 +131,7 @@ export default function PrecosPage() {
                       </span>
                     </div>
                   </div>
-                </GlowCard>
+                </div>
               </Link>
             </motion.div>
           ))}

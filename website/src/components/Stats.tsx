@@ -24,15 +24,12 @@ function StatItem({ stat, index }: { stat: typeof stats[0]; index: number }) {
     <motion.div
       ref={ref}
       style={{ scale, opacity, y }}
-      className="text-center"
+      className={`text-center ${index < stats.length - 1 ? "lg:border-r border-white/[0.06]" : ""}`}
     >
-      <div
-        className="text-4xl sm:text-5xl lg:text-7xl font-black tracking-[-0.04em] text-white"
-        style={{ textShadow: "0 0 80px rgba(59,130,246,0.2)" }}
-      >
+      <div className="text-5xl font-bold tracking-tight text-white">
         {stat.value}
       </div>
-      <div className="mt-3 text-[11px] text-white/50 tracking-[0.2em] uppercase font-medium">
+      <div className="mt-3 text-sm text-white/25 tracking-widest uppercase">
         {stat.label}
       </div>
     </motion.div>
@@ -42,16 +39,12 @@ function StatItem({ stat, index }: { stat: typeof stats[0]; index: number }) {
 export default function Stats() {
   return (
     <section className="py-32 bg-black">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="line-fade mb-24" />
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-8">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-16">
           {stats.map((s, i) => (
             <StatItem key={s.label} stat={s} index={i} />
           ))}
         </div>
-
-        <div className="line-fade mt-24" />
       </div>
     </section>
   );

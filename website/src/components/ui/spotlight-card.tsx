@@ -11,7 +11,7 @@ interface GlowCardProps {
 const GlowCard: React.FC<GlowCardProps> = ({
   children,
   className = "",
-  glowColor = "rgba(255, 255, 255, 0.15)",
+  glowColor = "rgba(255, 255, 255, 0.08)",
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
@@ -32,7 +32,7 @@ const GlowCard: React.FC<GlowCardProps> = ({
 
     if (isNear) {
       glowRef.current.style.opacity = "1";
-      glowRef.current.style.background = `radial-gradient(500px circle at ${x}px ${y}px, ${glowColor}, transparent 70%)`;
+      glowRef.current.style.background = `radial-gradient(400px circle at ${x}px ${y}px, ${glowColor}, transparent 70%)`;
     } else {
       glowRef.current.style.opacity = "0";
     }
@@ -48,11 +48,11 @@ const GlowCard: React.FC<GlowCardProps> = ({
       ref={cardRef}
       className={`relative rounded-[20px] overflow-hidden ${className}`}
       style={{
-        background: "rgba(255, 255, 255, 0.04)",
+        background: "rgba(255, 255, 255, 0.02)",
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
-        border: "1px solid rgba(255, 255, 255, 0.10)",
-        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.06)",
+        border: "1px solid rgba(255, 255, 255, 0.06)",
+        boxShadow: "0 4px 24px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.03)",
       }}
     >
       {/* Cursor glow */}
@@ -63,9 +63,9 @@ const GlowCard: React.FC<GlowCardProps> = ({
 
       {/* Top highlight line (liquid glass effect) */}
       <div
-        className="absolute top-0 left-[10%] right-[10%] h-px pointer-events-none z-0"
+        className="absolute top-0 left-[15%] right-[15%] h-px pointer-events-none z-0"
         style={{
-          background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent)",
+          background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent)",
         }}
       />
 

@@ -13,16 +13,16 @@ export default function DemoConfirmacao() {
         transition={{ duration: 0.6 }}
         className="text-center px-6 max-w-md"
       >
-        <div className="w-16 h-16 rounded-full bg-[#5B9BF3]/10 border border-[#5B9BF3]/20 flex items-center justify-center mx-auto mb-8">
-          <CheckCircle className="w-8 h-8 text-[#5B9BF3]" />
+        <div className="w-16 h-16 rounded-full bg-white/[0.04] border border-white/[0.06] flex items-center justify-center mx-auto mb-8">
+          <CheckCircle className="w-8 h-8 text-white/60" />
         </div>
-        <h1 className="text-3xl font-bold text-white">Recebemos sua solicitação!</h1>
-        <p className="mt-4 text-white/40 font-light leading-relaxed">
+        <h1 className="text-5xl lg:text-6xl font-bold tracking-tight text-white">Recebemos sua solicitação!</h1>
+        <p className="mt-4 text-white/35 font-light leading-relaxed">
           Nossa equipe entrará em contato em até 24 horas para agendar sua demonstração personalizada.
         </p>
         <Link
           href="/"
-          className="inline-block mt-8 px-8 py-3 text-sm font-medium text-white/60 border border-white/10 rounded-full hover:border-white/25 hover:text-white transition-all duration-500"
+          className="inline-block mt-8 border border-white/[0.08] text-white/40 rounded-full px-8 py-4 text-sm font-medium transition-all duration-300 hover:border-white/[0.15] hover:text-white/60"
         >
           Voltar ao início
         </Link>

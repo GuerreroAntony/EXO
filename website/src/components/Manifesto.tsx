@@ -15,10 +15,8 @@ const lines = [
 
 export default function Manifesto() {
   return (
-    <section className="relative py-48 bg-black overflow-hidden">
-      <div className="shader-blob-sm absolute w-[400px] h-[400px] top-1/2 right-0 -translate-y-1/2 opacity-5" />
-
-      <div className="relative z-10 max-w-4xl mx-auto px-6">
+    <section className="relative py-40 bg-black overflow-hidden">
+      <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
         <div className="space-y-2">
           {lines.map((line, i) => {
             if (line.text === "") return <div key={i} className="h-8" />;
@@ -30,10 +28,10 @@ export default function Manifesto() {
                 whileInView={{ opacity: line.highlight ? 1 : 0.5, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: false, amount: 0.8 }}
                 transition={{ duration: 0.6, delay: i * 0.04 }}
-                className={`text-3xl sm:text-4xl lg:text-[3.5rem] font-bold tracking-[-0.02em] leading-[1.15] ${
+                className={`text-3xl lg:text-4xl font-medium leading-relaxed tracking-tight ${
                   line.highlight
-                    ? "bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent"
-                    : "text-white"
+                    ? "text-white"
+                    : "text-white/15"
                 }`}
               >
                 {line.text}

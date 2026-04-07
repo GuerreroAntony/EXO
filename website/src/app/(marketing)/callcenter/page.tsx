@@ -6,12 +6,6 @@ import Link from "next/link";
 import {
   ArrowRight,
   Check,
-  Clock,
-  Globe,
-  Shield,
-  Headphones,
-  Zap,
-  Users,
   Phone,
   MessageSquare,
   Calendar,
@@ -19,7 +13,6 @@ import {
   Minus,
   Plus,
 } from "lucide-react";
-import { GlowCard } from "@/components/ui/spotlight-card";
 import { ScrollReveal } from "@/components/ScrollReveal";
 
 const PRICE_PER_AGENT = 500;
@@ -55,21 +48,21 @@ export default function CallCenterPage() {
   return (
     <main className="bg-black min-h-screen">
       {/* Hero */}
-      <section className="relative pt-36 pb-20 overflow-hidden">
-        <div className="relative z-10 max-w-5xl mx-auto px-6">
+      <section className="relative pt-40 pb-32 overflow-hidden">
+        <div className="relative z-10 max-w-6xl mx-auto px-6">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-[11px] font-mono tracking-[0.3em] uppercase text-white/40"
+            className="text-[11px] font-mono tracking-[0.3em] uppercase text-white/30"
           >
             Call Center IA
           </motion.p>
           <motion.h1
-            initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.1 }}
-            className="mt-6 text-5xl sm:text-6xl lg:text-7xl font-bold tracking-[-0.04em] text-white leading-[0.95]"
+            className="mt-6 text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[0.95]"
           >
             Atendimento que
             <br />
@@ -79,7 +72,7 @@ export default function CallCenterPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="mt-8 text-lg text-white/40 max-w-xl leading-relaxed font-light"
+            className="mt-8 text-lg text-white/30 max-w-xl leading-relaxed font-light"
           >
             Cada agente inclui todos os módulos: recepção, SAC, agendamento e
             cobrança. Escolha quantos agentes sua operação precisa.
@@ -88,13 +81,13 @@ export default function CallCenterPage() {
       </section>
 
       {/* Pricing configurator */}
-      <section className="py-16 bg-black">
-        <div className="max-w-5xl mx-auto px-6">
+      <section className="py-32 bg-black">
+        <div className="max-w-6xl mx-auto px-6">
           <div className="grid lg:grid-cols-5 gap-8">
             {/* Left — Agent selector (3 cols) */}
             <div className="lg:col-span-3">
               <ScrollReveal>
-                <GlowCard>
+                <div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl">
                   <div className="p-8 sm:p-10">
                     {/* Quantity selector */}
                     <p className="text-[11px] font-mono text-white/30 uppercase tracking-wider mb-6">
@@ -104,8 +97,7 @@ export default function CallCenterPage() {
                     <div className="flex items-center justify-center gap-6 py-8">
                       <button
                         onClick={() => setAgentCount(Math.max(1, agentCount - 1))}
-                        className="w-12 h-12 rounded-xl bg-white/[0.06] border border-white/[0.10] backdrop-blur-[16px] flex items-center justify-center text-white/50 hover:text-white hover:bg-white/[0.10] hover:border-white/[0.20] transition-all"
-                        style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05)" }}
+                        className="w-12 h-12 rounded-full bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-white/50 hover:text-white hover:bg-white/[0.08] hover:border-white/[0.12] transition-all"
                       >
                         <Minus size={18} />
                       </button>
@@ -121,8 +113,7 @@ export default function CallCenterPage() {
 
                       <button
                         onClick={() => setAgentCount(Math.min(20, agentCount + 1))}
-                        className="w-12 h-12 rounded-xl bg-white/[0.06] border border-white/[0.10] backdrop-blur-[16px] flex items-center justify-center text-white/50 hover:text-white hover:bg-white/[0.10] hover:border-white/[0.20] transition-all"
-                        style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05)" }}
+                        className="w-12 h-12 rounded-full bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-white/50 hover:text-white hover:bg-white/[0.08] hover:border-white/[0.12] transition-all"
                       >
                         <Plus size={18} />
                       </button>
@@ -137,11 +128,13 @@ export default function CallCenterPage() {
                         {includedAgents.map((a) => (
                           <div
                             key={a.name}
-                            className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/[0.05]"
+                            className="flex items-center gap-3 p-3 rounded-2xl bg-white/[0.02] border border-white/[0.06]"
                           >
-                            <a.icon size={16} className="text-white/30 shrink-0" />
+                            <div className="w-8 h-8 rounded-full bg-white/[0.06] flex items-center justify-center shrink-0">
+                              <a.icon size={14} className="text-white/60" />
+                            </div>
                             <div>
-                              <p className="text-sm font-medium text-white/70">{a.name}</p>
+                              <p className="text-sm font-medium text-white/60">{a.name}</p>
                               <p className="text-[11px] text-white/25">{a.desc}</p>
                             </div>
                           </div>
@@ -149,7 +142,7 @@ export default function CallCenterPage() {
                       </div>
                     </div>
                   </div>
-                </GlowCard>
+                </div>
               </ScrollReveal>
             </div>
 
@@ -157,7 +150,7 @@ export default function CallCenterPage() {
             <div className="lg:col-span-2">
               <div className="sticky top-28">
                 <ScrollReveal>
-                  <GlowCard>
+                  <div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl">
                     <div className="p-8">
                       <p className="text-[11px] font-mono text-white/30 uppercase tracking-wider mb-8">
                         Resumo
@@ -172,7 +165,6 @@ export default function CallCenterPage() {
                           R$ {totalPrice.toLocaleString("pt-BR")}
                         </span>
                       </div>
-
 
                       {/* Total */}
                       <div className="border-t border-white/[0.06] pt-6 mt-6">
@@ -193,8 +185,7 @@ export default function CallCenterPage() {
                       {/* CTA */}
                       <Link
                         href={`/signup?product=callcenter&agents=${agentCount}`}
-                        className="mt-8 w-full py-3.5 rounded-xl text-sm font-medium tracking-wide flex items-center justify-center gap-2 bg-white/[0.08] text-white border border-white/[0.12] backdrop-blur-[20px] hover:bg-white/[0.14] hover:border-white/[0.22] transition-all duration-500"
-                        style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06)" }}
+                        className="mt-8 w-full py-4 rounded-full text-sm font-medium tracking-wide flex items-center justify-center gap-2 bg-white text-black hover:bg-white/90 transition-all duration-500"
                       >
                         Começar agora
                         <ArrowRight size={15} />
@@ -204,7 +195,7 @@ export default function CallCenterPage() {
                         7 dias grátis • Cancele quando quiser
                       </p>
                     </div>
-                  </GlowCard>
+                  </div>
                 </ScrollReveal>
               </div>
             </div>
@@ -213,11 +204,10 @@ export default function CallCenterPage() {
       </section>
 
       {/* Everything included */}
-      <section className="py-20 bg-black">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="line-fade mb-16" />
+      <section className="py-32 bg-black">
+        <div className="max-w-6xl mx-auto px-6">
           <ScrollReveal>
-            <h2 className="text-2xl font-bold text-white mb-10">
+            <h2 className="text-2xl font-bold text-white mb-10 tracking-tight">
               Tudo incluído.
             </h2>
           </ScrollReveal>
@@ -225,7 +215,7 @@ export default function CallCenterPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {features.map((f, i) => (
               <ScrollReveal key={i}>
-                <div className="flex items-center gap-3 py-3 px-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                <div className="flex items-center gap-3 py-3 px-4 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
                   <Check size={14} className="text-white/25 shrink-0" />
                   <span className="text-sm text-white/45">{f}</span>
                 </div>
@@ -237,14 +227,14 @@ export default function CallCenterPage() {
 
       {/* Final CTA */}
       <section className="py-32 bg-black">
-        <div className="max-w-3xl mx-auto px-6 text-center">
+        <div className="max-w-6xl mx-auto px-6 text-center">
           <ScrollReveal>
-            <h2 className="text-4xl sm:text-5xl font-bold text-white tracking-[-0.03em]">
+            <h2 className="text-5xl lg:text-6xl font-bold text-white tracking-tight">
               Pronto para nunca mais
               <br />
               <span className="text-white/30">perder uma ligação?</span>
             </h2>
-            <p className="mt-6 text-white/35 font-light">
+            <p className="mt-6 text-white/30 font-light">
               Configure em minutos. Resultados imediatos.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -254,15 +244,14 @@ export default function CallCenterPage() {
                   e.preventDefault();
                   window.scrollTo({ top: 500, behavior: "smooth" });
                 }}
-                className="group flex items-center gap-3 px-8 py-3.5 text-sm font-medium tracking-wide bg-white/[0.08] text-white border border-white/[0.12] backdrop-blur-[20px] rounded-full hover:bg-white/[0.14] hover:border-white/[0.22] transition-all duration-500"
-                style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06)" }}
+                className="group flex items-center gap-3 px-8 py-4 text-sm font-medium tracking-wide bg-white text-black rounded-full hover:bg-white/90 transition-all duration-500"
               >
                 Montar minha equipe
                 <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
               </a>
               <Link
                 href="/demo"
-                className="px-8 py-3.5 text-sm text-white/35 hover:text-white/60 transition-colors font-medium"
+                className="px-8 py-4 text-sm text-white/40 border border-white/[0.08] rounded-full hover:text-white/60 hover:border-white/[0.12] transition-all font-medium"
               >
                 Agendar demonstração
               </Link>
