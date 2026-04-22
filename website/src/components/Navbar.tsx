@@ -11,6 +11,7 @@ const links = [
   { label: "Influencers Virtuais", href: "/inteligencia-virtual" },
   { label: "Digital Workers", href: "/digital-workers" },
   { label: "Robótica", href: "/robotica" },
+  { label: "Innovation Studio", href: "/innovation-studio" },
   { label: "Preços", href: "/precos" },
 ];
 

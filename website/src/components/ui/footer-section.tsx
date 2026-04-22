@@ -24,6 +24,7 @@ const footerLinks: FooterSection[] = [
 			{ title: 'Influencers Virtuais', href: '/inteligencia-virtual', icon: Users },
 			{ title: 'Digital Workers', href: '/digital-workers', icon: Bot },
 			{ title: 'Robótica', href: '/robotica', icon: Cog },
+			{ title: 'Innovation Studio', href: '/innovation-studio' },
 		],
 	},
 	{
