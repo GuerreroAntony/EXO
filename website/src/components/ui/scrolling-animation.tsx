@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { Bot, Brain, Users, Cog, Phone, Headphones, Calendar, DollarSign, ArrowRight, Sparkles } from "lucide-react";
+import { Bot, Brain, Users, Cog, Phone, Headphones, Calendar, DollarSign, ArrowRight, Sparkles, Lightbulb, Puzzle, Layers, Cpu } from "lucide-react";
 
 const RotatingEarth = dynamic(
   () => import("@/components/ui/wireframe-dotted-globe"),
@@ -16,6 +16,7 @@ const pillars = [
   { icon: Sparkles, label: "Influencers Virtuais", desc: "Personalidades digitais que engajam e criam conteúdo", href: "/inteligencia-virtual", color: "#22d3ee", tw: "text-cyan-400", bg: "bg-cyan-400/10", border: "border-cyan-400/25 hover:border-cyan-400/50" },
   { icon: Users, label: "Digital Workers", desc: "Funcionários digitais que automatizam processos complexos", href: "/digital-workers", color: "#a78bfa", tw: "text-violet-400", bg: "bg-violet-400/10", border: "border-violet-400/25 hover:border-violet-400/50" },
   { icon: Cog, label: "Robótica", desc: "Automação física inteligente para operações", href: "/robotica", color: "#34d399", tw: "text-emerald-400", bg: "bg-emerald-400/10", border: "border-emerald-400/25 hover:border-emerald-400/50", soon: true },
+  { icon: Lightbulb, label: "Innovation Studio", desc: "Soluções de IA sob medida para sua empresa", href: "/innovation-studio", color: "#f59e0b", tw: "text-amber-400", bg: "bg-amber-400/10", border: "border-amber-400/25 hover:border-amber-400/50" },
 ];
 
 const sections = [
@@ -62,6 +63,17 @@ const sections = [
       { icon: Users, text: "Colaboração humano-robô" },
     ],
     cta: "Explorar Robótica", href: "/robotica",
+  },
+  {
+    tag: "Innovation Studio", title: "Ideias que", highlight: "viram realidade.", color: "#f59e0b",
+    desc: "Nosso laboratório de inovação cria soluções personalizadas de IA — do diagnóstico à implementação, transformamos desafios em vantagem competitiva.",
+    features: [
+      { icon: Lightbulb, text: "Consultoria de IA" },
+      { icon: Puzzle, text: "Soluções sob medida" },
+      { icon: Layers, text: "Integração de sistemas" },
+      { icon: Cpu, text: "Treinamento de modelos" },
+    ],
+    cta: "Conhecer o Studio", href: "/innovation-studio",
   },
 ];
 
@@ -163,6 +175,8 @@ export function ScrollingHero() {
   const dwFadeIn = scrollY > 6700 ? Math.min((scrollY - 6700) / 300, 1) : 0;
   const dwFadeOut = scrollY > 8200 ? Math.min((scrollY - 8200) / 300, 1) : 0;
   const robFadeIn = scrollY > 8700 ? Math.min((scrollY - 8700) / 300, 1) : 0;
+  const robFadeOut = scrollY > 10200 ? Math.min((scrollY - 10200) / 300, 1) : 0;
+  const studioFadeIn = scrollY > 10700 ? Math.min((scrollY - 10700) / 300, 1) : 0;
 
   // ── Logo ──
   const logoOpacity = 1 - phase3;
@@ -171,13 +185,15 @@ export function ScrollingHero() {
   // ── Globe — centered in viewport with vw offset ──
   const sphereOpacity = Math.min(Math.max((phase1 - 0.3) * 3, 0), 0.9);
   const phase4 = scrollY > 6700 ? Math.min((scrollY - 6700) / 800, 1) : 0;
-  // Scale 1.5 → globe = 750px diameter (fits well with text)
-  // Initial: 23vw → right edge at navbar right
-  // CC/Influencers (phase3): stays at 23vw → same position, globe fits at scale 1.5
-  // DW/Robótica (phase4): mirrors to -23vw → left-aligned
+  const phase5 = scrollY > 10700 ? Math.min((scrollY - 10700) / 800, 1) : 0;
+  // Scale 1.5 → globe = 750px diameter
+  // CC/Influencers (phase3): right side
+  // DW/Robótica (phase4): crosses to left
+  // Innovation Studio (phase5): crosses back to right
   const globeShiftPillars = phase3 * 0;
   const globeShiftLeft = phase4 * -46;
-  const globeX = 23 + globeShiftPillars + globeShiftLeft;
+  const globeShiftBack = phase5 * 46;
+  const globeX = 23 + globeShiftPillars + globeShiftLeft + globeShiftBack;
   const globeScale = 1 + phase3 * 0.5;
 
   // ── Cards ──
@@ -191,13 +207,15 @@ export function ScrollingHero() {
   const infX = (1 - infFadeIn) * -40;
   const dwOp = dwFadeIn * (1 - dwFadeOut);
   const dwX = (1 - dwFadeIn) * 40;
-  const robOp = robFadeIn;
+  const robOp = robFadeIn * (1 - robFadeOut);
   const robX = (1 - robFadeIn) * 40;
+  const studioOp = studioFadeIn;
+  const studioX = (1 - studioFadeIn) * -40;
 
   const heroTextOpacity = Math.min(Math.max((phase1 - 0.4) * 3, 0), 1) * (1 - heroFadeOut);
 
   return (
-    <div style={{ height: "1100vh" }}>
+    <div style={{ height: "1400vh" }}>
       <div className="h-screen sticky top-0 overflow-hidden">
 
         {/* ── EXO Logo (fades out before globe) ── */}
@@ -267,7 +285,7 @@ export function ScrollingHero() {
           }}
         >
           <div className="max-w-6xl mx-auto px-6">
-            <div className="grid grid-cols-4 gap-5">
+            <div className="grid grid-cols-5 gap-4">
               {pillars.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -308,6 +326,7 @@ export function ScrollingHero() {
         <PillarSection section={sections[1]} opacity={infOp} x={infX} side="left" pointerEvents={infOp > 0.5} />
         <PillarSection section={sections[2]} opacity={dwOp} x={dwX} side="right" pointerEvents={dwOp > 0.5} />
         <PillarSection section={sections[3]} opacity={robOp} x={robX} side="right" pointerEvents={robOp > 0.5} />
+        <PillarSection section={sections[4]} opacity={studioOp} x={studioX} side="left" pointerEvents={studioOp > 0.5} />
 
       </div>
     </div>
