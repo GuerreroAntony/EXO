@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Linkedin, Globe, ArrowRight } from "lucide-react";
+import { Link2, Globe, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 const team = [
@@ -113,7 +113,7 @@ export default function EquipePage() {
                       rel="noopener noreferrer"
                       className="text-white/30 hover:text-white/70 transition-colors"
                     >
-                      <Linkedin size={18} />
+                      <Link2 size={18} />
                     </a>
                   )}
                   {person.website && (
