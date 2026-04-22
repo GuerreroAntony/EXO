@@ -2,13 +2,13 @@ const statusColors: Record<string, { bg: string; text: string }> = {
   agendado: { bg: "bg-blue-500/15", text: "text-blue-400" },
   confirmado: { bg: "bg-emerald-500/15", text: "text-emerald-400" },
   cancelado: { bg: "bg-red-500/15", text: "text-red-400" },
-  realizado: { bg: "bg-white/10", text: "text-white/70" },
+  realizado: { bg: "bg-gray-500/15", text: "text-gray-400" },
   pendente: { bg: "bg-yellow-500/15", text: "text-yellow-400" },
   pago: { bg: "bg-emerald-500/15", text: "text-emerald-400" },
   atrasado: { bg: "bg-red-500/15", text: "text-red-400" },
   aberto: { bg: "bg-blue-500/15", text: "text-blue-400" },
   resolvido: { bg: "bg-emerald-500/15", text: "text-emerald-400" },
-  fechado: { bg: "bg-white/10", text: "text-white/40" },
+  fechado: { bg: "bg-gray-500/15", text: "text-gray-400" },
   ativo: { bg: "bg-emerald-500/15", text: "text-emerald-400" },
   pausado: { bg: "bg-yellow-500/15", text: "text-yellow-400" },
   erro: { bg: "bg-red-500/15", text: "text-red-400" },
@@ -32,8 +32,8 @@ const statusColors: Record<string, { bg: string; text: string }> = {
   // Admin statuses — roles
   owner: { bg: "bg-orange-500/15", text: "text-orange-400" },
   admin: { bg: "bg-blue-500/15", text: "text-blue-400" },
-  member: { bg: "bg-white/10", text: "text-white/70" },
-  viewer: { bg: "bg-white/10", text: "text-white/40" },
+  member: { bg: "bg-gray-500/15", text: "text-gray-400" },
+  viewer: { bg: "bg-gray-500/15", text: "text-gray-400" },
   // Escalation & knowledge statuses
   aguardando: { bg: "bg-orange-500/15", text: "text-orange-400" },
   "em atendimento": { bg: "bg-blue-500/15", text: "text-blue-400" },
@@ -43,7 +43,7 @@ const statusColors: Record<string, { bg: string; text: string }> = {
   escalonado: { bg: "bg-orange-500/15", text: "text-orange-400" },
   online: { bg: "bg-emerald-500/15", text: "text-emerald-400" },
   atendendo: { bg: "bg-blue-500/15", text: "text-blue-400" },
-  offline: { bg: "bg-white/10", text: "text-white/40" },
+  offline: { bg: "bg-gray-500/15", text: "text-gray-400" },
 };
 
 interface StatusBadgeProps {
@@ -53,7 +53,7 @@ interface StatusBadgeProps {
 
 export default function StatusBadge({ status, size = "sm" }: StatusBadgeProps) {
   const key = status.toLowerCase();
-  const colors = statusColors[key] || { bg: "bg-white/10", text: "text-white/50" };
+  const colors = statusColors[key] || { bg: "bg-gray-500/15", text: "text-gray-400" };
 
   return (
     <span

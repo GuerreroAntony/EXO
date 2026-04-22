@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { PhoneCall, X, Clock, User, Bot, PhoneIncoming, PhoneOutgoing } from "lucide-react";
+import { PhoneCall, X, Clock, User, Headphones, PhoneIncoming, PhoneOutgoing } from "lucide-react";
 import PageHeader from "@/components/dashboard/PageHeader";
 import DataTable, { type Column } from "@/components/dashboard/DataTable";
 import StatusBadge from "@/components/dashboard/StatusBadge";
@@ -69,8 +69,8 @@ function LiveCalls() {
     <div className="mb-8">
       <div className="flex items-center gap-2 mb-4">
         <span className="relative flex h-2.5 w-2.5">
-          <span className={`absolute inline-flex h-full w-full rounded-full opacity-75 ${calls.length > 0 ? "animate-ping bg-emerald-400" : "bg-[#555]"}`} />
-          <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${calls.length > 0 ? "bg-emerald-500" : "bg-[#555]"}`} />
+          <span className={`absolute inline-flex h-full w-full rounded-full opacity-75 ${calls.length > 0 ? "animate-ping bg-emerald-400" : "bg-[#444]"}`} />
+          <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${calls.length > 0 ? "bg-emerald-500" : "bg-[#444]"}`} />
         </span>
         <h3 className="text-[12px] font-mono text-[#888] uppercase tracking-wider">
           Ao vivo {calls.length > 0 && <span className="text-emerald-400 ml-1">({calls.length})</span>}
@@ -79,17 +79,17 @@ function LiveCalls() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
         {calls.length === 0 ? (
-          <div className="bg-[#1a1a1a] border border-[#2a2a2a] border-dashed rounded-xl p-5 flex items-center justify-center min-h-[100px]">
+          <div className="bg-[#151515] border border-[#333] border-dashed rounded-xl p-5 flex items-center justify-center min-h-[100px]">
             <div className="text-center">
               <PhoneCall className="w-6 h-6 text-[#333] mx-auto mb-2" />
-              <p className="text-[13px] text-[#555]">Nenhuma ligação ativa</p>
+              <p className="text-[13px] text-[#999]">Nenhuma ligação ativa</p>
             </div>
           </div>
         ) : (
           calls.map((call) => {
-            const color = typeColors[call.agent_type] ?? "text-[#999] bg-[#1e1e1e]";
+            const color = typeColors[call.agent_type] ?? "text-[#999] bg-[#1a1a1a]";
             return (
-              <div key={call.id} className="bg-[#1a1a1a] border border-emerald-500/20 rounded-xl p-4 relative overflow-hidden">
+              <div key={call.id} className="bg-[#151515] border border-emerald-500/30 rounded-xl p-4 relative overflow-hidden">
                 {/* Progress bar */}
                 <div className="absolute top-0 left-0 right-0 h-0.5 bg-emerald-500/30">
                   <div className="h-full bg-emerald-400 animate-pulse" style={{ width: "100%" }} />
@@ -98,11 +98,11 @@ function LiveCalls() {
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${color}`}>
-                      <Bot size={16} />
+                      <Headphones size={16} />
                     </div>
                     <div>
                       <p className="text-sm text-white font-medium">{call.agent_name}</p>
-                      <p className="text-[11px] text-[#666] capitalize">{call.agent_type}</p>
+                      <p className="text-[11px] text-[#999] capitalize">{call.agent_type}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-1.5 text-emerald-400">
@@ -116,16 +116,16 @@ function LiveCalls() {
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <User size={12} className="text-[#666]" />
-                    <span className="text-[13px] text-[#aaa]">{call.customer_name || call.customer_number}</span>
+                    <User size={12} className="text-[#999]" />
+                    <span className="text-[13px] text-[#666]">{call.customer_name || call.customer_number}</span>
                   </div>
                   {call.customer_name && (
-                    <span className="text-[11px] text-[#555] font-mono">{call.customer_number}</span>
+                    <span className="text-[11px] text-[#999] font-mono">{call.customer_number}</span>
                   )}
                 </div>
 
                 {call.last_transcript && (
-                  <div className="mt-3 bg-[#111] rounded-lg px-3 py-2">
+                  <div className="mt-3 bg-[#1a1a1a] rounded-lg px-3 py-2">
                     <p className="text-[12px] text-[#888] italic truncate">&ldquo;{call.last_transcript}&rdquo;</p>
                   </div>
                 )}
@@ -261,7 +261,7 @@ export default function AtendimentosPage() {
         <select
           value={agente}
           onChange={(e) => setAgente(e.target.value)}
-          className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-white appearance-none cursor-pointer hover:bg-[#1e1e1e] transition-colors"
+          className="bg-[#151515] border border-[#333] rounded-lg px-4 py-2.5 text-sm text-white appearance-none cursor-pointer hover:bg-[#1a1a1a] transition-colors"
         >
           <option value="todos">Todos os Agentes</option>
           <option value="recepcionista">Recepcionista</option>
@@ -272,7 +272,7 @@ export default function AtendimentosPage() {
         <select
           value={canal}
           onChange={(e) => setCanal(e.target.value)}
-          className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-2.5 text-sm text-white appearance-none cursor-pointer hover:bg-[#1e1e1e] transition-colors"
+          className="bg-[#151515] border border-[#333] rounded-lg px-4 py-2.5 text-sm text-white appearance-none cursor-pointer hover:bg-[#1a1a1a] transition-colors"
         >
           <option value="todos">Todos os Canais</option>
           <option value="voz">Voz</option>
@@ -282,13 +282,13 @@ export default function AtendimentosPage() {
 
       {loading ? (
         <div className="text-center py-20">
-          <div className="w-6 h-6 border-2 border-[#333] border-t-[#888] rounded-full animate-spin mx-auto" />
+          <div className="w-6 h-6 border-2 border-[#333] border-t-[#666] rounded-full animate-spin mx-auto" />
         </div>
       ) : data.length === 0 ? (
         <div className="text-center py-20">
           <PhoneCall className="w-10 h-10 text-[#333] mx-auto mb-4" />
-          <p className="text-[#666]">Nenhuma ligação registrada</p>
-          <p className="text-sm text-[#444] mt-1">As ligações aparecerão aqui quando os agentes atenderem.</p>
+          <p className="text-[#888]">Nenhuma ligação registrada</p>
+          <p className="text-sm text-[#999] mt-1">As ligações aparecerão aqui quando os agentes atenderem.</p>
         </div>
       ) : (
         <DataTable
@@ -325,7 +325,7 @@ export default function AtendimentosPage() {
                 </div>
                 <button
                   onClick={() => setSelected(null)}
-                  className="p-2 rounded-xl bg-[#1a1a1a] hover:bg-[#252525] text-[#888] hover:text-white transition-all"
+                  className="p-2 rounded-xl bg-[#1a1a1a] hover:bg-[#222] text-[#888] hover:text-white transition-all"
                 >
                   <X size={18} />
                 </button>
@@ -334,17 +334,17 @@ export default function AtendimentosPage() {
               <div className="p-6 space-y-6">
                 {/* Info cards */}
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-4">
+                  <div className="bg-[#151515] border border-[#333] rounded-xl p-4">
                     <div className="flex items-center gap-2 text-[#888] mb-2">
                       <User size={14} />
                       <span className="text-[11px] uppercase tracking-wider">Paciente</span>
                     </div>
                     <p className="text-sm text-white font-medium">{selected.paciente}</p>
-                    <p className="text-[12px] text-[#666] font-mono mt-0.5">{selected.telefone}</p>
+                    <p className="text-[12px] text-[#999] font-mono mt-0.5">{selected.telefone}</p>
                   </div>
-                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-4">
+                  <div className="bg-[#151515] border border-[#333] rounded-xl p-4">
                     <div className="flex items-center gap-2 text-[#888] mb-2">
-                      <Bot size={14} />
+                      <Headphones size={14} />
                       <span className="text-[11px] uppercase tracking-wider">Agente</span>
                     </div>
                     <p className="text-sm text-white font-medium capitalize">{selected.agente}</p>
@@ -352,14 +352,14 @@ export default function AtendimentosPage() {
                       <StatusBadge status={selected.canal.toLowerCase() === "whatsapp" ? "whatsapp" : "voz"} />
                     </div>
                   </div>
-                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-4">
+                  <div className="bg-[#151515] border border-[#333] rounded-xl p-4">
                     <div className="flex items-center gap-2 text-[#888] mb-2">
                       {selected.direcao === "inbound" ? <PhoneIncoming size={14} /> : <PhoneOutgoing size={14} />}
                       <span className="text-[11px] uppercase tracking-wider">Direção</span>
                     </div>
                     <p className="text-sm text-white font-medium">{selected.direcao === "inbound" ? "Recebida" : "Realizada"}</p>
                   </div>
-                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-4">
+                  <div className="bg-[#151515] border border-[#333] rounded-xl p-4">
                     <div className="flex items-center gap-2 text-[#888] mb-2">
                       <Clock size={14} />
                       <span className="text-[11px] uppercase tracking-wider">Duração</span>
@@ -371,8 +371,8 @@ export default function AtendimentosPage() {
                 {/* Resultado */}
                 <div>
                   <h3 className="text-[12px] font-mono text-[#888] uppercase tracking-wider mb-2">Resultado</h3>
-                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-4">
-                    <p className="text-sm text-[#ccc]">{selected.resultado}</p>
+                  <div className="bg-[#151515] border border-[#333] rounded-xl p-4">
+                    <p className="text-sm text-[#666]">{selected.resultado}</p>
                   </div>
                 </div>
 
@@ -380,8 +380,8 @@ export default function AtendimentosPage() {
                 {selected.resumo && (
                   <div>
                     <h3 className="text-[12px] font-mono text-[#888] uppercase tracking-wider mb-2">Resumo</h3>
-                    <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-4">
-                      <p className="text-sm text-[#ccc]">{selected.resumo}</p>
+                    <div className="bg-[#151515] border border-[#333] rounded-xl p-4">
+                      <p className="text-sm text-[#666]">{selected.resumo}</p>
                     </div>
                   </div>
                 )}
@@ -389,7 +389,7 @@ export default function AtendimentosPage() {
                 {/* Transcrição */}
                 <div>
                   <h3 className="text-[12px] font-mono text-[#888] uppercase tracking-wider mb-2">Transcrição</h3>
-                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-5">
+                  <div className="bg-[#151515] border border-[#333] rounded-xl p-5">
                     {selected.transcricao ? (
                       <div className="space-y-3">
                         {selected.transcricao.split("\n").map((line, i) => {
@@ -400,10 +400,10 @@ export default function AtendimentosPage() {
                               <div className={`max-w-[80%] rounded-xl px-3.5 py-2.5 ${
                                 isAgent
                                   ? "bg-[#5B9BF3]/10 border border-[#5B9BF3]/20"
-                                  : "bg-[#222] border border-[#2a2a2a]"
+                                  : "bg-[#1a1a1a] border border-[#333]"
                               }`}>
-                                <p className="text-[11px] font-mono text-[#666] mb-1">{isAgent ? "Agente" : "Cliente"}</p>
-                                <p className="text-[13px] text-[#ccc]">{text}</p>
+                                <p className="text-[11px] font-mono text-[#999] mb-1">{isAgent ? "Agente" : "Cliente"}</p>
+                                <p className="text-[13px] text-white">{text}</p>
                               </div>
                             </div>
                           );
@@ -412,8 +412,8 @@ export default function AtendimentosPage() {
                     ) : (
                       <div className="text-center py-8">
                         <PhoneCall className="w-8 h-8 text-[#333] mx-auto mb-3" />
-                        <p className="text-sm text-[#666]">Transcrição não disponível</p>
-                        <p className="text-[12px] text-[#444] mt-1">Faça uma ligação para gerar a transcrição automaticamente.</p>
+                        <p className="text-sm text-[#888]">Transcrição não disponível</p>
+                        <p className="text-[12px] text-[#999] mt-1">Faça uma ligação para gerar a transcrição automaticamente.</p>
                       </div>
                     )}
                   </div>
@@ -422,14 +422,14 @@ export default function AtendimentosPage() {
                 {/* Gravação */}
                 <div>
                   <h3 className="text-[12px] font-mono text-[#888] uppercase tracking-wider mb-2">Gravação</h3>
-                  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-5">
+                  <div className="bg-[#151515] border border-[#333] rounded-xl p-5">
                     {selected.recording_url ? (
                       <audio controls className="w-full" src={selected.recording_url}>
                         Seu navegador não suporta áudio.
                       </audio>
                     ) : (
                       <div className="text-center py-4">
-                        <p className="text-sm text-[#666]">Gravação não disponível</p>
+                        <p className="text-sm text-[#888]">Gravação não disponível</p>
                       </div>
                     )}
                   </div>

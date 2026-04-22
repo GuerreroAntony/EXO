@@ -75,7 +75,16 @@ function PillarSection({ section, opacity, x, side, pointerEvents }: {
       className="absolute inset-0 z-30 hidden lg:flex items-center"
       style={{ opacity, transform: `translateX(${x}px)`, pointerEvents: pointerEvents ? "auto" : "none" }}
     >
-      <div className="max-w-6xl w-full mx-auto px-6">
+      {/* Gradient scrim behind text for readability */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: isRight
+            ? "linear-gradient(to left, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 40%, transparent 65%)"
+            : "linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 40%, transparent 65%)",
+        }}
+      />
+      <div className="max-w-6xl w-full mx-auto px-6 relative">
         <div className={`max-w-[480px] ${isRight ? "ml-auto" : ""}`}>
 
           {/* Tag */}
@@ -94,14 +103,14 @@ function PillarSection({ section, opacity, x, side, pointerEvents }: {
           </h2>
 
           {/* Description */}
-          <p className="text-white/30 text-[17px] leading-[1.7] mb-10 max-w-[420px]">
+          <p className="text-white/45 text-[17px] leading-[1.7] mb-10 max-w-[420px]">
             {section.desc}
           </p>
 
           {/* Features */}
           <div className="grid grid-cols-2 gap-x-8 gap-y-4 mb-12">
             {section.features.map((f) => (
-              <div key={f.text} className="flex items-center gap-3 text-[15px] text-white/50">
+              <div key={f.text} className="flex items-center gap-3 text-[15px] text-white/60">
                 <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-white/[0.04]">
                   <f.icon size={16} style={{ color: section.color }} strokeWidth={1.5} />
                 </div>
@@ -162,13 +171,14 @@ export function ScrollingHero() {
   // ── Globe — centered in viewport with vw offset ──
   const sphereOpacity = Math.min(Math.max((phase1 - 0.3) * 3, 0), 0.9);
   const phase4 = scrollY > 6700 ? Math.min((scrollY - 6700) / 800, 1) : 0;
+  // Scale 1.5 → globe = 750px diameter (fits well with text)
   // Initial: 23vw → right edge at navbar right
-  // CC/Influencers (phase3): eases to 17vw → globe fits inside viewport at scale 1.8
-  // DW/Robótica (phase4): mirrors to -17vw → globe fits inside viewport on left
-  const globeToRight = phase3 * -6;
-  const globeToLeft = phase4 * -34;
-  const globeX = 23 + globeToRight + globeToLeft;
-  const globeScale = 1 + phase3 * 0.8;
+  // CC/Influencers (phase3): stays at 23vw → same position, globe fits at scale 1.5
+  // DW/Robótica (phase4): mirrors to -23vw → left-aligned
+  const globeShiftPillars = phase3 * 0;
+  const globeShiftLeft = phase4 * -46;
+  const globeX = 23 + globeShiftPillars + globeShiftLeft;
+  const globeScale = 1 + phase3 * 0.5;
 
   // ── Cards ──
   const cardsOpacity = Math.min(phase1 * 2.5, 1) * (1 - heroFadeOut);
@@ -187,7 +197,7 @@ export function ScrollingHero() {
   const heroTextOpacity = Math.min(Math.max((phase1 - 0.4) * 3, 0), 1) * (1 - heroFadeOut);
 
   return (
-    <div style={{ height: "1400vh" }}>
+    <div style={{ height: "1100vh" }}>
       <div className="h-screen sticky top-0 overflow-hidden">
 
         {/* ── EXO Logo (fades out before globe) ── */}
@@ -212,7 +222,7 @@ export function ScrollingHero() {
             width: "500px",
             height: "500px",
             opacity: sphereOpacity,
-            top: "calc(50% + 10px)",
+            top: "calc(50% + 24px)",
             left: "50%",
             transform: `translate(-50%, -50%) translateX(${globeX}vw) scale(${globeScale})`,
             willChange: "transform, opacity",
@@ -226,14 +236,19 @@ export function ScrollingHero() {
           className="absolute inset-0 z-20 pointer-events-none"
           style={{ opacity: heroTextOpacity, willChange: "opacity" }}
         >
-          <div className="max-w-6xl w-full px-6 h-full mx-auto flex items-center">
-            <div className="hidden lg:block max-w-[500px] pt-6">
+          {/* Gradient scrim for hero text readability */}
+          <div
+            className="absolute inset-0"
+            style={{ background: "linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 35%, transparent 55%)" }}
+          />
+          <div className="max-w-6xl w-full px-6 h-full mx-auto flex items-center relative">
+            <div className="hidden lg:block max-w-[500px] -mt-10">
               <h2 className="text-[clamp(3rem,5.5vw,4.8rem)] font-bold text-white leading-[1.05] tracking-[-0.02em]">
                 Empresa global
                 <br />
-                <span className="text-white/35">e multi-setor.</span>
+                <span className="text-white/50">e multi-setor.</span>
               </h2>
-              <p className="mt-8 text-[17px] text-white/25 leading-[1.7] max-w-[400px]">
+              <p className="mt-8 text-[17px] text-white/40 leading-[1.7] max-w-[400px]">
                 Levamos inteligência artificial para operações de vendas, atendimento, marketing e finanças em qualquer lugar do mundo.
               </p>
             </div>
@@ -257,7 +272,16 @@ export function ScrollingHero() {
                 const Icon = item.icon;
                 return (
                   <Link key={item.label} href={item.href} className="group">
-                    <div className="relative flex flex-col items-center justify-center gap-3 py-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] transition-all duration-500 group-hover:bg-white/[0.05] group-hover:border-white/[0.12] group-hover:-translate-y-0.5">
+                    <div
+                      className="relative flex flex-col items-center justify-center gap-3 py-6 rounded-2xl transition-all duration-500 group-hover:-translate-y-0.5"
+                      style={{
+                        background: "rgba(255, 255, 255, 0.06)",
+                        backdropFilter: "blur(40px) saturate(1.6)",
+                        WebkitBackdropFilter: "blur(40px) saturate(1.6)",
+                        border: "1px solid rgba(255, 255, 255, 0.12)",
+                        boxShadow: "0 4px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08)",
+                      }}
+                    >
                       <div className={`w-11 h-11 rounded-xl ${item.bg} flex items-center justify-center shrink-0 transition-transform duration-500 group-hover:scale-110`}>
                         <Icon size={20} className={item.tw} />
                       </div>

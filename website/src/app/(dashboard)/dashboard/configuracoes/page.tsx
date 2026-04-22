@@ -21,7 +21,7 @@ function InputField({ label, value, onChange, readOnly = false }: {
         value={value}
         readOnly={readOnly}
         onChange={(e) => onChange?.(e.target.value)}
-        className={`w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:border-white/30 transition-colors ${readOnly ? "opacity-50 cursor-not-allowed" : ""}`}
+        className={`w-full bg-[#151515] border border-[#333] rounded-xl px-4 py-3 text-sm text-white placeholder:text-[#999] focus:outline-none focus:border-[#5B9BF3]/50 transition-colors ${readOnly ? "opacity-50 cursor-not-allowed" : ""}`}
       />
     </div>
   );
@@ -29,7 +29,7 @@ function InputField({ label, value, onChange, readOnly = false }: {
 
 function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl p-6">
+    <div className="bg-[#151515] border border-[#333] rounded-2xl p-6 ">
       <h3 className="text-base font-semibold text-white mb-5">{title}</h3>
       {children}
     </div>
@@ -71,15 +71,15 @@ export default function ConfiguracoesPage() {
       <PageHeader title="Configurações" subtitle="Gerencie seu perfil e preferências" />
 
       {/* Tab navigation */}
-      <div className="flex gap-1 mb-6 bg-[#141414] rounded-xl p-1 w-fit">
+      <div className="flex gap-1 mb-6 bg-[#1e1e1e] rounded-xl p-1 w-fit">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
               activeTab === tab.id
-                ? "bg-[#252525] text-white"
-                : "text-[#888] hover:text-[#aaa]"
+                ? "bg-[#222] text-white "
+                : "text-[#888] hover:text-[#999]"
             }`}
           >
             {tab.label}
@@ -129,11 +129,11 @@ export default function ConfiguracoesPage() {
                         next[idx] = { ...next[idx], ativo: !next[idx].ativo };
                         setHorarios(next);
                       }}
-                      className={`relative w-9 h-5 rounded-full transition-colors shrink-0 ${h.ativo ? "bg-[#5B9BF3]" : "bg-white/10"}`}
+                      className={`relative w-9 h-5 rounded-full transition-colors shrink-0 ${h.ativo ? "bg-[#5B9BF3]" : "bg-[#333]"}`}
                     >
                       <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${h.ativo ? "translate-x-4" : "translate-x-0"}`} />
                     </button>
-                    <span className={`text-sm w-20 ${h.ativo ? "text-[#bbb]" : "text-[#555]"}`}>{h.dia}</span>
+                    <span className={`text-sm w-20 ${h.ativo ? "text-[#666]" : "text-[#999]"}`}>{h.dia}</span>
                     {h.ativo ? (
                       <div className="flex items-center gap-2 text-sm text-[#999]">
                         <input
@@ -144,9 +144,9 @@ export default function ConfiguracoesPage() {
                             next[idx] = { ...next[idx], inicio: e.target.value };
                             setHorarios(next);
                           }}
-                          className="bg-[#141414] border border-[#2a2a2a] rounded-lg px-2 py-1 text-[#aaa] text-sm"
+                          className="bg-[#151515] border border-[#333] rounded-lg px-2 py-1 text-white text-sm"
                         />
-                        <span className="text-[#555]">até</span>
+                        <span className="text-[#999]">até</span>
                         <input
                           type="time"
                           value={h.fim}
@@ -155,11 +155,11 @@ export default function ConfiguracoesPage() {
                             next[idx] = { ...next[idx], fim: e.target.value };
                             setHorarios(next);
                           }}
-                          className="bg-[#141414] border border-[#2a2a2a] rounded-lg px-2 py-1 text-[#aaa] text-sm"
+                          className="bg-[#151515] border border-[#333] rounded-lg px-2 py-1 text-white text-sm"
                         />
                       </div>
                     ) : (
-                      <span className="text-sm text-[#555]">Fechado</span>
+                      <span className="text-sm text-[#999]">Fechado</span>
                     )}
                   </div>
                 ))}
@@ -189,7 +189,7 @@ export default function ConfiguracoesPage() {
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Voz */}
-              <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl p-5">
+              <div className="bg-[#151515] border border-[#333] rounded-2xl p-5 ">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-violet-500/15 flex items-center justify-center">
@@ -197,7 +197,7 @@ export default function ConfiguracoesPage() {
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-white">Voz</p>
-                      <p className="text-[11px] text-[#666]">Twilio + Vapi</p>
+                      <p className="text-[11px] text-[#999]">Twilio + Vapi</p>
                     </div>
                   </div>
                   <button
@@ -205,7 +205,7 @@ export default function ConfiguracoesPage() {
                     role="switch"
                     aria-checked={vozAtivo}
                     onClick={() => setVozAtivo(!vozAtivo)}
-                    className={`relative w-11 h-6 rounded-full transition-colors ${vozAtivo ? "bg-emerald-500" : "bg-white/10"}`}
+                    className={`relative w-11 h-6 rounded-full transition-colors ${vozAtivo ? "bg-emerald-500" : "bg-[#333]"}`}
                   >
                     <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${vozAtivo ? "translate-x-5" : "translate-x-0"}`} />
                   </button>
@@ -213,7 +213,7 @@ export default function ConfiguracoesPage() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between text-[#888]">
                     <span>Número</span>
-                    <span className="text-[#aaa]">+1 (681) 281-2439</span>
+                    <span className="text-[#666]">+1 (681) 281-2439</span>
                   </div>
                   <div className="flex justify-between text-[#888]">
                     <span>Status</span>
@@ -223,7 +223,7 @@ export default function ConfiguracoesPage() {
               </div>
 
               {/* WhatsApp */}
-              <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl p-5 opacity-50">
+              <div className="bg-[#151515] border border-[#333] rounded-2xl p-5  opacity-50">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center">
@@ -231,11 +231,11 @@ export default function ConfiguracoesPage() {
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-white">WhatsApp</p>
-                      <p className="text-[11px] text-[#666]">Em breve</p>
+                      <p className="text-[11px] text-[#999]">Em breve</p>
                     </div>
                   </div>
                 </div>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-white/5 text-[10px] font-mono uppercase text-[#555] tracking-wider">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#1e1e1e] text-[10px] font-mono uppercase text-[#999] tracking-wider">
                   Em breve
                 </span>
               </div>
@@ -254,17 +254,17 @@ export default function ConfiguracoesPage() {
                 { nome: "Zapier", desc: "Automação entre apps", icon: Zap, cor: "text-amber-400", bgCor: "bg-amber-500/10" },
                 { nome: "Google Calendar", desc: "Sincronizar agendamentos", icon: CalendarIcon, cor: "text-blue-400", bgCor: "bg-blue-500/10" },
               ].map((integ) => (
-                <div key={integ.nome} className="bg-[#141414] border border-[#2a2a2a] rounded-2xl p-5 opacity-50 cursor-not-allowed">
+                <div key={integ.nome} className="bg-[#111] border border-[#333] rounded-2xl p-5 opacity-50 cursor-not-allowed">
                   <div className="flex items-center gap-3 mb-3">
                     <div className={`w-10 h-10 rounded-xl ${integ.bgCor} flex items-center justify-center`}>
                       <integ.icon size={18} className={integ.cor} />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-[#aaa]">{integ.nome}</p>
-                      <p className="text-[11px] text-[#555]">{integ.desc}</p>
+                      <p className="text-sm font-semibold text-[#888]">{integ.nome}</p>
+                      <p className="text-[11px] text-[#999]">{integ.desc}</p>
                     </div>
                   </div>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-white/5 text-[10px] font-mono uppercase text-[#555] tracking-wider">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#1e1e1e] text-[10px] font-mono uppercase text-[#999] tracking-wider">
                     Em breve
                   </span>
                 </div>

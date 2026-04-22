@@ -73,7 +73,7 @@ export default function ContactDrawer({ contato, open, onClose }: ContactDrawerP
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed top-0 right-0 h-full w-full sm:w-[480px] bg-[#0a0a0a] border-l border-[#2a2a2a] z-50 flex flex-col overflow-hidden"
+            className="fixed top-0 right-0 h-full w-full sm:w-[480px] bg-[#111] border-l border-[#2a2a2a] z-50 flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-start justify-between gap-4 p-6 border-b border-[#2a2a2a]">
@@ -96,7 +96,7 @@ export default function ContactDrawer({ contato, open, onClose }: ContactDrawerP
               </div>
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-lg hover:bg-[#1e1e1e] text-[#888] hover:text-white transition-colors shrink-0"
+                className="p-1.5 rounded-lg hover:bg-[#1a1a1a] text-[#999] hover:text-white transition-colors shrink-0"
               >
                 <X size={18} />
               </button>
@@ -107,7 +107,7 @@ export default function ContactDrawer({ contato, open, onClose }: ContactDrawerP
               {/* Tags */}
               {contato.tags.length > 0 && (
                 <section>
-                  <h4 className="text-[11px] font-mono uppercase tracking-wider text-[#666] mb-3">
+                  <h4 className="text-[11px] font-mono uppercase tracking-wider text-[#999] mb-3">
                     Tags
                   </h4>
                   <div className="flex flex-wrap gap-2">
@@ -125,7 +125,7 @@ export default function ContactDrawer({ contato, open, onClose }: ContactDrawerP
 
               {/* Notas */}
               <section>
-                <h4 className="text-[11px] font-mono uppercase tracking-wider text-[#666] mb-3">
+                <h4 className="text-[11px] font-mono uppercase tracking-wider text-[#999] mb-3">
                   Notas
                 </h4>
                 {contato.notas.length > 0 ? (
@@ -133,10 +133,10 @@ export default function ContactDrawer({ contato, open, onClose }: ContactDrawerP
                     {contato.notas.map((nota) => (
                       <div
                         key={nota.id}
-                        className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-3"
+                        className="bg-[#151515] border border-[#333] rounded-xl p-3"
                       >
-                        <p className="text-sm text-[#bbb] leading-relaxed">{nota.texto}</p>
-                        <div className="flex items-center gap-2 mt-2 text-[11px] text-[#666]">
+                        <p className="text-sm text-white leading-relaxed">{nota.texto}</p>
+                        <div className="flex items-center gap-2 mt-2 text-[11px] text-[#999]">
                           <span>{nota.autor}</span>
                           <span>&middot;</span>
                           <span>{formatDate(nota.criado_em)}</span>
@@ -145,20 +145,20 @@ export default function ContactDrawer({ contato, open, onClose }: ContactDrawerP
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-[#555]">Nenhuma nota registrada.</p>
+                  <p className="text-sm text-[#999]">Nenhuma nota registrada.</p>
                 )}
 
                 {/* Add note textarea (non-functional) */}
                 <textarea
                   placeholder="Adicionar nota..."
                   rows={3}
-                  className="mt-3 w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-[#666] focus:outline-none focus:border-white/20 transition-colors resize-none"
+                  className="mt-3 w-full bg-[#151515] border border-[#333] rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-[#999] focus:outline-none focus:border-[#5B9BF3]/50 transition-colors resize-none"
                 />
               </section>
 
               {/* Timeline */}
               <section>
-                <h4 className="text-[11px] font-mono uppercase tracking-wider text-[#666] mb-3">
+                <h4 className="text-[11px] font-mono uppercase tracking-wider text-[#999] mb-3">
                   Timeline
                 </h4>
                 {contato.timeline.length > 0 ? (
@@ -169,19 +169,19 @@ export default function ContactDrawer({ contato, open, onClose }: ContactDrawerP
                     {contato.timeline.map((item) => (
                       <div key={item.id} className="relative flex gap-3 py-3">
                         {/* Icon circle */}
-                        <div className="relative z-10 flex items-center justify-center w-[23px] h-[23px] rounded-full bg-[#1e1e1e] border border-white/[0.10] text-[#999] shrink-0">
+                        <div className="relative z-10 flex items-center justify-center w-[23px] h-[23px] rounded-full bg-[#1e1e1e] border border-[#333] text-[#999] shrink-0">
                           {timelineIcon[item.tipo]}
                         </div>
 
                         {/* Content */}
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm text-[#bbb] leading-snug">{item.resumo}</p>
+                          <p className="text-sm text-white leading-snug">{item.resumo}</p>
                           <div className="flex flex-wrap items-center gap-2 mt-1.5">
-                            <span className="text-[11px] text-[#666]">
+                            <span className="text-[11px] text-[#999]">
                               {formatDate(item.data)}
                             </span>
                             <span className="text-[11px] text-[#555]">&middot;</span>
-                            <span className="text-[11px] text-[#666]">{item.agente}</span>
+                            <span className="text-[11px] text-[#999]">{item.agente}</span>
                             <StatusBadge status={item.status} size="sm" />
                           </div>
                         </div>
@@ -189,7 +189,7 @@ export default function ContactDrawer({ contato, open, onClose }: ContactDrawerP
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-[#555]">Nenhum evento na timeline.</p>
+                  <p className="text-sm text-[#999]">Nenhum evento na timeline.</p>
                 )}
               </section>
             </div>

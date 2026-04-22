@@ -53,44 +53,59 @@ const footerLinks: FooterSection[] = [
 
 export function Footer() {
 	return (
-		<footer className="relative w-full max-w-6xl mx-auto border-t border-white/[0.06] px-6 py-16 lg:py-20">
-			<div className="grid w-full gap-16 xl:grid-cols-3 xl:gap-20">
-				<AnimatedContainer className="space-y-4">
-					<Link href="/" className="flex items-center gap-2.5">
-						<div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
-							<span className="text-white/60 font-bold text-sm font-mono">EX</span>
-						</div>
-						<span className="text-white font-semibold text-lg tracking-tight">EXO</span>
-					</Link>
-					<p className="text-white/30 text-sm leading-relaxed max-w-xs">
-						Expandindo humanos através de agentes de IA, influencers virtuais e robótica.
-					</p>
-					<p className="text-white/15 text-xs">
-						© {new Date().getFullYear()} EXO. Todos os direitos reservados.
-					</p>
-				</AnimatedContainer>
+		<footer
+			className="relative w-full"
+			style={{
+				background: "rgba(255, 255, 255, 0.07)",
+				backdropFilter: "blur(60px) saturate(1.8)",
+				WebkitBackdropFilter: "blur(60px) saturate(1.8)",
+				borderTop: "1px solid rgba(255, 255, 255, 0.14)",
+				boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.12)",
+			}}
+		>
+			<div className="max-w-6xl mx-auto px-6 py-16 lg:py-20">
+				{/* Main grid — links */}
+				<div className="grid grid-cols-2 md:grid-cols-5 gap-10 lg:gap-16">
+					{/* Brand column */}
+					<AnimatedContainer className="col-span-2 md:col-span-1 space-y-4">
+						<Link href="/" className="text-2xl font-black tracking-[-0.05em] text-white">
+							EXO
+						</Link>
+						<p className="text-white/35 text-sm leading-relaxed max-w-[200px]">
+							Expandindo humanos através de agentes de IA.
+						</p>
+					</AnimatedContainer>
 
-				<div className="mt-10 grid grid-cols-2 gap-8 md:grid-cols-4 xl:col-span-2 xl:mt-0">
+					{/* Link columns */}
 					{footerLinks.map((section, index) => (
 						<AnimatedContainer key={section.label} delay={0.1 + index * 0.1}>
-							<div className="mb-10 md:mb-0">
-								<h3 className="text-xs text-white/20 uppercase tracking-[0.2em] font-medium">{section.label}</h3>
-								<ul className="mt-4 space-y-2.5 text-sm">
-									{section.links.map((link) => (
-										<li key={link.title}>
-											<Link
-												href={link.href}
-												className="text-white/35 hover:text-white inline-flex items-center transition-colors duration-300"
-											>
-												{link.icon && <link.icon className="me-1.5 size-3.5" />}
-												{link.title}
-											</Link>
-										</li>
-									))}
-								</ul>
-							</div>
+							<h3 className="text-xs text-white/25 uppercase tracking-[0.2em] font-medium mb-5">{section.label}</h3>
+							<ul className="space-y-3 text-sm">
+								{section.links.map((link) => (
+									<li key={link.title}>
+										<Link
+											href={link.href}
+											className="text-white/40 hover:text-white inline-flex items-center transition-colors duration-300"
+										>
+											{link.icon && <link.icon className="me-1.5 size-3.5" />}
+											{link.title}
+										</Link>
+									</li>
+								))}
+							</ul>
 						</AnimatedContainer>
 					))}
+				</div>
+
+				{/* Bottom bar */}
+				<div className="mt-14 pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
+					<p className="text-white/20 text-xs">
+						© {new Date().getFullYear()} EXO. Todos os direitos reservados.
+					</p>
+					<div className="flex items-center gap-6">
+						<Link href="#" className="text-white/20 hover:text-white/50 text-xs transition-colors">Privacidade</Link>
+						<Link href="#" className="text-white/20 hover:text-white/50 text-xs transition-colors">Termos</Link>
+					</div>
 				</div>
 			</div>
 		</footer>

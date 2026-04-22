@@ -57,7 +57,7 @@ const columns: Column<EscalonamentoRow>[] = [
     render: (row) => (
       <div className="flex items-center gap-2">
         <span
-          className={`w-2 h-2 rounded-full shrink-0 ${prioridadeDot[row.prioridade as Escalonamento["prioridade"]] ?? "bg-white/30"}`}
+          className={`w-2 h-2 rounded-full shrink-0 ${prioridadeDot[row.prioridade as Escalonamento["prioridade"]] ?? "bg-[#444]"}`}
         />
         <StatusBadge status={row.prioridade as string} />
       </div>

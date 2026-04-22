@@ -54,7 +54,7 @@ export default function CallCenterPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-[11px] font-mono tracking-[0.3em] uppercase text-white/30"
+            className="text-[11px] font-mono tracking-[0.3em] uppercase text-[#5B9BF3]"
           >
             Call Center IA
           </motion.p>
@@ -66,13 +66,13 @@ export default function CallCenterPage() {
           >
             Atendimento que
             <br />
-            <span className="text-white/30">nunca dorme.</span>
+            <span className="text-[#5B9BF3]">nunca dorme.</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="mt-8 text-lg text-white/30 max-w-xl leading-relaxed font-light"
+            className="mt-8 text-lg text-white/50 max-w-xl leading-relaxed font-light"
           >
             Cada agente inclui todos os módulos: recepção, SAC, agendamento e
             cobrança. Escolha quantos agentes sua operação precisa.

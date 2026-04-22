@@ -12,7 +12,7 @@ export default function RoboticaPage() {
               initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 0.8 }}
-              className="text-[13px] tracking-[0.3em] uppercase text-white/30 font-medium"
+              className="text-[13px] tracking-[0.3em] uppercase text-emerald-400 font-medium"
             >
               Robótica
             </motion.p>
@@ -22,13 +22,13 @@ export default function RoboticaPage() {
               transition={{ duration: 1, delay: 0.1 }}
               className="mt-6 text-5xl lg:text-7xl font-bold tracking-tight text-white leading-[0.9]"
             >
-              Em breve.
+              <span className="text-emerald-400">Em breve.</span>
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="mt-8 text-lg text-white/30 max-w-md mx-auto leading-relaxed"
+              className="mt-8 text-lg text-white/50 max-w-md mx-auto leading-relaxed"
             >
               Automação física inteligente para logística, manufatura e operações.
               O corpo da evolução.

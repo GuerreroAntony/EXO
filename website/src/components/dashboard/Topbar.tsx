@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Bell, Menu } from "lucide-react";
+import { Bell, Menu, Phone } from "lucide-react";
 
 const pageTitles: Record<string, string> = {
   "/dashboard": "Visão Geral",
@@ -26,24 +26,30 @@ export default function Topbar({ onMenuClick }: TopbarProps) {
     || "Dashboard";
 
   return (
-    <header className="h-16 border-b border-[#1e1e1e] px-4 lg:px-8 flex items-center justify-between shrink-0">
+    <header className="h-14 border-b border-[#2a2a2a] bg-[#111] px-4 lg:px-8 flex items-center justify-between shrink-0">
       <div className="flex items-center gap-4">
         <button
           onClick={onMenuClick}
-          className="lg:hidden text-[#666] hover:text-white transition-colors"
+          className="lg:hidden text-[#555] hover:text-[#999] transition-colors"
         >
-          <Menu size={22} />
+          <Menu size={20} />
         </button>
-        <h1 className="text-lg font-semibold text-white">{title}</h1>
+        <h1 className="text-base font-medium text-white">{title}</h1>
+        {pathname !== "/dashboard/hub" && (
+          <span className="hidden sm:inline-flex items-center gap-1.5 ml-3 px-2 py-0.5 rounded-lg bg-[#1e1e1e] border-0">
+            <Phone size={10} className="text-[#5B9BF3]" />
+            <span className="text-[10px] font-medium text-[#888]">Call Center</span>
+          </span>
+        )}
       </div>
 
       <div className="flex items-center gap-4">
-        <button className="relative text-[#666] hover:text-white transition-colors">
-          <Bell size={20} />
-          <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#5B9BF3] rounded-full" />
+        <button className="relative text-[#555] hover:text-[#999] transition-colors">
+          <Bell size={18} />
+          <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-[#5B9BF3] rounded-full" />
         </button>
         <div className="hidden sm:flex items-center gap-2">
-          <span className="text-sm text-[#999]">Dr. Ricardo</span>
+          <span className="text-[13px] text-[#999]">Dr. Ricardo</span>
         </div>
       </div>
     </header>

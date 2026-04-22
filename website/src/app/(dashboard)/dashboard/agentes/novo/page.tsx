@@ -35,7 +35,11 @@ interface FormData {
   firstMessage: string;
   empresa: string;
   setor: string;
-  horario: string;
+  diaInicio: string;
+  diaFim: string;
+  horaInicio: string;
+  horaFim: string;
+  telefone: string;
   conhecimento: string;
 }
 
@@ -102,9 +106,13 @@ export default function NovoAgentePage() {
     name: "",
     tone: "amigavel",
     firstMessage: "",
-    empresa: "",
+    empresa: "Clínica Sorriso",
     setor: "Saúde",
-    horario: "Segunda a sexta das 8h às 18h, sábado das 8h às 13h",
+    diaInicio: "Segunda",
+    diaFim: "Sexta",
+    horaInicio: "08:00",
+    horaFim: "18:00",
+    telefone: "",
     conhecimento: "",
   });
 
@@ -135,6 +143,8 @@ export default function NovoAgentePage() {
         });
     });
   }, []);
+
+  const horarioText = `${form.diaInicio} a ${form.diaFim}, das ${form.horaInicio} às ${form.horaFim}`;
 
   const update = useCallback((partial: Partial<FormData>) => {
     setForm((prev) => {
@@ -188,7 +198,7 @@ export default function NovoAgentePage() {
         setor: form.setor,
         agente_nome: form.name,
         tom: form.tone,
-        horario: form.horario,
+        horario: horarioText,
         conhecimento: form.conhecimento || undefined,
       });
 
@@ -197,7 +207,7 @@ export default function NovoAgentePage() {
         agente_nome: form.name,
       });
 
-      setProvisionStatus("Salvando configuracao...");
+      setProvisionStatus("Salvando configuração...");
 
       // Insert provisioning record
       const { data: provisioning, error } = await supabase
@@ -213,7 +223,7 @@ export default function NovoAgentePage() {
           config_json: {
             empresa: form.empresa,
             setor: form.setor,
-            horario: form.horario,
+            horario: horarioText,
             conhecimento: form.conhecimento,
           },
         })
@@ -280,7 +290,7 @@ export default function NovoAgentePage() {
         }, 2000);
       } else {
         // Edge function not deployed yet — save as pending anyway
-        setProvisionStatus("Agente salvo! Ativacao pendente.");
+        setProvisionStatus("Agente salvo! Ativação pendente.");
         setTimeout(() => router.push("/dashboard/agentes"), 2000);
       }
     } catch (err: unknown) {
@@ -296,7 +306,7 @@ export default function NovoAgentePage() {
       <div className="flex items-center gap-4 mb-8">
         <button
           onClick={() => step > 0 ? setStep(step - 1) : router.push("/dashboard/agentes")}
-          className="p-2 rounded-xl bg-[#1a1a1a] hover:bg-[#252525] text-[#aaa] hover:text-white transition-all"
+          className="p-2 rounded-xl bg-[#1a1a1a] hover:bg-[#222] border border-[#333] text-[#888] hover:text-white transition-all"
         >
           <ArrowLeft size={18} />
         </button>
@@ -317,17 +327,17 @@ export default function NovoAgentePage() {
                     ? "bg-emerald-500/20 text-emerald-400"
                     : i === step
                       ? "bg-[#5B9BF3]/20 text-[#5B9BF3]"
-                      : "bg-white/[0.04] text-[#555]"
+                      : "bg-[#1e1e1e] text-[#999]"
                 }`}
               >
                 {i < step ? <Check size={14} /> : i + 1}
               </div>
-              <span className={`text-xs hidden sm:block ${i === step ? "text-[#bbb]" : "text-[#555]"}`}>
+              <span className={`text-xs hidden sm:block ${i === step ? "text-[#666]" : "text-[#999]"}`}>
                 {s.label}
               </span>
             </div>
             {i < stepsMeta.length - 1 && (
-              <div className={`h-px flex-1 mx-2 ${i < step ? "bg-emerald-500/30" : "bg-[#2a2a2a]"}`} />
+              <div className={`h-px flex-1 mx-2 ${i < step ? "bg-emerald-500/30" : "bg-[#222]"}`} />
             )}
           </div>
         ))}
@@ -355,7 +365,7 @@ export default function NovoAgentePage() {
                     className={`relative w-full text-left p-5 rounded-2xl border transition-all duration-200 ${
                       form.agentType === a.type
                         ? `${a.bg} ${a.selectedBorder} ring-1 ring-white/10`
-                        : "bg-[#141414] border-[#2a2a2a] hover:bg-[#1e1e1e] hover:border-[#3a3a3a]"
+                        : "bg-[#151515] border-[#333] hover:bg-[#1a1a1a] hover:border-[#2a2a2a]"
                     }`}
                   >
                     {form.agentType === a.type && (
@@ -375,16 +385,16 @@ export default function NovoAgentePage() {
                         {/* Skills */}
                         <div className="flex flex-wrap gap-1.5 mb-3">
                           {a.skills.map((skill) => (
-                            <span key={skill} className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-[#1a1a1a] border border-[#2a2a2a] text-[#aaa]">
+                            <span key={skill} className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-[#111] border border-[#333] text-[#888]">
                               {skill}
                             </span>
                           ))}
                         </div>
 
                         {/* Example */}
-                        <div className="bg-[#0f0f0f] rounded-lg px-3 py-2 border border-[#222]">
-                          <p className="text-[12px] text-[#666] mb-0.5">Exemplo de conversa:</p>
-                          <p className="text-[13px] text-[#ccc] italic">{a.example}</p>
+                        <div className="bg-[#111] rounded-lg px-3 py-2 border border-[#333]">
+                          <p className="text-[12px] text-[#999] mb-0.5">Exemplo de conversa:</p>
+                          <p className="text-[13px] text-[#666] italic">{a.example}</p>
                         </div>
                       </div>
                     </div>
@@ -402,7 +412,7 @@ export default function NovoAgentePage() {
 
               <div className="space-y-5">
                 <div>
-                  <label className="block text-sm font-medium text-[#aaa] mb-2">
+                  <label className="block text-sm font-medium text-[#888] mb-2">
                     <User size={14} className="inline mr-1.5" />
                     Nome do agente
                   </label>
@@ -411,11 +421,11 @@ export default function NovoAgentePage() {
                     value={form.name}
                     onChange={(e) => update({ name: e.target.value })}
                     placeholder="Ex: Sofia, Ana, Carlos..."
-                    className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-3 text-white placeholder:text-[#555] focus:border-[#5B9BF3]/50 focus:ring-1 focus:ring-[#5B9BF3]/20 outline-none transition-all"
+                    className="w-full bg-[#151515] border border-[#333] rounded-xl px-4 py-3 text-white placeholder:text-[#999] focus:border-[#5B9BF3]/50 focus:ring-1 focus:ring-[#5B9BF3]/20 outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[#aaa] mb-2">
+                  <label className="block text-sm font-medium text-[#888] mb-2">
                     <Building2 size={14} className="inline mr-1.5" />
                     Nome da empresa
                   </label>
@@ -423,31 +433,91 @@ export default function NovoAgentePage() {
                     type="text"
                     value={form.empresa}
                     readOnly
-                    className="w-full bg-[#111] border border-[#2a2a2a] rounded-xl px-4 py-3 text-[#aaa] cursor-not-allowed outline-none"
+                    className="w-full bg-[#111] border border-[#333] rounded-xl px-4 py-3 text-[#888] cursor-not-allowed outline-none"
                   />
-                  <p className="text-[11px] text-[#555] mt-1.5">Definido nas configurações da organização</p>
+                  <p className="text-[11px] text-[#999] mt-1.5">Definido nas configurações da organização</p>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-[#aaa] mb-2">Setor</label>
-                    <select
-                      value={form.setor}
-                      onChange={(e) => update({ setor: e.target.value })}
-                      className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-3 text-white outline-none focus:border-[#5B9BF3]/50 transition-all"
-                    >
-                      {["Saúde", "Educação", "Varejo", "Serviços", "Financeiro", "Tecnologia", "Outro"].map((s) => (
-                        <option key={s} value={s} className="bg-neutral-900">{s}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-[#aaa] mb-2">Horário</label>
+                    <label className="block text-sm font-medium text-[#888] mb-2">Setor</label>
                     <input
                       type="text"
-                      value={form.horario}
-                      onChange={(e) => update({ horario: e.target.value })}
-                      className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-3 text-white placeholder:text-[#555] focus:border-[#5B9BF3]/50 outline-none transition-all"
+                      value={form.setor}
+                      readOnly
+                      className="w-full bg-[#111] border border-[#333] rounded-xl px-4 py-3 text-[#888] cursor-not-allowed outline-none"
                     />
+                    <p className="text-[11px] text-[#999] mt-1.5">Definido nas configurações da organização</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#888] mb-3">
+                      <Calendar size={14} className="inline mr-1.5" />
+                      Horário de funcionamento
+                    </label>
+                    <div className="bg-[#151515] border border-[#333] rounded-xl p-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        {/* Início */}
+                        <div>
+                          <p className="text-[11px] text-[#5B9BF3] font-medium uppercase tracking-wider mb-3">De</p>
+                          <div className="space-y-2">
+                            <select
+                              value={form.diaInicio}
+                              onChange={(e) => update({ diaInicio: e.target.value })}
+                              className="w-full bg-[#111] border border-[#333] rounded-lg px-3 py-2.5 text-sm text-white outline-none focus:border-[#5B9BF3]/50 cursor-pointer"
+                            >
+                              {["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"].map((d) => (
+                                <option key={d} value={d}>{d}</option>
+                              ))}
+                            </select>
+                            <input
+                              type="time"
+                              value={form.horaInicio}
+                              onChange={(e) => update({ horaInicio: e.target.value })}
+                              className="w-full bg-[#111] border border-[#333] rounded-lg px-3 py-2.5 text-sm text-white outline-none focus:border-[#5B9BF3]/50"
+                            />
+                          </div>
+                        </div>
+                        {/* Separador */}
+                        <div>
+                          <p className="text-[11px] text-[#5B9BF3] font-medium uppercase tracking-wider mb-3">Até</p>
+                          <div className="space-y-2">
+                            <select
+                              value={form.diaFim}
+                              onChange={(e) => update({ diaFim: e.target.value })}
+                              className="w-full bg-[#111] border border-[#333] rounded-lg px-3 py-2.5 text-sm text-white outline-none focus:border-[#5B9BF3]/50 cursor-pointer"
+                            >
+                              {["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"].map((d) => (
+                                <option key={d} value={d}>{d}</option>
+                              ))}
+                            </select>
+                            <input
+                              type="time"
+                              value={form.horaFim}
+                              onChange={(e) => update({ horaFim: e.target.value })}
+                              className="w-full bg-[#111] border border-[#333] rounded-lg px-3 py-2.5 text-sm text-white outline-none focus:border-[#5B9BF3]/50"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <p className="text-[11px] text-[#666] mt-3 text-center">{horarioText}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <label className="block text-sm font-medium text-[#888] mb-2">
+                    <Phone size={14} className="inline mr-1.5" />
+                    Número de telefone do agente
+                  </label>
+                  <div className="bg-[#151515] border border-[#333] rounded-xl p-4">
+                    <input
+                      type="tel"
+                      value={form.telefone}
+                      onChange={(e) => update({ telefone: e.target.value })}
+                      placeholder="+55 (11) 99999-9999"
+                      className="w-full bg-[#111] border border-[#333] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-[#555] focus:border-[#5B9BF3]/50 outline-none transition-all"
+                    />
+                    <p className="text-[12px] text-[#666] mt-3">
+                      Opcional — deixe vazio e geraremos um número dedicado na ativação.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -469,7 +539,7 @@ export default function NovoAgentePage() {
                     className={`w-full text-left p-4 rounded-xl border transition-all duration-200 ${
                       form.tone === t.id
                         ? "bg-[#5B9BF3]/10 border-[#5B9BF3]/30"
-                        : "bg-white/[0.02] border-white/[0.06] hover:bg-white/[0.04]"
+                        : "bg-[#151515] border-[#333] hover:bg-[#1a1a1a]"
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -488,7 +558,7 @@ export default function NovoAgentePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#aaa] mb-2">
+                <label className="block text-sm font-medium text-[#888] mb-2">
                   <MessageSquare size={14} className="inline mr-1.5" />
                   Primeira mensagem
                 </label>
@@ -497,7 +567,7 @@ export default function NovoAgentePage() {
                   onChange={(e) => update({ firstMessage: e.target.value })}
                   rows={3}
                   placeholder="O que o agente diz ao atender a ligação..."
-                  className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-3 text-white placeholder:text-[#555] focus:border-[#5B9BF3]/50 focus:ring-1 focus:ring-[#5B9BF3]/20 outline-none transition-all resize-none"
+                  className="w-full bg-[#151515] border border-[#333] rounded-xl px-4 py-3 text-white placeholder:text-[#999] focus:border-[#5B9BF3]/50 focus:ring-1 focus:ring-[#5B9BF3]/20 outline-none transition-all resize-none"
                 />
               </div>
             </div>
@@ -515,7 +585,7 @@ export default function NovoAgentePage() {
                 onChange={(e) => update({ conhecimento: e.target.value })}
                 rows={12}
                 placeholder={`Exemplo:\n\n- Serviços oferecidos: Limpeza dental, Clareamento, Ortodontia\n- Preços: Limpeza R$150, Clareamento R$500\n- Formas de pagamento: Pix, crédito até 6x, convênios\n- Endereço: Rua das Flores, 123, Centro\n- Estacionamento: Sim, gratuito\n- Perguntas frequentes:\n  P: Aceita convênio? R: Sim, Amil, Bradesco e Odontoprev\n  P: Tem emergência? R: Sim, seg-sex até 20h`}
-                className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-3 text-white text-[14px] leading-relaxed placeholder:text-[#444] focus:border-[#5B9BF3]/50 focus:ring-1 focus:ring-[#5B9BF3]/20 outline-none transition-all resize-none font-mono"
+                className="w-full bg-[#151515] border border-[#333] rounded-xl px-4 py-3 text-white text-[14px] leading-relaxed placeholder:text-[#444] focus:border-[#5B9BF3]/50 focus:ring-1 focus:ring-[#5B9BF3]/20 outline-none transition-all resize-none font-mono"
               />
             </div>
           )}
@@ -526,7 +596,7 @@ export default function NovoAgentePage() {
               <h2 className="text-lg font-semibold text-white mb-2">Pagamento</h2>
               <p className="text-sm text-[#888] mb-6">Escolha o plano para ativar seu agente.</p>
 
-              <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl p-6 mb-4">
+              <div className="bg-[#151515] border border-[#333] rounded-2xl p-6  mb-4">
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <h3 className="text-lg font-semibold text-white">1x Agente IA</h3>
@@ -540,7 +610,7 @@ export default function NovoAgentePage() {
                   </div>
                 </div>
 
-                <div className="border-t border-[#2a2a2a] pt-4 space-y-3">
+                <div className="border-t border-[#333] pt-4 space-y-3">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-[#999]">Agente de IA 24/7</span>
                     <Check size={16} className="text-emerald-400" />
@@ -563,7 +633,7 @@ export default function NovoAgentePage() {
                   </div>
                 </div>
 
-                <div className="border-t border-[#2a2a2a] mt-4 pt-4 flex items-center justify-between">
+                <div className="border-t border-[#333] mt-4 pt-4 flex items-center justify-between">
                   <span className="text-white font-semibold">Total mensal</span>
                   <span className="text-xl font-bold text-white">R$ 500<span className="text-sm font-normal text-[#888]">/mês</span></span>
                 </div>
@@ -571,7 +641,7 @@ export default function NovoAgentePage() {
 
               <div className="bg-[#5B9BF3]/5 border border-[#5B9BF3]/20 rounded-xl p-4 flex items-center gap-3">
                 <Sparkles size={18} className="text-[#5B9BF3] shrink-0" />
-                <p className="text-sm text-[#aaa]">
+                <p className="text-sm text-[#888]">
                   <strong className="text-white">7 dias grátis</strong> &mdash; cancele a qualquer momento. Após o trial, a cobrança é mensal via cartão ou Pix.
                 </p>
               </div>
@@ -586,7 +656,7 @@ export default function NovoAgentePage() {
 
               <div className="space-y-4">
                 {/* Agent summary card */}
-                <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl p-6">
+                <div className="bg-[#151515] border border-[#333] rounded-2xl p-6 ">
                   <div className="flex items-center gap-4 mb-5">
                     {(() => {
                       const card = agentCards.find((c) => c.type === form.agentType);
@@ -616,7 +686,11 @@ export default function NovoAgentePage() {
                     </div>
                     <div>
                       <span className="text-[#888]">Horário</span>
-                      <p className="text-white mt-0.5">{form.horario}</p>
+                      <p className="text-white mt-0.5">{horarioText}</p>
+                    </div>
+                    <div>
+                      <span className="text-[#888]">Telefone</span>
+                      <p className="text-white mt-0.5 font-mono">{form.telefone || "Não definido"}</p>
                     </div>
                     <div>
                       <span className="text-[#888]">Canal</span>
@@ -624,15 +698,15 @@ export default function NovoAgentePage() {
                     </div>
                   </div>
 
-                  <div className="mt-5 pt-4 border-t border-white/[0.06]">
+                  <div className="mt-5 pt-4 border-t border-[#333]">
                     <span className="text-[#888] text-sm">Primeira mensagem</span>
                     <p className="text-white text-sm mt-1 italic">&ldquo;{form.firstMessage}&rdquo;</p>
                   </div>
 
                   {form.conhecimento && (
-                    <div className="mt-4 pt-4 border-t border-white/[0.06]">
+                    <div className="mt-4 pt-4 border-t border-[#333]">
                       <span className="text-[#888] text-sm">Base de conhecimento</span>
-                      <p className="text-[#aaa] text-sm mt-1 line-clamp-3 font-mono">{form.conhecimento}</p>
+                      <p className="text-[#888] text-sm mt-1 line-clamp-3 font-mono">{form.conhecimento}</p>
                     </div>
                   )}
                 </div>
@@ -663,12 +737,12 @@ export default function NovoAgentePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="bg-neutral-900 border border-white/[0.1] rounded-2xl p-8 max-w-sm w-full mx-4 text-center"
+              className="bg-[#151515] border border-[#333] rounded-2xl p-8 max-w-sm w-full mx-4 text-center "
             >
               {provisionStatus?.startsWith("Erro") ? (
                 <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
@@ -688,7 +762,7 @@ export default function NovoAgentePage() {
               {provisionStatus?.startsWith("Erro") && (
                 <button
                   onClick={() => { setActivating(false); setProvisionStatus(null); }}
-                  className="mt-4 px-4 py-2 bg-[#2a2a2a] hover:bg-white/[0.1] rounded-xl text-sm text-[#bbb] transition-colors"
+                  className="mt-4 px-4 py-2 bg-[#1a1a1a] hover:bg-[#222] border border-[#333] rounded-xl text-sm text-[#888] transition-colors"
                 >
                   Tentar novamente
                 </button>
@@ -699,10 +773,10 @@ export default function NovoAgentePage() {
       </AnimatePresence>
 
       {/* Navigation */}
-      <div className="flex items-center justify-between mt-10 pt-6 border-t border-white/[0.06]">
+      <div className="flex items-center justify-between mt-10 pt-6 border-t border-[#333]">
         <button
           onClick={() => step > 0 ? setStep(step - 1) : router.push("/dashboard/agentes")}
-          className="flex items-center gap-2 px-4 py-2.5 text-sm text-[#999] hover:text-white/80 transition-colors"
+          className="flex items-center gap-2 px-4 py-2.5 text-sm text-[#999] hover:text-white transition-colors"
         >
           <ArrowLeft size={16} />
           {step === 0 ? "Cancelar" : "Voltar"}

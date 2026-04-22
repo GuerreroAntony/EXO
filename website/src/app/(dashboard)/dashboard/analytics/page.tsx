@@ -48,11 +48,12 @@ const periods = ["Hoje", "7 dias", "30 dias"] as const;
 
 const chartTooltipStyle = {
   contentStyle: {
-    background: "rgba(0,0,0,0.9)",
-    border: "1px solid rgba(255,255,255,0.1)",
+    background: "#1a1a1a",
+    border: "1px solid #222",
     borderRadius: "12px",
     color: "#fff",
     fontSize: "12px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
   },
   itemStyle: { color: "#fff" },
   cursor: { fill: "rgba(255,255,255,0.04)" },
@@ -74,15 +75,15 @@ export default function AnalyticsPage() {
       />
 
       {/* Tab navigation */}
-      <div className="flex gap-1 bg-white/[0.04] border border-white/[0.08] rounded-2xl p-1 mb-8 w-fit">
+      <div className="flex gap-1 bg-[#151515] border border-[#333] rounded-2xl p-1 mb-8 w-fit">
         {tabs.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`px-5 py-2 rounded-xl text-sm font-medium transition-colors ${
               activeTab === tab
-                ? "bg-white/[0.08] text-white"
-                : "text-white/40 hover:text-white/60"
+                ? "bg-[#222] text-white shadow-sm"
+                : "text-[#888] hover:text-[#999]"
             }`}
           >
             {tab}
@@ -134,8 +135,8 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Bar Chart - Atendimentos por hora */}
-          <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl backdrop-blur p-6 mb-8">
-            <h3 className="text-sm font-medium text-white/60 mb-4">
+          <div className="bg-[#151515] border border-[#333] rounded-2xl backdrop-blur p-6 mb-8">
+            <h3 className="text-sm font-medium text-[#888] mb-4">
               Atendimentos por Hora
             </h3>
             <ResponsiveContainer width="100%" height={260}>
@@ -163,28 +164,28 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Ultimos atendimentos */}
-          <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl backdrop-blur p-6">
-            <h3 className="text-sm font-medium text-white/60 mb-4">
+          <div className="bg-[#151515] border border-[#333] rounded-2xl backdrop-blur p-6">
+            <h3 className="text-sm font-medium text-[#888] mb-4">
               Últimos Atendimentos
             </h3>
             <div className="space-y-3">
               {mockUltimosAtendimentos.map((a) => (
                 <div
                   key={a.id}
-                  className="flex items-center justify-between py-3 border-b border-white/[0.06] last:border-0"
+                  className="flex items-center justify-between py-3 border-b border-[#2a2a2a] last:border-0"
                 >
                   <div className="flex items-center gap-4">
                     <span className="text-sm text-white font-medium w-32 truncate">
                       {a.contato}
                     </span>
-                    <span className="text-xs text-white/40 font-mono">
+                    <span className="text-xs text-[#999] font-mono">
                       {a.agente}
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
                     <StatusBadge status={a.canal} />
                     <StatusBadge status={a.status} />
-                    <span className="text-xs text-white/30 font-mono w-12 text-right">
+                    <span className="text-xs text-[#999] font-mono w-12 text-right">
                       {a.hora}
                     </span>
                   </div>
@@ -203,15 +204,15 @@ export default function AnalyticsPage() {
           transition={{ duration: 0.3 }}
         >
           {/* Period selector */}
-          <div className="flex gap-1 bg-white/[0.04] border border-white/[0.08] rounded-xl p-1 mb-6 w-fit">
+          <div className="flex gap-1 bg-[#151515] border border-[#333] rounded-xl p-1 mb-6 w-fit">
             {periods.map((p) => (
               <button
                 key={p}
                 onClick={() => setPeriod(p)}
                 className={`px-4 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                   period === p
-                    ? "bg-white/[0.08] text-white"
-                    : "text-white/40 hover:text-white/60"
+                    ? "bg-[#222] text-white shadow-sm"
+                    : "text-[#888] hover:text-[#999]"
                 }`}
               >
                 {p}
@@ -260,8 +261,8 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Line chart - Volume por dia */}
-          <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl backdrop-blur p-6 mb-8">
-            <h3 className="text-sm font-medium text-white/60 mb-4">
+          <div className="bg-[#151515] border border-[#333] rounded-2xl backdrop-blur p-6 mb-8">
+            <h3 className="text-sm font-medium text-[#888] mb-4">
               Volume por Dia
             </h3>
             <ResponsiveContainer width="100%" height={260}>
@@ -293,8 +294,8 @@ export default function AnalyticsPage() {
           {/* Grid: Pie + Bar */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             {/* Pie chart - Distribuição por canal */}
-            <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl backdrop-blur p-6">
-              <h3 className="text-sm font-medium text-white/60 mb-4">
+            <div className="bg-[#151515] border border-[#333] rounded-2xl backdrop-blur p-6">
+              <h3 className="text-sm font-medium text-[#888] mb-4">
                 Distribuição por Canal
               </h3>
               <ResponsiveContainer width="100%" height={220}>
@@ -324,9 +325,9 @@ export default function AnalyticsPage() {
                       className="w-2.5 h-2.5 rounded-full"
                       style={{ backgroundColor: c.cor }}
                     />
-                    <span className="text-xs text-white/50">
+                    <span className="text-xs text-[#888]">
                       {c.canal}{" "}
-                      <span className="text-white/30 font-mono">
+                      <span className="text-[#666] font-mono">
                         ({c.total})
                       </span>
                     </span>
@@ -336,8 +337,8 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Bar chart - Volume por agente */}
-            <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl backdrop-blur p-6">
-              <h3 className="text-sm font-medium text-white/60 mb-4">
+            <div className="bg-[#151515] border border-[#333] rounded-2xl backdrop-blur p-6">
+              <h3 className="text-sm font-medium text-[#888] mb-4">
                 Volume por Agente
               </h3>
               <ResponsiveContainer width="100%" height={250}>
@@ -373,8 +374,8 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Motivos de contato */}
-          <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl backdrop-blur p-6">
-            <h3 className="text-sm font-medium text-white/60 mb-4">
+          <div className="bg-[#151515] border border-[#333] rounded-2xl backdrop-blur p-6">
+            <h3 className="text-sm font-medium text-[#888] mb-4">
               Motivos de Contato
             </h3>
             <div className="space-y-3">
@@ -383,16 +384,16 @@ export default function AnalyticsPage() {
                 const pct = (m.total / maxTotal) * 100;
                 return (
                   <div key={i} className="flex items-center gap-4">
-                    <span className="text-xs text-white/50 w-48 truncate">
+                    <span className="text-xs text-[#888] w-48 truncate">
                       {m.motivo}
                     </span>
-                    <div className="flex-1 h-2 bg-white/[0.06] rounded-full overflow-hidden">
+                    <div className="flex-1 h-2 bg-[#1e1e1e] rounded-full overflow-hidden">
                       <div
                         className="h-full bg-[#5B9BF3]/60 rounded-full"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
-                    <span className="text-xs text-white/30 font-mono w-8 text-right">
+                    <span className="text-xs text-[#999] font-mono w-8 text-right">
                       {m.total}
                     </span>
                   </div>
@@ -412,8 +413,8 @@ export default function AnalyticsPage() {
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             {/* Sentimento */}
-            <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl backdrop-blur p-6">
-              <h3 className="text-sm font-medium text-white/60 mb-5">
+            <div className="bg-[#151515] border border-[#333] rounded-2xl backdrop-blur p-6">
+              <h3 className="text-sm font-medium text-[#888] mb-5">
                 Sentimento dos Atendimentos
               </h3>
               <div className="space-y-4">
@@ -426,7 +427,7 @@ export default function AnalyticsPage() {
                   {
                     label: "Neutro",
                     value: mockSentimento.neutro,
-                    color: "bg-white/30",
+                    color: "bg-gray-300",
                   },
                   {
                     label: "Negativo",
@@ -436,12 +437,12 @@ export default function AnalyticsPage() {
                 ].map((s) => (
                   <div key={s.label}>
                     <div className="flex justify-between mb-1.5">
-                      <span className="text-xs text-white/50">{s.label}</span>
-                      <span className="text-xs text-white/70 font-mono">
+                      <span className="text-xs text-[#888]">{s.label}</span>
+                      <span className="text-xs text-white font-mono">
                         {s.value}%
                       </span>
                     </div>
-                    <div className="h-2 bg-white/[0.06] rounded-full overflow-hidden">
+                    <div className="h-2 bg-[#1e1e1e] rounded-full overflow-hidden">
                       <div
                         className={`h-full ${s.color} rounded-full transition-all duration-700`}
                         style={{ width: `${s.value}%` }}
@@ -453,8 +454,8 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Palavras frequentes */}
-            <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl backdrop-blur p-6">
-              <h3 className="text-sm font-medium text-white/60 mb-5">
+            <div className="bg-[#151515] border border-[#333] rounded-2xl backdrop-blur p-6">
+              <h3 className="text-sm font-medium text-[#888] mb-5">
                 Palavras Frequentes
               </h3>
               <div className="space-y-2.5">
@@ -463,16 +464,16 @@ export default function AnalyticsPage() {
                   const pct = (p.count / maxCount) * 100;
                   return (
                     <div key={p.palavra} className="flex items-center gap-3">
-                      <span className="text-xs text-white/50 w-24 truncate">
+                      <span className="text-xs text-[#888] w-24 truncate">
                         {p.palavra}
                       </span>
-                      <div className="flex-1 h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                      <div className="flex-1 h-1.5 bg-[#1e1e1e] rounded-full overflow-hidden">
                         <div
                           className="h-full bg-[#5B9BF3]/50 rounded-full"
                           style={{ width: `${pct}%` }}
                         />
                       </div>
-                      <span className="text-[11px] text-white/30 font-mono w-8 text-right">
+                      <span className="text-[11px] text-[#999] font-mono w-8 text-right">
                         {p.count}
                       </span>
                     </div>
@@ -483,20 +484,20 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Perguntas frequentes */}
-          <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl backdrop-blur p-6 mb-8">
-            <h3 className="text-sm font-medium text-white/60 mb-4">
+          <div className="bg-[#151515] border border-[#333] rounded-2xl backdrop-blur p-6 mb-8">
+            <h3 className="text-sm font-medium text-[#888] mb-4">
               Perguntas Frequentes
             </h3>
             <div className="space-y-3">
               {mockPerguntasFrequentes.map((pergunta, i) => (
                 <div
                   key={i}
-                  className="flex items-start gap-3 py-2 border-b border-white/[0.06] last:border-0"
+                  className="flex items-start gap-3 py-2 border-b border-[#2a2a2a] last:border-0"
                 >
-                  <span className="text-xs text-white/20 font-mono w-5 pt-0.5 text-right shrink-0">
+                  <span className="text-xs text-[#444] font-mono w-5 pt-0.5 text-right shrink-0">
                     {i + 1}.
                   </span>
-                  <span className="text-sm text-white/60">{pergunta}</span>
+                  <span className="text-sm text-[#888]">{pergunta}</span>
                 </div>
               ))}
             </div>
@@ -504,7 +505,7 @@ export default function AnalyticsPage() {
 
           {/* Sugestões da IA */}
           <div className="space-y-4">
-            <h3 className="text-sm font-medium text-white/60">
+            <h3 className="text-sm font-medium text-[#888]">
               Sugestões da IA
             </h3>
             {mockSugestoesIA.map((s) => (
@@ -512,12 +513,12 @@ export default function AnalyticsPage() {
                 key={s.id}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white/[0.04] border border-white/[0.08] rounded-2xl backdrop-blur p-5 flex items-start gap-4"
+                className="bg-[#151515] border border-[#333] rounded-2xl backdrop-blur p-5 flex items-start gap-4"
               >
                 <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center shrink-0">
                   <Lightbulb size={18} className="text-amber-400" />
                 </div>
-                <p className="text-sm text-white/60 leading-relaxed">
+                <p className="text-sm text-[#888] leading-relaxed">
                   {s.texto}
                 </p>
               </motion.div>

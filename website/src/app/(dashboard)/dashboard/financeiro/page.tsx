@@ -124,13 +124,13 @@ export default function FinanceiroPage() {
 
       {loading ? (
         <div className="text-center py-20">
-          <div className="w-6 h-6 border-2 border-white/10 border-t-white/40 rounded-full animate-spin mx-auto" />
+          <div className="w-6 h-6 border-2 border-[#333] border-t-[#666] rounded-full animate-spin mx-auto" />
         </div>
       ) : faturas.length === 0 ? (
         <div className="text-center py-20">
-          <DollarSign className="w-10 h-10 text-white/10 mx-auto mb-4" />
-          <p className="text-[#666]">Nenhum registro encontrado</p>
-          <p className="text-sm text-[#444] mt-1">Os dados aparecerão aqui quando houver atividade.</p>
+          <DollarSign className="w-10 h-10 text-[#333] mx-auto mb-4" />
+          <p className="text-[#888]">Nenhum registro encontrado</p>
+          <p className="text-sm text-[#999] mt-1">Os dados aparecerão aqui quando houver atividade.</p>
         </div>
       ) : (
         <DataTable columns={columns} data={faturas} emptyMessage="Nenhuma fatura encontrada" />

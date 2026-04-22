@@ -19,7 +19,7 @@ export default function InteligenciaVirtualPage() {
               initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 0.8 }}
-              className="text-[13px] tracking-[0.3em] uppercase text-white/30 font-medium"
+              className="text-[13px] tracking-[0.3em] uppercase text-cyan-400 font-medium"
             >
               Influencers Virtuais
             </motion.p>
@@ -31,13 +31,13 @@ export default function InteligenciaVirtualPage() {
             >
               Influência
               <br />
-              que nunca para.
+              <span className="text-cyan-400">que nunca para.</span>
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="mt-8 text-lg text-white/35 max-w-xl leading-relaxed"
+              className="mt-8 text-lg text-white/50 max-w-xl leading-relaxed"
             >
               Crie influencers virtuais com personalidade própria que produzem conteúdo,
               engajam seguidores e representam sua marca 24 horas por dia.
@@ -58,11 +58,11 @@ export default function InteligenciaVirtualPage() {
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                   className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 transition-all duration-300 hover:bg-white/[0.04] hover:border-white/[0.12] hover:-translate-y-0.5"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-white/[0.04] flex items-center justify-center mb-5">
-                    <c.icon className="w-5 h-5 text-white/30" />
+                  <div className="w-10 h-10 rounded-lg bg-cyan-400/10 flex items-center justify-center mb-5">
+                    <c.icon className="w-5 h-5 text-cyan-400" />
                   </div>
                   <h3 className="text-lg font-bold text-white">{c.name}</h3>
-                  <p className="mt-2 text-sm text-white/35 leading-relaxed">{c.desc}</p>
+                  <p className="mt-2 text-sm text-white/50 leading-relaxed">{c.desc}</p>
                 </motion.div>
               ))}
             </div>

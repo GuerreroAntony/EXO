@@ -52,11 +52,11 @@ export default function Navbar() {
       <div
         className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between rounded-2xl transition-all duration-700"
         style={{
-          background: "rgba(255, 255, 255, 0.04)",
-          backdropFilter: "blur(24px) saturate(1.4)",
-          WebkitBackdropFilter: "blur(24px) saturate(1.4)",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
-          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
+          background: "rgba(255, 255, 255, 0.10)",
+          backdropFilter: "blur(60px) saturate(1.8)",
+          WebkitBackdropFilter: "blur(60px) saturate(1.8)",
+          border: "1px solid rgba(255, 255, 255, 0.16)",
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.12)",
         }}
       >
         <Link
@@ -80,16 +80,16 @@ export default function Navbar() {
           ))}
         </div>
 
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-3">
           <Link
-            href="/login"
-            className="px-5 py-2.5 rounded-full text-[13px] font-medium tracking-wide text-white/60 hover:text-[#5B9BF3] transition-all duration-300"
+            href="/dashboard/hub"
+            className="px-5 py-2.5 rounded-full text-[13px] font-medium tracking-wide text-white/60 hover:text-white transition-all duration-300"
           >
             Entrar
           </Link>
           <Link
             href="/demo"
-            className="px-6 py-2.5 rounded-full text-[13px] font-medium tracking-wide text-white/60 border border-white/10 hover:border-white/25 hover:text-white transition-all duration-500"
+            className="px-6 py-2.5 rounded-full text-[13px] font-medium tracking-wide text-white/60 border border-white/12 hover:border-white/25 hover:text-white transition-all duration-500"
           >
             Agendar Demo
           </Link>

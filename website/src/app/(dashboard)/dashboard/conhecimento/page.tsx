@@ -48,7 +48,7 @@ function KnowledgeEditor() {
           </h3>
         </div>
         <div className="flex items-center gap-2">
-          <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white/60 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] rounded-lg transition-colors">
+          <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#888] bg-[#151515] hover:bg-[#1a1a1a] border border-[#333] rounded-lg transition-colors">
             <Plus size={14} />
             Adicionar Categoria
           </button>
@@ -67,23 +67,23 @@ function KnowledgeEditor() {
           return (
             <div
               key={cat.id}
-              className="bg-white/[0.03] border border-white/[0.06] rounded-2xl overflow-hidden"
+              className="bg-[#111] border border-[#333] rounded-2xl overflow-hidden"
             >
               {/* Category header */}
               <button
                 onClick={() => toggle(cat.id)}
-                className="flex items-center justify-between w-full px-5 py-3.5 text-left hover:bg-white/[0.02] transition-colors"
+                className="flex items-center justify-between w-full px-5 py-3.5 text-left hover:bg-[#1a1a1a] transition-colors"
               >
                 <div className="flex items-center gap-3">
                   {isExpanded ? (
-                    <ChevronDown size={16} className="text-white/40" />
+                    <ChevronDown size={16} className="text-[#999]" />
                   ) : (
-                    <ChevronRight size={16} className="text-white/40" />
+                    <ChevronRight size={16} className="text-[#999]" />
                   )}
                   <span className="text-sm font-medium text-white">
                     {cat.nome}
                   </span>
-                  <span className="px-2 py-0.5 text-[11px] font-medium text-white/40 bg-white/[0.06] rounded-full">
+                  <span className="px-2 py-0.5 text-[11px] font-medium text-[#999] bg-[#1e1e1e] rounded-full">
                     {cat.items.length}
                   </span>
                 </div>
@@ -95,15 +95,15 @@ function KnowledgeEditor() {
                   {cat.items.map((item) => (
                     <div
                       key={item.id}
-                      className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4"
+                      className="bg-[#111] border border-[#333] rounded-xl p-4"
                     >
                       <div className="flex items-start justify-between gap-3 mb-2">
-                        <p className="text-sm font-semibold text-white/90">
+                        <p className="text-sm font-semibold text-white">
                           {item.pergunta}
                         </p>
                         <div className="flex items-center gap-2 shrink-0">
                           <StatusBadge status={item.status} />
-                          <button className="p-1 text-white/20 hover:text-red-400 transition-colors">
+                          <button className="p-1 text-[#444] hover:text-red-400 transition-colors">
                             <Trash2 size={14} />
                           </button>
                         </div>
@@ -111,7 +111,7 @@ function KnowledgeEditor() {
                       <textarea
                         readOnly
                         value={item.resposta}
-                        className="w-full bg-transparent text-sm text-white/50 resize-none outline-none leading-relaxed"
+                        className="w-full bg-transparent text-sm text-[#888] resize-none outline-none leading-relaxed"
                         rows={2}
                       />
                     </div>
@@ -134,7 +134,7 @@ function AIAssistant() {
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-white/[0.06]">
+      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-[#333]">
         <Sparkles size={18} className="text-[#5B9BF3]" />
         <h3 className="text-sm font-semibold text-white">
           Assistente de Conhecimento
@@ -151,8 +151,8 @@ function AIAssistant() {
             <div
               className={`max-w-[85%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
                 msg.role === "user"
-                  ? "bg-[#5B9BF3]/20 text-white/80"
-                  : "bg-white/[0.06] text-white/70"
+                  ? "bg-[#5B9BF3]/20 text-white"
+                  : "bg-[#1e1e1e] text-[#666]"
               }`}
             >
               {msg.content}
@@ -162,15 +162,15 @@ function AIAssistant() {
       </div>
 
       {/* Input area */}
-      <div className="px-5 py-4 border-t border-white/[0.06]">
-        <div className="flex items-center gap-2 bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-2.5">
+      <div className="px-5 py-4 border-t border-[#333]">
+        <div className="flex items-center gap-2 bg-[#151515] border border-[#333] rounded-xl px-4 py-2.5">
           <input
             type="text"
             placeholder="Diga o que quer atualizar..."
-            className="flex-1 bg-transparent text-sm text-white placeholder:text-white/30 outline-none"
+            className="flex-1 bg-transparent text-sm text-white placeholder:text-[#999] outline-none"
             readOnly
           />
-          <button className="p-1.5 text-white/30 hover:text-[#5B9BF3] transition-colors">
+          <button className="p-1.5 text-[#444] hover:text-[#4A8AE2] transition-colors">
             <Send size={16} />
           </button>
         </div>
@@ -195,14 +195,14 @@ export default function ConhecimentoPage() {
         subtitle="Gerencie a base de conhecimento do seu agente"
       />
 
-      <div className="flex flex-col lg:flex-row gap-0 bg-white/[0.04] border border-white/[0.08] rounded-2xl overflow-hidden min-h-[600px]">
+      <div className="flex flex-col lg:flex-row gap-0 bg-[#151515] border border-[#333] rounded-2xl overflow-hidden min-h-[600px]">
         {/* Left — Knowledge editor (60%) */}
         <div className="w-full lg:w-[60%] p-6 overflow-y-auto">
           <KnowledgeEditor />
         </div>
 
         {/* Right — AI assistant (40%) */}
-        <div className="w-full lg:w-[40%] bg-white/[0.02] border-t lg:border-t-0 lg:border-l border-white/[0.06]">
+        <div className="w-full lg:w-[40%] bg-[#111] border-t lg:border-t-0 lg:border-l border-[#2a2a2a]">
           <AIAssistant />
         </div>
       </div>

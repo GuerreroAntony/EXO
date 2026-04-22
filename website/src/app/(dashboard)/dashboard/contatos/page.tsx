@@ -61,7 +61,7 @@ const columns: Column<ContatoRow>[] = [
         {(row.tags as string[]).map((tag) => (
           <span
             key={tag}
-            className="inline-flex items-center rounded-full bg-white/[0.06] px-2 py-0.5 text-[11px] text-white/50"
+            className="inline-flex items-center rounded-full bg-[#1e1e1e] px-2 py-0.5 text-[11px] text-[#888]"
           >
             {tag}
           </span>
@@ -113,7 +113,7 @@ export default function ContatosPage() {
       <PageHeader
         title="Contatos"
         action={
-          <button className="flex items-center gap-2 bg-white/[0.06] hover:bg-white/[0.10] border border-white/[0.08] rounded-xl px-4 py-2.5 text-sm text-white transition-colors">
+          <button className="flex items-center gap-2 bg-[#1e1e1e] hover:bg-[#1e1e1e] border border-[#333] rounded-xl px-4 py-2.5 text-sm text-white transition-colors">
             <UserPlus size={16} />
             Novo Contato
           </button>
@@ -123,13 +123,13 @@ export default function ContatosPage() {
       {/* Search + Tag filters */}
       <div className="flex flex-col gap-4 mb-6">
         <div className="relative max-w-md">
-          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/30" />
+          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#444]" />
           <input
             type="text"
             placeholder="Buscar por nome, telefone ou email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-white/20 transition-colors"
+            className="w-full bg-[#151515] border border-[#333] rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-[#999] focus:outline-none focus:border-[#5B9BF3]/50 transition-colors"
           />
         </div>
         {allTags.length > 0 && (
@@ -142,8 +142,8 @@ export default function ContatosPage() {
                   onClick={() => toggleTag(tag)}
                   className={`rounded-full px-3 py-1 text-xs font-medium transition-colors border ${
                     active
-                      ? "bg-white/10 border-white/20 text-white"
-                      : "bg-white/[0.04] border-white/[0.08] text-white/40 hover:text-white/60 hover:bg-white/[0.06]"
+                      ? "bg-[#5B9BF3]/10 border-[#5B9BF3]/30 text-[#5B9BF3]"
+                      : "bg-[#151515] border-[#333] text-[#666] hover:text-[#999] hover:bg-[#1e1e1e]"
                   }`}
                 >
                   {tag}
