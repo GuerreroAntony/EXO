@@ -12,7 +12,7 @@ const links = [
   { label: "Digital Workers", href: "/digital-workers" },
   { label: "Robótica", href: "/robotica" },
   { label: "Innovation Studio", href: "/innovation-studio" },
-  { label: "Preços", href: "/precos" },
+  { label: "Equipe", href: "/equipe" },
 ];
 
 export default function Navbar() {

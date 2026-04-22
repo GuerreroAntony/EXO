@@ -1,0 +1,196 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { Linkedin, Globe, ArrowRight } from "lucide-react";
+import Link from "next/link";
+
+const team = [
+  {
+    name: "Jimmy Peixoto",
+    role: "CEO & Co-Founder",
+    bio: "Empreendedor serial com passagem por Brasil, EUA e Europa. Reconhecido como um dos 14 empreendedores mais inovadores do Brasil em 2014. Especialista em modelos de negocio escalaveis, desenvolvimento de negocios e lideranca estrategica.",
+    avatar: "JP",
+    color: "#5B9BF3",
+    linkedin: "https://linkedin.com/in/jimmypeixoto",
+    website: "https://jimmypeixoto.com.br",
+  },
+  {
+    name: "Antony Guerrero",
+    role: "CTO & Co-Founder",
+    bio: "Engenheiro de software e arquiteto de sistemas de IA. Responsavel pela infraestrutura tecnica da EXO, desde os agentes de voz ate os digital workers. Apaixonado por transformar ideias complexas em produtos que funcionam.",
+    avatar: "AG",
+    color: "#22d3ee",
+    linkedin: "#",
+  },
+];
+
+const values = [
+  {
+    title: "Humanos primeiro",
+    desc: "A tecnologia existe para expandir o potencial humano, nao para substitui-lo.",
+  },
+  {
+    title: "Execucao > ideias",
+    desc: "Ideias sao baratas. O que importa e a capacidade de transformar visao em realidade.",
+  },
+  {
+    title: "Transparencia radical",
+    desc: "Sem letras miudas, sem promessas vazias. Construimos confianca com clareza.",
+  },
+];
+
+export default function EquipePage() {
+  return (
+    <main className="bg-black min-h-screen">
+      {/* Hero */}
+      <section className="relative pt-40 pb-20 overflow-hidden">
+        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-[13px] tracking-[0.3em] uppercase text-[#5B9BF3] font-medium"
+          >
+            Equipe
+          </motion.p>
+          <motion.h1
+            initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ duration: 1, delay: 0.1 }}
+            className="mt-6 text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[0.95]"
+          >
+            As pessoas por tras
+            <br />
+            <span className="text-[#5B9BF3]">da revolucao.</span>
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="mt-8 text-lg text-white/50 max-w-xl mx-auto leading-relaxed"
+          >
+            Uma equipe obcecada por construir o futuro das operacoes empresariais com inteligencia artificial.
+          </motion.p>
+        </div>
+      </section>
+
+      {/* Team Cards */}
+      <section className="py-20">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="grid sm:grid-cols-2 gap-6">
+            {team.map((person, i) => (
+              <motion.div
+                key={person.name}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.15 }}
+                className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 hover:bg-white/[0.04] hover:border-white/[0.12] transition-all duration-300"
+              >
+                {/* Avatar */}
+                <div
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-xl font-bold"
+                  style={{ background: `${person.color}15`, color: person.color }}
+                >
+                  {person.avatar}
+                </div>
+
+                {/* Info */}
+                <h3 className="text-xl font-bold text-white">{person.name}</h3>
+                <p className="text-sm font-medium mt-1 mb-4" style={{ color: person.color }}>
+                  {person.role}
+                </p>
+                <p className="text-sm text-white/45 leading-relaxed mb-6">
+                  {person.bio}
+                </p>
+
+                {/* Links */}
+                <div className="flex items-center gap-4">
+                  {person.linkedin && (
+                    <a
+                      href={person.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white/30 hover:text-white/70 transition-colors"
+                    >
+                      <Linkedin size={18} />
+                    </a>
+                  )}
+                  {person.website && (
+                    <a
+                      href={person.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white/30 hover:text-white/70 transition-colors"
+                    >
+                      <Globe size={18} />
+                    </a>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Values */}
+      <section className="py-32">
+        <div className="max-w-6xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <p className="text-xs tracking-[0.25em] uppercase text-[#5B9BF3] font-medium mb-4">
+              Nossos valores
+            </p>
+            <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-white">
+              No que acreditamos.
+            </h2>
+          </motion.div>
+
+          <div className="grid sm:grid-cols-3 gap-6">
+            {values.map((v, i) => (
+              <motion.div
+                key={v.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="text-center"
+              >
+                <h3 className="text-lg font-semibold text-white mb-3">{v.title}</h3>
+                <p className="text-sm text-white/40 leading-relaxed">{v.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-32 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-6xl mx-auto px-6"
+        >
+          <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-white mb-4">
+            Quer fazer parte?
+          </h2>
+          <p className="text-white/40 text-lg mb-10 max-w-lg mx-auto">
+            Estamos sempre buscando pessoas excepcionais para expandir o futuro conosco.
+          </p>
+          <Link
+            href="/demo"
+            className="group inline-flex items-center gap-3 bg-white text-black font-medium rounded-full px-8 py-4 text-sm transition-all duration-300 hover:bg-white/90 hover:-translate-y-0.5"
+          >
+            Entre em contato
+            <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </motion.div>
+      </section>
+    </main>
+  );
+}

@@ -30,7 +30,7 @@ const footerLinks: FooterSection[] = [
 	{
 		label: 'Empresa',
 		links: [
-			{ title: 'Preços', href: '/precos' },
+			{ title: 'Equipe', href: '/equipe' },
 			{ title: 'Agendar Demo', href: '/demo' },
 			{ title: 'Entrar', href: '/login' },
 			{ title: 'Criar Conta', href: '/signup' },
