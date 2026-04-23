@@ -23,7 +23,7 @@ const footerLinks: FooterSection[] = [
 			{ title: 'Call Center IA', href: '/callcenter', icon: Phone },
 			{ title: 'Influencers Virtuais', href: '/inteligencia-virtual', icon: Users },
 			{ title: 'Digital Workers', href: '/digital-workers', icon: Bot },
-			{ title: 'Robótica', href: '/robotica', icon: Cog },
+			{ title: 'Robotica', href: '/robotica', icon: Cog },
 			{ title: 'Innovation Studio', href: '/innovation-studio' },
 		],
 	},
@@ -40,7 +40,7 @@ const footerLinks: FooterSection[] = [
 		label: 'Contato',
 		links: [
 			{ title: 'contato@exo.ai', href: 'mailto:contato@exo.ai', icon: Mail },
-			{ title: 'São Paulo, Brasil', href: '#', icon: MapPin },
+			{ title: 'Sao Paulo, Brasil', href: '#', icon: MapPin },
 		],
 	},
 	{
@@ -54,39 +54,30 @@ const footerLinks: FooterSection[] = [
 
 export function Footer() {
 	return (
-		<footer
-			className="relative w-full"
-			style={{
-				background: "rgba(255, 255, 255, 0.07)",
-				backdropFilter: "blur(60px) saturate(1.8)",
-				WebkitBackdropFilter: "blur(60px) saturate(1.8)",
-				borderTop: "1px solid rgba(255, 255, 255, 0.14)",
-				boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.12)",
-			}}
-		>
+		<footer className="relative w-full bg-muted/50 border-t border-border">
 			<div className="max-w-6xl mx-auto px-6 py-16 lg:py-20">
 				{/* Main grid — links */}
 				<div className="grid grid-cols-2 md:grid-cols-5 gap-10 lg:gap-16">
 					{/* Brand column */}
 					<AnimatedContainer className="col-span-2 md:col-span-1 space-y-4">
-						<Link href="/" className="text-2xl font-black tracking-[-0.05em] text-white">
+						<Link href="/" className="text-2xl font-black tracking-[-0.05em] text-foreground">
 							EXO
 						</Link>
-						<p className="text-white/35 text-sm leading-relaxed max-w-[200px]">
-							Expandindo humanos através de agentes de IA.
+						<p className="text-muted-foreground text-sm leading-relaxed max-w-[200px]">
+							Expandindo humanos atraves de agentes de IA.
 						</p>
 					</AnimatedContainer>
 
 					{/* Link columns */}
 					{footerLinks.map((section, index) => (
 						<AnimatedContainer key={section.label} delay={0.1 + index * 0.1}>
-							<h3 className="text-xs text-white/25 uppercase tracking-[0.2em] font-medium mb-5">{section.label}</h3>
+							<h3 className="text-xs text-muted-foreground/70 uppercase tracking-[0.2em] font-medium mb-5">{section.label}</h3>
 							<ul className="space-y-3 text-sm">
 								{section.links.map((link) => (
 									<li key={link.title}>
 										<Link
 											href={link.href}
-											className="text-white/40 hover:text-white inline-flex items-center transition-colors duration-300"
+											className="text-muted-foreground hover:text-foreground inline-flex items-center transition-colors duration-300"
 										>
 											{link.icon && <link.icon className="me-1.5 size-3.5" />}
 											{link.title}
@@ -99,13 +90,13 @@ export function Footer() {
 				</div>
 
 				{/* Bottom bar */}
-				<div className="mt-14 pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
-					<p className="text-white/20 text-xs">
-						© {new Date().getFullYear()} EXO. Todos os direitos reservados.
+				<div className="mt-14 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
+					<p className="text-muted-foreground/70 text-xs">
+						&copy; {new Date().getFullYear()} EXO. Todos os direitos reservados.
 					</p>
 					<div className="flex items-center gap-6">
-						<Link href="#" className="text-white/20 hover:text-white/50 text-xs transition-colors">Privacidade</Link>
-						<Link href="#" className="text-white/20 hover:text-white/50 text-xs transition-colors">Termos</Link>
+						<Link href="#" className="text-muted-foreground/70 hover:text-muted-foreground text-xs transition-colors">Privacidade</Link>
+						<Link href="#" className="text-muted-foreground/70 hover:text-muted-foreground text-xs transition-colors">Termos</Link>
 					</div>
 				</div>
 			</div>

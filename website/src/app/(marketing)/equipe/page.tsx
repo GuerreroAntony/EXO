@@ -33,7 +33,7 @@ const values = [
 
 export default function EquipePage() {
   return (
-    <main className="bg-black min-h-screen">
+    <main className="min-h-screen">
       {/* Hero */}
       <section className="relative pt-40 pb-20 overflow-hidden">
         <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
@@ -49,7 +49,7 @@ export default function EquipePage() {
             initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 1, delay: 0.1 }}
-            className="mt-6 text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[0.95]"
+            className="mt-6 text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[0.95]"
           >
             As pessoas por tras
             <br />
@@ -59,7 +59,7 @@ export default function EquipePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="mt-8 text-lg text-white/50 max-w-xl mx-auto leading-relaxed"
+            className="mt-8 text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed"
           >
             Uma equipe obcecada por construir o futuro das operacoes empresariais com inteligencia artificial.
           </motion.p>
@@ -77,7 +77,7 @@ export default function EquipePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.15 }}
-                className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 hover:bg-white/[0.04] hover:border-white/[0.12] transition-all duration-300"
+                className="bg-muted/50 border border-border rounded-2xl p-8 hover:bg-muted hover:border-border transition-all duration-300"
               >
                 {/* Avatar */}
                 <div
@@ -88,11 +88,11 @@ export default function EquipePage() {
                 </div>
 
                 {/* Info */}
-                <h3 className="text-xl font-bold text-white">{person.name}</h3>
+                <h3 className="text-xl font-bold text-foreground">{person.name}</h3>
                 <p className="text-sm font-medium mt-1 mb-4" style={{ color: person.color }}>
                   {person.role}
                 </p>
-                <p className="text-sm text-white/45 leading-relaxed mb-6">
+                <p className="text-sm text-muted-foreground leading-relaxed mb-6">
                   {person.bio}
                 </p>
 
@@ -103,7 +103,7 @@ export default function EquipePage() {
                       href={person.linkedin}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-white/30 hover:text-white/70 transition-colors"
+                      className="text-muted-foreground/70 hover:text-foreground transition-colors"
                     >
                       <Link2 size={18} />
                     </a>
@@ -113,7 +113,7 @@ export default function EquipePage() {
                       href={person.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-white/30 hover:text-white/70 transition-colors"
+                      className="text-muted-foreground/70 hover:text-foreground transition-colors"
                     >
                       <Globe size={18} />
                     </a>
@@ -137,7 +137,7 @@ export default function EquipePage() {
             <p className="text-xs tracking-[0.25em] uppercase text-[#5B9BF3] font-medium mb-4">
               Nossos valores
             </p>
-            <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-white">
+            <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground">
               No que acreditamos.
             </h2>
           </motion.div>
@@ -152,8 +152,8 @@ export default function EquipePage() {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="text-center"
               >
-                <h3 className="text-lg font-semibold text-white mb-3">{v.title}</h3>
-                <p className="text-sm text-white/40 leading-relaxed">{v.desc}</p>
+                <h3 className="text-lg font-semibold text-foreground mb-3">{v.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{v.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -168,15 +168,15 @@ export default function EquipePage() {
           viewport={{ once: true }}
           className="max-w-6xl mx-auto px-6"
         >
-          <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-white mb-4">
+          <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground mb-4">
             Quer fazer parte?
           </h2>
-          <p className="text-white/40 text-lg mb-10 max-w-lg mx-auto">
+          <p className="text-muted-foreground text-lg mb-10 max-w-lg mx-auto">
             Estamos sempre buscando pessoas excepcionais para expandir o futuro conosco.
           </p>
           <Link
             href="/demo"
-            className="group inline-flex items-center gap-3 bg-white text-black font-medium rounded-full px-8 py-4 text-sm transition-all duration-300 hover:bg-white/90 hover:-translate-y-0.5"
+            className="group inline-flex items-center gap-3 bg-primary text-primary-foreground font-medium rounded-full px-8 py-4 text-sm transition-all duration-300 hover:bg-primary/90 hover:-translate-y-0.5"
           >
             Entre em contato
             <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />

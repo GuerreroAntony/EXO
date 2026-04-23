@@ -3,11 +3,11 @@
 import { motion } from "framer-motion";
 
 const lines = [
-  { text: "O ser humano não foi feito", highlight: false },
-  { text: "para ser substituído.", highlight: false },
+  { text: "O ser humano nao foi feito", highlight: false },
+  { text: "para ser substituido.", highlight: false },
   { text: "Foi feito para evoluir.", highlight: true },
   { text: "", highlight: false },
-  { text: "Robótica para estender o corpo.", highlight: false },
+  { text: "Robotica para estender o corpo.", highlight: false },
   { text: "IA para estender a mente.", highlight: false },
   { text: "Digital Workers para", highlight: false },
   { text: "estender o tempo.", highlight: true },
@@ -15,7 +15,7 @@ const lines = [
 
 export default function Manifesto() {
   return (
-    <section className="relative py-40 bg-black overflow-hidden">
+    <section className="relative py-40 overflow-hidden">
       <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
         <div className="space-y-2">
           {lines.map((line, i) => {
@@ -30,8 +30,8 @@ export default function Manifesto() {
                 transition={{ duration: 0.6, delay: i * 0.04 }}
                 className={`text-3xl lg:text-4xl font-medium leading-relaxed tracking-tight ${
                   line.highlight
-                    ? "text-white"
-                    : "text-white/15"
+                    ? "text-foreground"
+                    : "text-muted-foreground/50"
                 }`}
               >
                 {line.text}

@@ -37,9 +37,9 @@ export default function LoginPage() {
   }
 
   const inputClass =
-    "w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-white/30 transition-colors";
+    "w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:border-ring transition-colors";
   const labelClass =
-    "block text-[12px] font-mono text-white/40 uppercase tracking-wider mb-2";
+    "block text-[12px] font-mono text-muted-foreground uppercase tracking-wider mb-2";
 
   return (
     <motion.div
@@ -49,10 +49,10 @@ export default function LoginPage() {
     >
       <GlowCard>
         <form onSubmit={handleSubmit} className="p-8 sm:p-10 space-y-5">
-          <h1 className="text-xl font-semibold text-white mb-2">Entrar</h1>
+          <h1 className="text-xl font-semibold text-foreground mb-2">Entrar</h1>
 
           {error && (
-            <div className="text-sm text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-4 py-3">
+            <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
               {error}
             </div>
           )}
@@ -83,7 +83,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/70 hover:text-muted-foreground transition-colors"
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -93,12 +93,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl text-sm font-medium transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{
-              background: "rgba(255, 255, 255, 0.08)",
-              border: "1px solid rgba(255, 255, 255, 0.15)",
-              color: "#ffffff",
-            }}
+            className="w-full py-3 rounded-xl text-sm font-medium transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed bg-primary text-primary-foreground hover:bg-primary/90"
           >
             {loading ? "Entrando..." : "Entrar"}
           </button>
@@ -106,13 +101,13 @@ export default function LoginPage() {
           <div className="flex items-center justify-between text-sm pt-2">
             <Link
               href="/signup"
-              className="text-white/40 hover:text-white/70 transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Criar conta
             </Link>
             <button
               type="button"
-              className="text-white/40 hover:text-white/70 transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Esqueceu a senha?
             </button>

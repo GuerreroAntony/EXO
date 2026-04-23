@@ -8,17 +8,17 @@ const services = [
   {
     icon: Lightbulb,
     name: "Consultoria de IA",
-    desc: "Analisamos sua operação e identificamos onde a IA pode gerar mais impacto. Do diagnóstico ao roadmap de implementação.",
+    desc: "Analisamos sua operacao e identificamos onde a IA pode gerar mais impacto. Do diagnostico ao roadmap de implementacao.",
   },
   {
     icon: Puzzle,
-    name: "Soluções Sob Medida",
-    desc: "Desenvolvemos agentes e automações customizados para resolver problemas específicos do seu negócio.",
+    name: "Solucoes Sob Medida",
+    desc: "Desenvolvemos agentes e automacoes customizados para resolver problemas especificos do seu negocio.",
   },
   {
     icon: Layers,
-    name: "Integração de Sistemas",
-    desc: "Conectamos IA aos seus sistemas existentes — CRM, ERP, WhatsApp, e-mail — sem interromper sua operação.",
+    name: "Integracao de Sistemas",
+    desc: "Conectamos IA aos seus sistemas existentes — CRM, ERP, WhatsApp, e-mail — sem interromper sua operacao.",
   },
   {
     icon: Cpu,
@@ -28,15 +28,15 @@ const services = [
 ];
 
 const process = [
-  { step: "01", title: "Discovery", desc: "Entendemos seu negócio, dores e oportunidades em uma sessão de diagnóstico." },
-  { step: "02", title: "Design", desc: "Desenhamos a solução ideal — arquitetura, fluxos e integrações necessárias." },
-  { step: "03", title: "Build", desc: "Desenvolvemos, testamos e refinamos até a solução estar pronta para produção." },
+  { step: "01", title: "Discovery", desc: "Entendemos seu negocio, dores e oportunidades em uma sessao de diagnostico." },
+  { step: "02", title: "Design", desc: "Desenhamos a solucao ideal — arquitetura, fluxos e integracoes necessarias." },
+  { step: "03", title: "Build", desc: "Desenvolvemos, testamos e refinamos ate a solucao estar pronta para producao." },
   { step: "04", title: "Launch", desc: "Implantamos com acompanhamento e iteramos com base nos resultados reais." },
 ];
 
 export default function InnovationStudioPage() {
   return (
-    <main className="bg-black min-h-screen">
+    <main className="min-h-screen">
       {/* Hero */}
       <section className="relative pt-40 pb-32 overflow-hidden">
         <div className="relative z-10 max-w-6xl mx-auto px-6">
@@ -56,21 +56,21 @@ export default function InnovationStudioPage() {
             initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 1, delay: 0.1 }}
-            className="text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[0.95] max-w-3xl"
+            className="text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[0.95] max-w-3xl"
           >
             Transformamos ideias
             <br />
-            <span className="text-[#f59e0b]">em soluções de IA.</span>
+            <span className="text-[#f59e0b]">em solucoes de IA.</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="mt-8 text-lg text-white/50 max-w-xl leading-relaxed"
+            className="mt-8 text-lg text-muted-foreground max-w-xl leading-relaxed"
           >
-            Nosso laboratório de inovação cria soluções personalizadas de inteligência artificial
-            para empresas que querem liderar, não apenas acompanhar.
+            Nosso laboratorio de inovacao cria solucoes personalizadas de inteligencia artificial
+            para empresas que querem liderar, nao apenas acompanhar.
           </motion.p>
 
           <motion.div
@@ -81,14 +81,14 @@ export default function InnovationStudioPage() {
           >
             <Link
               href="/demo"
-              className="group flex items-center gap-2.5 bg-white text-black font-medium text-[15px] px-8 py-3.5 rounded-full transition-all duration-300 hover:bg-white/90 hover:-translate-y-0.5"
+              className="group flex items-center gap-2.5 bg-primary text-primary-foreground font-medium text-[15px] px-8 py-3.5 rounded-full transition-all duration-300 hover:bg-primary/90 hover:-translate-y-0.5"
             >
               Agendar Consultoria
               <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               href="#process"
-              className="text-[14px] text-white/25 hover:text-white/60 transition-colors duration-300"
+              className="text-[14px] text-muted-foreground/70 hover:text-muted-foreground transition-colors duration-300"
             >
               Como funciona
             </Link>
@@ -106,10 +106,10 @@ export default function InnovationStudioPage() {
             className="mb-16"
           >
             <p className="text-xs tracking-[0.25em] uppercase text-[#f59e0b] font-medium mb-4">O que fazemos</p>
-            <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-white">
-              Soluções que resolvem
+            <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground">
+              Solucoes que resolvem
               <br />
-              <span className="text-white/40">problemas reais.</span>
+              <span className="text-muted-foreground">problemas reais.</span>
             </h2>
           </motion.div>
 
@@ -121,13 +121,13 @@ export default function InnovationStudioPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 transition-all duration-300 hover:bg-white/[0.04] hover:border-white/[0.12] hover:-translate-y-0.5"
+                className="bg-muted/50 border border-border rounded-2xl p-8 transition-all duration-300 hover:bg-muted hover:border-border hover:-translate-y-0.5"
               >
                 <div className="w-10 h-10 rounded-lg bg-[#f59e0b]/10 flex items-center justify-center mb-5">
                   <s.icon className="w-5 h-5 text-[#f59e0b]" />
                 </div>
-                <h3 className="text-lg font-bold text-white mb-2">{s.name}</h3>
-                <p className="text-sm text-white/50 leading-relaxed">{s.desc}</p>
+                <h3 className="text-lg font-bold text-foreground mb-2">{s.name}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -144,10 +144,10 @@ export default function InnovationStudioPage() {
             className="mb-16"
           >
             <p className="text-xs tracking-[0.25em] uppercase text-[#f59e0b] font-medium mb-4">Processo</p>
-            <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-white">
-              Do problema à solução
+            <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground">
+              Do problema a solucao
               <br />
-              <span className="text-white/40">em 4 etapas.</span>
+              <span className="text-muted-foreground">em 4 etapas.</span>
             </h2>
           </motion.div>
 
@@ -161,10 +161,10 @@ export default function InnovationStudioPage() {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="relative"
               >
-                <div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 h-full">
+                <div className="bg-muted/50 border border-border rounded-2xl p-6 h-full">
                   <span className="text-3xl font-bold text-[#f59e0b]/20 mb-4 block">{p.step}</span>
-                  <h3 className="text-lg font-semibold text-white mb-2">{p.title}</h3>
-                  <p className="text-sm text-white/45 leading-relaxed">{p.desc}</p>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">{p.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -181,15 +181,15 @@ export default function InnovationStudioPage() {
             viewport={{ once: true }}
           >
             <Sparkles className="w-8 h-8 text-[#f59e0b] mx-auto mb-6" />
-            <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-white mb-4">
-              Tem um desafio? Nós temos a solução.
+            <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground mb-4">
+              Tem um desafio? Nos temos a solucao.
             </h2>
-            <p className="text-white/40 text-lg mb-10 max-w-lg mx-auto">
-              Conte-nos sobre seu projeto e criaremos algo único para sua empresa.
+            <p className="text-muted-foreground text-lg mb-10 max-w-lg mx-auto">
+              Conte-nos sobre seu projeto e criaremos algo unico para sua empresa.
             </p>
             <Link
               href="/demo"
-              className="group inline-flex items-center gap-3 bg-white text-black font-medium rounded-full px-8 py-4 text-sm transition-all duration-300 hover:bg-white/90 hover:-translate-y-0.5"
+              className="group inline-flex items-center gap-3 bg-primary text-primary-foreground font-medium rounded-full px-8 py-4 text-sm transition-all duration-300 hover:bg-primary/90 hover:-translate-y-0.5"
             >
               Falar com o Studio
               <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />

@@ -22,7 +22,7 @@ export default function SignupPage() {
     setError(null);
 
     if (password !== confirmPassword) {
-      setError("As senhas não coincidem.");
+      setError("As senhas nao coincidem.");
       return;
     }
 
@@ -71,9 +71,9 @@ export default function SignupPage() {
   }
 
   const inputClass =
-    "w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-white/30 transition-colors";
+    "w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:border-ring transition-colors";
   const labelClass =
-    "block text-[12px] font-mono text-white/40 uppercase tracking-wider mb-2";
+    "block text-[12px] font-mono text-muted-foreground uppercase tracking-wider mb-2";
 
   return (
     <motion.div
@@ -83,10 +83,10 @@ export default function SignupPage() {
     >
       <GlowCard>
         <form onSubmit={handleSubmit} className="p-8 sm:p-10 space-y-5">
-          <h1 className="text-xl font-semibold text-white mb-2">Criar Conta</h1>
+          <h1 className="text-xl font-semibold text-foreground mb-2">Criar Conta</h1>
 
           {error && (
-            <div className="text-sm text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-4 py-3">
+            <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
               {error}
             </div>
           )}
@@ -154,18 +154,13 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl text-sm font-medium transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{
-              background: "rgba(255, 255, 255, 0.08)",
-              border: "1px solid rgba(255, 255, 255, 0.15)",
-              color: "#ffffff",
-            }}
+            className="w-full py-3 rounded-xl text-sm font-medium transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed bg-primary text-primary-foreground hover:bg-primary/90"
           >
             {loading ? "Criando conta..." : "Criar Conta"}
           </button>
 
-          <p className="text-sm text-center text-white/40 pt-2">
-            Já tem conta?{" "}
+          <p className="text-sm text-center text-muted-foreground pt-2">
+            Ja tem conta?{" "}
             <Link
               href="/login"
               className="text-[#5B9BF3] hover:text-[#5B9BF3]/80 transition-colors"

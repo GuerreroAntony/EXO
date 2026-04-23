@@ -5,9 +5,9 @@ import { useRef } from "react";
 
 const stats = [
   { value: "99.9%", label: "Uptime garantido" },
-  { value: "<1s", label: "Latência média" },
-  { value: "70%", label: "Redução de custos" },
-  { value: "24/7", label: "Operação contínua" },
+  { value: "<1s", label: "Latencia media" },
+  { value: "70%", label: "Reducao de custos" },
+  { value: "24/7", label: "Operacao continua" },
 ];
 
 function StatItem({ stat, index }: { stat: typeof stats[0]; index: number }) {
@@ -24,12 +24,12 @@ function StatItem({ stat, index }: { stat: typeof stats[0]; index: number }) {
     <motion.div
       ref={ref}
       style={{ scale, opacity, y }}
-      className={`text-center ${index < stats.length - 1 ? "lg:border-r border-white/[0.06]" : ""}`}
+      className={`text-center ${index < stats.length - 1 ? "lg:border-r border-border" : ""}`}
     >
-      <div className="text-5xl font-bold tracking-tight text-white">
+      <div className="text-5xl font-bold tracking-tight text-foreground">
         {stat.value}
       </div>
-      <div className="mt-3 text-sm text-white/25 tracking-widest uppercase">
+      <div className="mt-3 text-sm text-muted-foreground/70 tracking-widest uppercase">
         {stat.label}
       </div>
     </motion.div>
@@ -38,7 +38,7 @@ function StatItem({ stat, index }: { stat: typeof stats[0]; index: number }) {
 
 export default function Stats() {
   return (
-    <section className="py-32 bg-black">
+    <section className="py-32">
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-16">
           {stats.map((s, i) => (
