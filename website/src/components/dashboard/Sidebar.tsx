@@ -154,7 +154,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
               const { createClient } = await import("@/lib/supabase/client");
               const supabase = createClient();
               await supabase.auth.signOut();
-              window.location.href = "/";
+              window.location.href = "/login";
             }}
             className="flex items-center gap-2 text-[#555] hover:text-[#999] text-[12px] transition-colors w-full px-1 cursor-pointer"
           >

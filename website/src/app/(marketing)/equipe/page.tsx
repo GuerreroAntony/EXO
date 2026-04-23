@@ -7,20 +7,12 @@ import Link from "next/link";
 const team = [
   {
     name: "Jimmy Peixoto",
-    role: "CEO & Co-Founder",
+    role: "CEO & Founder",
     bio: "Empreendedor serial com passagem por Brasil, EUA e Europa. Reconhecido como um dos 14 empreendedores mais inovadores do Brasil em 2014. Especialista em modelos de negocio escalaveis, desenvolvimento de negocios e lideranca estrategica.",
     avatar: "JP",
     color: "#5B9BF3",
     linkedin: "https://linkedin.com/in/jimmypeixoto",
     website: "https://jimmypeixoto.com.br",
-  },
-  {
-    name: "Antony Guerrero",
-    role: "CTO & Co-Founder",
-    bio: "Engenheiro de software e arquiteto de sistemas de IA. Responsavel pela infraestrutura tecnica da EXO, desde os agentes de voz ate os digital workers. Apaixonado por transformar ideias complexas em produtos que funcionam.",
-    avatar: "AG",
-    color: "#22d3ee",
-    linkedin: "#",
   },
 ];
 

@@ -83,7 +83,7 @@ export default function Navbar() {
 
         <div className="hidden lg:flex items-center gap-2">
           <Link
-            href="/dashboard/hub"
+            href="/login"
             className="px-4 py-2 rounded-full text-[11px] font-medium tracking-[0.05em] text-white/55 hover:text-white transition-all duration-300"
           >
             Entrar

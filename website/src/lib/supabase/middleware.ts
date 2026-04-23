@@ -29,15 +29,25 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // TODO: Re-enable auth protection after Supabase keys are configured
-  // const isProtected =
-  //   request.nextUrl.pathname.startsWith("/dashboard") ||
-  //   request.nextUrl.pathname.startsWith("/onboarding");
-  // if (isProtected && !user) {
-  //   const url = request.nextUrl.clone();
-  //   url.pathname = "/login";
-  //   return NextResponse.redirect(url);
-  // }
+  // Protect dashboard and onboarding routes
+  const isProtected =
+    request.nextUrl.pathname.startsWith("/dashboard") ||
+    request.nextUrl.pathname.startsWith("/onboarding");
+  if (isProtected && !user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    return NextResponse.redirect(url);
+  }
+
+  // Redirect logged-in users from login/signup to hub
+  const isAuthPage =
+    request.nextUrl.pathname === "/login" ||
+    request.nextUrl.pathname === "/signup";
+  if (isAuthPage && user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/dashboard/hub";
+    return NextResponse.redirect(url);
+  }
 
   return supabaseResponse;
 }
