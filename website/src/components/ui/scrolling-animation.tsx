@@ -240,7 +240,7 @@ export function ScrollingHero() {
             width: "500px",
             height: "500px",
             opacity: sphereOpacity,
-            top: "calc(50% + 24px)",
+            top: `calc(50% - ${20 * (1 - phase3)}px + ${24 * phase3}px)`,
             left: "50%",
             transform: `translate(-50%, -50%) translateX(${globeX}vw) scale(${globeScale})`,
             willChange: "transform, opacity",
@@ -260,7 +260,7 @@ export function ScrollingHero() {
             style={{ background: "linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 35%, transparent 55%)" }}
           />
           <div className="max-w-6xl w-full px-6 h-full mx-auto flex items-center relative">
-            <div className="hidden lg:block max-w-[500px] -mt-10">
+            <div className="hidden lg:block max-w-[500px] -mt-16">
               <h2 className="text-[clamp(3rem,5.5vw,4.8rem)] font-bold text-white leading-[1.05] tracking-[-0.02em]">
                 Empresa global
                 <br />
