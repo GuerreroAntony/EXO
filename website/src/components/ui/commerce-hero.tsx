@@ -16,28 +16,36 @@ import Link from "next/link";
 const categories = [
   {
     title: "Digital Workers",
+    desc: "Funcionários digitais autônomos que executam, decidem e aprendem.",
     icon: Users,
     color: "#a78bfa",
     bg: "bg-violet-50",
     href: "/digital-workers",
+    cta: "Conhecer",
   },
   {
     title: "Influencers Virtuais",
+    desc: "Personalidades digitais que engajam e criam conteúdo 24/7.",
     icon: Sparkles,
     color: "#22d3ee",
     bg: "bg-cyan-50",
     href: "/inteligencia-virtual",
+    cta: "Conhecer",
   },
   {
     title: "Innovation Studio",
+    desc: "Soluções personalizadas de IA sob medida para seu negócio.",
     icon: Lightbulb,
     color: "#f59e0b",
     bg: "bg-amber-50",
     href: "/innovation-studio",
+    cta: "Explorar",
   },
   {
     title: "Robótica",
+    desc: "Automação física inteligente para logística e manufatura.",
     icon: Cog,
+    cta: "Em breve",
     color: "#34d399",
     bg: "bg-emerald-50",
     href: "/robotica",
@@ -171,38 +179,40 @@ export function CommerceHero() {
           </motion.section>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-7xl mx-auto mt-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-7xl mx-auto mt-12 mb-20">
           {categories.map((category, index) => {
             const Icon = category.icon;
             return (
               <motion.div
                 key={category.title}
-                className="group relative bg-muted/50 backdrop-blur-sm rounded-3xl p-4 sm:p-6 min-h-[250px] sm:min-h-[300px] w-full overflow-hidden transition-all duration-500"
+                className="group relative bg-muted/50 rounded-3xl p-6 sm:p-8 w-full overflow-hidden transition-all duration-500 hover:shadow-lg"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
+                style={{ borderTop: `3px solid ${category.color}` }}
               >
-                <Link href={category.href} className="absolute inset-0 z-20">
-                  <h2 className="text-center text-2xl sm:text-3xl font-bold relative z-10 my-2 sm:my-4 transition-colors duration-300"
+                <Link href={category.href} className="block">
+                  <div
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300"
+                    style={{ background: `${category.color}12` }}
+                  >
+                    <Icon size={28} style={{ color: category.color }} strokeWidth={1.5} />
+                  </div>
+                  <h2 className="text-xl font-bold mb-2 transition-colors duration-300"
                     style={{ color: category.color }}
                   >
                     {category.title}
                   </h2>
-                  <div className="absolute inset-0 flex items-center justify-center p-4">
-                    <div
-                      className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl flex items-center justify-center opacity-80 group-hover:scale-110 group-hover:opacity-100 transition-all duration-500"
-                      style={{ background: `${category.color}15` }}
-                    >
-                      <Icon size={48} style={{ color: category.color }} strokeWidth={1.5} />
-                    </div>
-                  </div>
-                  <div className="absolute bottom-0 right-0 w-16 h-16 md:w-20 md:h-20 bg-background/95 backdrop-blur-sm rounded-tl-xl flex items-center justify-center z-10 border-l border-t border-border/50">
-                    <div className="absolute bottom-2 right-2 md:bottom-3 md:right-3 w-10 h-10 md:w-12 md:h-12 bg-secondary rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-300 shadow-lg"
-                      style={{ ['--tw-shadow-color' as string]: `${category.color}30` }}
-                    >
-                      <ArrowUpRight className="w-5 h-5" style={{ color: category.color }} />
-                    </div>
-                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+                    {category.desc}
+                  </p>
+                  <span
+                    className="inline-flex items-center gap-1.5 text-sm font-medium group-hover:gap-2.5 transition-all duration-300"
+                    style={{ color: category.color }}
+                  >
+                    {category.cta}
+                    <ArrowUpRight className="w-4 h-4" />
+                  </span>
                 </Link>
               </motion.div>
             );
