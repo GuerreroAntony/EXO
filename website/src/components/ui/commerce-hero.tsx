@@ -154,12 +154,8 @@ export function CommerceHero() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
               >
-                <span className="bg-gradient-to-r from-primary via-primary/90 to-primary/70 bg-clip-text text-transparent">
-                  Expanding Human
-                </span>
-                <br />
                 <span className="text-foreground">
-                  Operations.
+                  EXO
                 </span>
               </motion.h1>
               <motion.p

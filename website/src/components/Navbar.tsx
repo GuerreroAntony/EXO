@@ -53,16 +53,16 @@ export default function Navbar() {
       <div
         className="max-w-7xl mx-auto px-5 h-14 flex items-center justify-between rounded-2xl transition-all duration-700"
         style={{
-          background: "rgba(255, 255, 255, 0.10)",
-          backdropFilter: "blur(60px) saturate(1.8)",
-          WebkitBackdropFilter: "blur(60px) saturate(1.8)",
-          border: "1px solid rgba(255, 255, 255, 0.16)",
-          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.12)",
+          background: "rgba(255, 255, 255, 0.85)",
+          backdropFilter: "blur(20px) saturate(1.4)",
+          WebkitBackdropFilter: "blur(20px) saturate(1.4)",
+          border: "1px solid rgba(0, 0, 0, 0.06)",
+          boxShadow: "0 2px 12px rgba(0, 0, 0, 0.06)",
         }}
       >
         <Link
           href="/"
-          className={`text-2xl font-black tracking-[-0.05em] text-white transition-all duration-700 ${
+          className={`text-2xl font-black tracking-[-0.05em] text-foreground transition-all duration-700 ${
             showLogo ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
           }`}
         >
@@ -74,7 +74,7 @@ export default function Navbar() {
             <Link
               key={l.href}
               href={l.href}
-              className="text-[11px] font-medium text-white/55 hover:text-white transition-colors duration-300 tracking-[0.08em] uppercase whitespace-nowrap"
+              className="text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors duration-300 tracking-[0.08em] uppercase whitespace-nowrap"
             >
               {l.label}
             </Link>
@@ -84,19 +84,19 @@ export default function Navbar() {
         <div className="hidden lg:flex items-center gap-2">
           <Link
             href="/login"
-            className="px-4 py-2 rounded-full text-[11px] font-medium tracking-[0.05em] text-white/55 hover:text-white transition-all duration-300"
+            className="px-4 py-2 rounded-full text-[11px] font-medium tracking-[0.05em] text-muted-foreground hover:text-foreground transition-all duration-300"
           >
             Entrar
           </Link>
           <Link
             href="/demo"
-            className="px-5 py-2 rounded-full text-[11px] font-medium tracking-[0.05em] text-white/55 border border-white/12 hover:border-white/25 hover:text-white transition-all duration-500"
+            className="px-5 py-2 rounded-full text-[11px] font-medium tracking-[0.05em] text-muted-foreground border border-border hover:border-foreground/20 hover:text-foreground transition-all duration-500"
           >
             Agendar Demo
           </Link>
         </div>
 
-        <button onClick={() => setOpen(!open)} className="md:hidden text-white/60">
+        <button onClick={() => setOpen(!open)} className="lg:hidden text-muted-foreground">
           {open ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
@@ -107,11 +107,11 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-black/90 backdrop-blur-xl border-t border-white/5"
+            className="lg:hidden bg-background/95 backdrop-blur-xl border-t border-border"
           >
             <div className="px-6 py-8 flex flex-col gap-5">
               {links.map((l) => (
-                <Link key={l.href} href={l.href} onClick={() => setOpen(false)} className="text-sm text-white/40 hover:text-white">
+                <Link key={l.href} href={l.href} onClick={() => setOpen(false)} className="text-sm text-muted-foreground hover:text-foreground">
                   {l.label}
                 </Link>
               ))}
