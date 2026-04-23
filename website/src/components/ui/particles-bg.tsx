@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 
 export default function ParticlesComponent() {
+  const [ready, setReady] = useState(false);
+
   const initParticles = useCallback(() => {
     const oldCanvas = document.querySelector("#particles-js canvas");
     if (oldCanvas) oldCanvas.remove();
@@ -54,10 +56,31 @@ export default function ParticlesComponent() {
       },
       retina_detect: true,
     });
+
+    // Small delay so particles have time to render first frame
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setReady(true);
+      });
+    });
   }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+
+    // Check if already loaded
+    // @ts-ignore
+    if (window.particlesJS) {
+      initParticles();
+      return;
+    }
+
+    // Preload hint
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "script";
+    link.href = "https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js";
+    document.head.appendChild(link);
 
     const script = document.createElement("script");
     script.src = "https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js";
@@ -78,7 +101,8 @@ export default function ParticlesComponent() {
   return (
     <div
       id="particles-js"
-      className="w-full h-screen absolute top-0 left-0 bg-black"
+      className="w-full h-screen absolute top-0 left-0 bg-black transition-opacity duration-1000 ease-out"
+      style={{ opacity: ready ? 1 : 0 }}
     />
   );
 }
