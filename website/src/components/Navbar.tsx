@@ -51,7 +51,7 @@ export default function Navbar() {
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-700 p-4"
     >
       <div
-        className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between rounded-2xl transition-all duration-700"
+        className="max-w-7xl mx-auto px-5 h-14 flex items-center justify-between rounded-2xl transition-all duration-700"
         style={{
           background: "rgba(255, 255, 255, 0.10)",
           backdropFilter: "blur(60px) saturate(1.8)",
@@ -69,28 +69,28 @@ export default function Navbar() {
           EXO
         </Link>
 
-        <div className="hidden md:flex items-center gap-10">
+        <div className="hidden lg:flex items-center gap-6">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className="text-[13px] font-medium text-white/60 hover:text-[#5B9BF3] transition-colors duration-300 tracking-wide uppercase"
+              className="text-[11px] font-medium text-white/55 hover:text-white transition-colors duration-300 tracking-[0.08em] uppercase whitespace-nowrap"
             >
               {l.label}
             </Link>
           ))}
         </div>
 
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden lg:flex items-center gap-2">
           <Link
             href="/dashboard/hub"
-            className="px-5 py-2.5 rounded-full text-[13px] font-medium tracking-wide text-white/60 hover:text-white transition-all duration-300"
+            className="px-4 py-2 rounded-full text-[11px] font-medium tracking-[0.05em] text-white/55 hover:text-white transition-all duration-300"
           >
             Entrar
           </Link>
           <Link
             href="/demo"
-            className="px-6 py-2.5 rounded-full text-[13px] font-medium tracking-wide text-white/60 border border-white/12 hover:border-white/25 hover:text-white transition-all duration-500"
+            className="px-5 py-2 rounded-full text-[11px] font-medium tracking-[0.05em] text-white/55 border border-white/12 hover:border-white/25 hover:text-white transition-all duration-500"
           >
             Agendar Demo
           </Link>
