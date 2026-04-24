@@ -94,6 +94,69 @@ const pillars: Pillar[] = [
   },
 ];
 
+function PillarBody({ pillar }: { pillar: Pillar }) {
+  return (
+    <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 lg:items-center">
+      <div>
+        <div className="flex items-center gap-3 mb-5 lg:mb-6">
+          <div className="h-px w-8 bg-white/80" />
+          <span className="text-[10px] lg:text-xs font-mono tracking-[0.2em] font-medium text-white">
+            {pillar.tag}
+          </span>
+        </div>
+
+        <div className="mb-5 lg:mb-6">
+          <MorphingTextReveal
+            texts={pillar.morphTexts}
+            className="text-[1.75rem] md:text-3xl lg:text-4xl font-bold text-white leading-tight"
+            interval={3500}
+            glitchOnHover={true}
+          />
+        </div>
+
+        <p className="text-base lg:text-lg text-white/85 leading-relaxed mb-8 lg:mb-10 max-w-lg">
+          {pillar.subtitle}
+        </p>
+
+        <Link
+          href={pillar.href}
+          className={`group inline-flex items-center gap-2.5 font-medium text-sm px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-0.5 ${
+            pillar.soon
+              ? "border border-white/40 text-white/80 cursor-default"
+              : "bg-white hover:bg-white/90"
+          }`}
+          style={!pillar.soon ? { color: pillar.color } : undefined}
+        >
+          {pillar.cta}
+          {!pillar.soon && <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />}
+        </Link>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 lg:gap-5">
+        {pillar.features.map((feature) => {
+          const Icon = feature.icon;
+          return (
+            <div
+              key={feature.text}
+              className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 lg:p-7 border border-white/15"
+            >
+              <div className="w-10 h-10 lg:w-11 lg:h-11 rounded-xl bg-white/15 flex items-center justify-center mb-3 lg:mb-4">
+                <Icon size={20} className="text-white" strokeWidth={1.5} />
+              </div>
+              <p className="text-sm lg:text-base font-semibold text-white leading-snug mb-1 lg:mb-1.5">
+                {feature.text}
+              </p>
+              <p className="text-xs lg:text-sm text-white/75 leading-relaxed">
+                {feature.desc}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function PillarCard({ pillar }: { pillar: Pillar }) {
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
@@ -105,8 +168,15 @@ function PillarCard({ pillar }: { pillar: Pillar }) {
   const radius = useTransform(scrollYProgress, [0, 1], ["48px", "0px"]);
 
   return (
-    <section ref={sectionRef} className="h-[150vh] relative">
-      <div className="sticky top-0 h-screen overflow-hidden">
+    <section ref={sectionRef} className="relative lg:h-[150vh]">
+      <div
+        className="lg:hidden px-6 pt-32 pb-20"
+        style={{ backgroundColor: pillar.color }}
+      >
+        <PillarBody pillar={pillar} />
+      </div>
+
+      <div className="hidden lg:block sticky top-0 h-screen overflow-hidden">
         <motion.div
           className="absolute overflow-hidden"
           style={{
@@ -119,65 +189,8 @@ function PillarCard({ pillar }: { pillar: Pillar }) {
           }}
         >
           <div className="w-full h-full flex items-center">
-            <div className="max-w-7xl mx-auto w-full px-8 lg:px-16 py-12">
-              <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                {/* Left */}
-                <div>
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="h-px w-8 bg-white/80" />
-                    <span className="text-xs font-mono tracking-[0.2em] font-medium text-white">
-                      {pillar.tag}
-                    </span>
-                  </div>
-
-                  <div className="mb-6">
-                    <MorphingTextReveal
-                      texts={pillar.morphTexts}
-                      className="text-2xl md:text-3xl lg:text-4xl font-bold text-white"
-                      interval={3500}
-                      glitchOnHover={true}
-                    />
-                  </div>
-
-                  <p className="text-lg text-white/85 leading-relaxed mb-10 max-w-lg">
-                    {pillar.subtitle}
-                  </p>
-
-                  <Link
-                    href={pillar.href}
-                    className={`group inline-flex items-center gap-2.5 font-medium text-sm px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-0.5 ${
-                      pillar.soon
-                        ? "border border-white/40 text-white/80 cursor-default"
-                        : "bg-white hover:bg-white/90"
-                    }`}
-                    style={!pillar.soon ? { color: pillar.color } : undefined}
-                  >
-                    {pillar.cta}
-                    {!pillar.soon && <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />}
-                  </Link>
-                </div>
-
-                {/* Right — feature cards */}
-                <div className="grid grid-cols-2 gap-4 lg:gap-5">
-                  {pillar.features.map((feature) => {
-                    const Icon = feature.icon;
-                    return (
-                      <div
-                        key={feature.text}
-                        className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 lg:p-7 border border-white/15"
-                      >
-                        <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center mb-4">
-                          <Icon size={22} className="text-white" strokeWidth={1.5} />
-                        </div>
-                        <p className="text-base font-semibold text-white leading-snug mb-1.5">
-                          {feature.text}
-                        </p>
-                        <p className="text-sm text-white/75 leading-relaxed">{feature.desc}</p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+            <div className="max-w-7xl mx-auto w-full px-16 py-12">
+              <PillarBody pillar={pillar} />
             </div>
           </div>
         </motion.div>
