@@ -7,6 +7,7 @@ import PageHeader from "@/components/dashboard/PageHeader";
 import DataTable, { type Column } from "@/components/dashboard/DataTable";
 import StatusBadge from "@/components/dashboard/StatusBadge";
 import { createClient } from "@/lib/supabase/client";
+import { useOrg } from "@/lib/supabase/use-org";
 
 /* ───── Live Calls Component ───── */
 interface LiveCall {
@@ -26,36 +27,36 @@ const typeColors: Record<string, string> = {
   sac: "text-blue-400 bg-blue-500/15",
   cobranca: "text-amber-400 bg-amber-500/15",
   agendamento: "text-emerald-400 bg-emerald-500/15",
+  custom: "text-pink-400 bg-pink-500/15",
 };
 
 function LiveCalls() {
+  const { orgId } = useOrg();
   const [calls, setCalls] = useState<LiveCall[]>([]);
   const [now, setNow] = useState(Date.now());
 
   useEffect(() => {
+    if (!orgId) return;
     const supabase = createClient();
 
-    // Initial fetch
     const fetchCalls = async () => {
       const { data } = await supabase
         .from("ligacoes_ativas")
         .select("*")
+        .eq("organization_id", orgId)
         .order("started_at", { ascending: false });
       setCalls((data ?? []) as LiveCall[]);
     };
     fetchCalls();
 
-    // Poll every 3 seconds
     const interval = setInterval(fetchCalls, 3000);
-
-    // Timer for duration display
     const timer = setInterval(() => setNow(Date.now()), 1000);
 
     return () => {
       clearInterval(interval);
       clearInterval(timer);
     };
-  }, []);
+  }, [orgId]);
 
   function formatElapsed(startedAt: string): string {
     const seconds = Math.floor((now - new Date(startedAt).getTime()) / 1000);
@@ -202,6 +203,7 @@ const columns: Column<AtendimentoRow>[] = [
 ];
 
 export default function AtendimentosPage() {
+  const { orgId, loading: orgLoading } = useOrg();
   const [data, setData] = useState<AtendimentoRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [agente, setAgente] = useState("todos");
@@ -209,10 +211,13 @@ export default function AtendimentosPage() {
   const [selected, setSelected] = useState<AtendimentoRow | null>(null);
 
   useEffect(() => {
+    if (orgLoading) return;
+    if (!orgId) { setLoading(false); return; }
     const supabase = createClient();
     supabase
       .from("atendimentos_log")
       .select("*, pacientes(nome, telefone)")
+      .eq("organization_id", orgId)
       .order("criado_em", { ascending: false })
       .then(({ data: rows }) => {
         const mapped: AtendimentoRow[] = (rows ?? []).map((r: Atendimento) => ({
@@ -234,7 +239,7 @@ export default function AtendimentosPage() {
         setData(mapped);
         setLoading(false);
       });
-  }, []);
+  }, [orgId, orgLoading]);
 
   const filtered = data.filter((row) => {
     if (agente !== "todos" && !row.agente.toLowerCase().includes(agente)) return false;
@@ -268,6 +273,7 @@ export default function AtendimentosPage() {
           <option value="sac">SAC</option>
           <option value="cobranca">Cobrança</option>
           <option value="agendamento">Agendamento</option>
+          <option value="custom">Personalizado</option>
         </select>
         <select
           value={canal}

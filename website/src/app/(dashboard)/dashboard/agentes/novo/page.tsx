@@ -20,6 +20,9 @@ import {
   MessageSquare,
   Mic,
   FileText,
+  Upload,
+  X as XIcon,
+  File as FileIcon,
 } from "lucide-react";
 import {
   buildComposedSystemPrompt,
@@ -101,11 +104,26 @@ const stepsMeta = [
 ];
 
 /* ───── Component ───── */
+interface UploadedSource {
+  source_id: string;
+  title: string;
+  char_count: number;
+  size_bytes: number;
+}
+
+interface PendingUpload {
+  name: string;
+  status: "uploading" | "error";
+  error?: string;
+}
+
 export default function NovoAgentePage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [activating, setActivating] = useState(false);
   const [provisionStatus, setProvisionStatus] = useState<string | null>(null);
+  const [uploadedSources, setUploadedSources] = useState<UploadedSource[]>([]);
+  const [pendingUploads, setPendingUploads] = useState<PendingUpload[]>([]);
 
   const [form, setForm] = useState<FormData>({
     capabilities: [],
@@ -185,12 +203,75 @@ export default function NovoAgentePage() {
     });
   }, []);
 
+  const fileToBase64 = (file: File): Promise<string> => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve((reader.result as string).split(",")[1]);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+
+  const handleFiles = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    const supabase = createClient();
+    const { data: sess } = await supabase.auth.getSession();
+    const token = sess.session?.access_token;
+    if (!token) {
+      alert("Sessão expirada. Faça login novamente.");
+      return;
+    }
+
+    const accepted = Array.from(files).filter((f) => {
+      const ext = f.name.toLowerCase().split(".").pop() || "";
+      return ["pdf", "docx", "txt", "md"].includes(ext);
+    });
+
+    for (const file of accepted) {
+      setPendingUploads((p) => [...p, { name: file.name, status: "uploading" }]);
+      try {
+        const base64 = await fileToBase64(file);
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/ingest-document`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ file_base64: base64, filename: file.name }),
+          }
+        );
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "upload_failed");
+        setUploadedSources((u) => [
+          ...u,
+          {
+            source_id: data.source_id,
+            title: file.name,
+            char_count: data.char_count,
+            size_bytes: file.size,
+          },
+        ]);
+        setPendingUploads((p) => p.filter((x) => x.name !== file.name));
+      } catch (err) {
+        setPendingUploads((p) =>
+          p.map((x) => x.name === file.name ? { ...x, status: "error", error: String(err) } : x)
+        );
+      }
+    }
+  };
+
+  const removeSource = async (sourceId: string) => {
+    const supabase = createClient();
+    await supabase.from("knowledge_sources").delete().eq("id", sourceId);
+    setUploadedSources((u) => u.filter((s) => s.source_id !== sourceId));
+  };
+
   const canNext = (): boolean => {
     switch (step) {
       case 0: return form.capabilities.length > 0;
       case 1: return !!form.name && !!form.empresa;
       case 2: return true;
-      case 3: return true;
+      case 3: return pendingUploads.filter((p) => p.status === "uploading").length === 0;
       case 4: return true;
       case 5: return true;
       default: return false;
@@ -215,13 +296,28 @@ export default function NovoAgentePage() {
 
       const orgId = profile?.organization_id;
 
+      // Build composed knowledge from uploaded sources + manual text
+      let knowledgeBlob = form.conhecimento || "";
+      if (uploadedSources.length > 0) {
+        const { data: sources } = await supabase
+          .from("knowledge_sources")
+          .select("title, extracted_text")
+          .in("id", uploadedSources.map((s) => s.source_id));
+        if (sources && sources.length > 0) {
+          const filesText = sources
+            .map((s) => `### ${s.title}\n${s.extracted_text}`)
+            .join("\n\n---\n\n");
+          knowledgeBlob = filesText + (knowledgeBlob ? `\n\n---\n\n### Notas adicionais\n${knowledgeBlob}` : "");
+        }
+      }
+
       const systemPrompt = buildComposedSystemPrompt(form.capabilities, {
         empresa: form.empresa,
         setor: form.setor,
         agente_nome: form.name,
         tom: form.tone,
         horario: horarioText,
-        conhecimento: form.conhecimento || undefined,
+        conhecimento: knowledgeBlob || undefined,
       });
 
       const firstMessage = buildComposedFirstMessage(form.capabilities, {
@@ -257,6 +353,14 @@ export default function NovoAgentePage() {
         .single();
 
       if (error) throw error;
+
+      // Link uploaded knowledge sources to the created agent
+      if (uploadedSources.length > 0) {
+        await supabase
+          .from("knowledge_sources")
+          .update({ agent_id: provisioning.id })
+          .in("id", uploadedSources.map((s) => s.source_id));
+      }
 
       setProvisionStatus("Provisionando no Vapi...");
 
@@ -615,15 +719,103 @@ export default function NovoAgentePage() {
             <div>
               <h2 className="text-lg font-semibold text-white mb-2">Base de conhecimento</h2>
               <p className="text-sm text-[#888] mb-6">
-                Adicione informações que o agente precisa saber sobre sua empresa. Quanto mais detalhado, melhor o atendimento.
+                Faça upload de documentos (PDF, DOCX, TXT, MD) que o agente vai usar pra responder os clientes. Quanto mais completo, melhor o atendimento.
               </p>
-              <textarea
-                value={form.conhecimento}
-                onChange={(e) => update({ conhecimento: e.target.value })}
-                rows={12}
-                placeholder={`Exemplo:\n\n- Serviços oferecidos: Limpeza dental, Clareamento, Ortodontia\n- Preços: Limpeza R$150, Clareamento R$500\n- Formas de pagamento: Pix, crédito até 6x, convênios\n- Endereço: Rua das Flores, 123, Centro\n- Estacionamento: Sim, gratuito\n- Perguntas frequentes:\n  P: Aceita convênio? R: Sim, Amil, Bradesco e Odontoprev\n  P: Tem emergência? R: Sim, seg-sex até 20h`}
-                className="w-full bg-[#151515] border border-[#333] rounded-xl px-4 py-3 text-white text-[14px] leading-relaxed placeholder:text-[#444] focus:border-[#5B9BF3]/50 focus:ring-1 focus:ring-[#5B9BF3]/20 outline-none transition-all resize-none font-mono"
-              />
+
+              {/* Dropzone */}
+              <label
+                htmlFor="knowledge-upload"
+                className="block border-2 border-dashed border-[#333] rounded-2xl p-8 text-center cursor-pointer hover:border-[#5B9BF3]/50 hover:bg-[#5B9BF3]/5 transition-all mb-4"
+                onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add("border-[#5B9BF3]/50", "bg-[#5B9BF3]/5"); }}
+                onDragLeave={(e) => { e.currentTarget.classList.remove("border-[#5B9BF3]/50", "bg-[#5B9BF3]/5"); }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.classList.remove("border-[#5B9BF3]/50", "bg-[#5B9BF3]/5");
+                  handleFiles(e.dataTransfer.files);
+                }}
+              >
+                <input
+                  id="knowledge-upload"
+                  type="file"
+                  multiple
+                  accept=".pdf,.docx,.txt,.md"
+                  onChange={(e) => {
+                    handleFiles(e.target.files);
+                    e.target.value = "";
+                  }}
+                  className="hidden"
+                />
+                <Upload size={24} className="text-[#5B9BF3] mx-auto mb-3" />
+                <p className="text-[14px] text-white font-medium mb-1">
+                  Arraste arquivos aqui ou clique para selecionar
+                </p>
+                <p className="text-[12px] text-[#888]">PDF, DOCX, TXT ou MD — até 20 MB cada</p>
+              </label>
+
+              {/* Uploaded + pending list */}
+              {(uploadedSources.length > 0 || pendingUploads.length > 0) && (
+                <div className="space-y-2 mb-5">
+                  {uploadedSources.map((s) => (
+                    <div key={s.source_id} className="flex items-center gap-3 bg-[#151515] border border-emerald-500/20 rounded-xl px-4 py-3">
+                      <FileIcon size={16} className="text-emerald-400 shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[13px] text-white truncate">{s.title}</p>
+                        <p className="text-[11px] text-[#888]">
+                          {(s.size_bytes / 1024).toFixed(0)} KB · {s.char_count.toLocaleString("pt-BR")} caracteres extraídos
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeSource(s.source_id)}
+                        className="text-[#666] hover:text-red-400 transition-colors shrink-0"
+                      >
+                        <XIcon size={16} />
+                      </button>
+                    </div>
+                  ))}
+                  {pendingUploads.map((p) => (
+                    <div key={p.name} className={`flex items-center gap-3 bg-[#151515] border rounded-xl px-4 py-3 ${
+                      p.status === "error" ? "border-red-500/30" : "border-[#333]"
+                    }`}>
+                      {p.status === "uploading" ? (
+                        <Loader2 size={16} className="text-[#5B9BF3] animate-spin shrink-0" />
+                      ) : (
+                        <XIcon size={16} className="text-red-400 shrink-0" />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[13px] text-white truncate">{p.name}</p>
+                        <p className="text-[11px] text-[#888]">
+                          {p.status === "uploading" ? "Processando..." : `Erro: ${p.error}`}
+                        </p>
+                      </div>
+                      {p.status === "error" && (
+                        <button
+                          type="button"
+                          onClick={() => setPendingUploads((x) => x.filter((f) => f.name !== p.name))}
+                          className="text-[#666] hover:text-white shrink-0"
+                        >
+                          <XIcon size={14} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Manual text */}
+              <div>
+                <label className="block text-sm font-medium text-[#888] mb-2">
+                  <FileText size={14} className="inline mr-1.5" />
+                  Notas adicionais (opcional)
+                </label>
+                <textarea
+                  value={form.conhecimento}
+                  onChange={(e) => update({ conhecimento: e.target.value })}
+                  rows={6}
+                  placeholder={`Informações complementares que não estão nos arquivos:\n- Horário especial\n- Avisos pontuais\n- Preferências de atendimento`}
+                  className="w-full bg-[#151515] border border-[#333] rounded-xl px-4 py-3 text-white text-[14px] leading-relaxed placeholder:text-[#444] focus:border-[#5B9BF3]/50 focus:ring-1 focus:ring-[#5B9BF3]/20 outline-none transition-all resize-none font-mono"
+                />
+              </div>
             </div>
           )}
 

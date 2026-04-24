@@ -17,6 +17,7 @@ import Link from "next/link";
 import PageHeader from "@/components/dashboard/PageHeader";
 import StatusBadge from "@/components/dashboard/StatusBadge";
 import { createClient } from "@/lib/supabase/client";
+import { useOrg } from "@/lib/supabase/use-org";
 
 interface Agent {
   id: string;
@@ -35,6 +36,7 @@ interface ProvisionedAgent {
   organization_id: string;
   agent_name: string;
   agent_type: string;
+  capabilities: string[] | null;
   status: string;
   phone_number: string | null;
   voice_name: string | null;
@@ -51,6 +53,7 @@ const typeIcons: Record<string, typeof Phone> = {
   sac: Headphones,
   cobranca: DollarSign,
   agendamento: Calendar,
+  custom: Bot,
 };
 
 const typeColors: Record<string, string> = {
@@ -58,6 +61,15 @@ const typeColors: Record<string, string> = {
   sac: "text-blue-400 bg-blue-500/15",
   cobranca: "text-amber-400 bg-amber-500/15",
   agendamento: "text-emerald-400 bg-emerald-500/15",
+  custom: "text-pink-400 bg-pink-500/15",
+};
+
+const typeLabels: Record<string, string> = {
+  recepcionista: "Recepção",
+  sac: "SAC",
+  cobranca: "Cobrança",
+  agendamento: "Agendamento",
+  custom: "Multi",
 };
 
 function formatPhone(phone: string): string {
@@ -89,21 +101,24 @@ function StatusDot({ status }: { status: string }) {
 }
 
 export default function AgentesPage() {
+  const { orgId, loading: orgLoading } = useOrg();
   const [agents, setAgents] = useState<Agent[]>([]);
   const [provisioned, setProvisioned] = useState<ProvisionedAgent[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (orgLoading) return;
+    if (!orgId) { setLoading(false); return; }
     const supabase = createClient();
     Promise.all([
-      supabase.from("agents").select("*").order("criado_em"),
-      supabase.from("agent_provisioning").select("*").order("created_at", { ascending: false }),
+      supabase.from("agents").select("*").eq("organization_id", orgId).order("criado_em"),
+      supabase.from("agent_provisioning").select("*").eq("organization_id", orgId).order("criado_em", { ascending: false }),
     ]).then(([legacyRes, provRes]) => {
       setAgents(legacyRes.data ?? []);
       setProvisioned(provRes.data ?? []);
       setLoading(false);
     });
-  }, []);
+  }, [orgId, orgLoading]);
 
   const hasAny = agents.length > 0 || provisioned.length > 0;
 
@@ -170,10 +185,26 @@ export default function AgentesPage() {
                       <StatusDot status={agent.status} />
                     </div>
                     <p className="text-[11px] font-mono text-[#888] uppercase tracking-wider">
-                      {agent.agent_type}
+                      {typeLabels[agent.agent_type] ?? agent.agent_type}
                     </p>
                   </div>
                 </div>
+
+                {/* Capabilities chips for multi-capability agents */}
+                {agent.agent_type === "custom" && agent.capabilities && agent.capabilities.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {agent.capabilities.map((cap) => {
+                      const CapIcon = typeIcons[cap] ?? Bot;
+                      const capColor = typeColors[cap] ?? "text-[#999] bg-[#1a1a1a]";
+                      return (
+                        <span key={cap} className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium ${capColor}`}>
+                          <CapIcon size={11} />
+                          {typeLabels[cap] ?? cap}
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
 
                 {/* Status badge */}
                 <div className="flex flex-wrap items-center gap-2 mb-4">

@@ -8,11 +8,12 @@ import PageHeader from "@/components/dashboard/PageHeader";
 import DataTable, { type Column } from "@/components/dashboard/DataTable";
 import StatusBadge from "@/components/dashboard/StatusBadge";
 import { createClient } from "@/lib/supabase/client";
+import { useOrg } from "@/lib/supabase/use-org";
 
 interface FaturaRaw {
   id: string;
   descricao: string;
-  valor: number;
+  valor_final: number;
   status: string;
   vencimento: string;
   criado_em: string;
@@ -54,15 +55,19 @@ const columns: Column<Fatura>[] = [
 ];
 
 export default function FinanceiroPage() {
+  const { orgId, orgName, loading: orgLoading } = useOrg();
   const [faturas, setFaturas] = useState<Fatura[]>([]);
   const [raw, setRaw] = useState<FaturaRaw[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (orgLoading) return;
+    if (!orgId) { setLoading(false); return; }
     const supabase = createClient();
     supabase
       .from("faturas")
       .select("*, pacientes(nome)")
+      .eq("organization_id", orgId)
       .order("criado_em", { ascending: false })
       .then(({ data: rows }) => {
         const items = (rows ?? []) as FaturaRaw[];
@@ -70,18 +75,18 @@ export default function FinanceiroPage() {
         const mapped: Fatura[] = items.map((r) => ({
           paciente: r.pacientes?.nome ?? "—",
           descricao: r.descricao ?? "—",
-          valor: formatCurrency(r.valor ?? 0),
+          valor: formatCurrency(r.valor_final ?? 0),
           status: r.status ?? "—",
           vencimento: r.vencimento ? formatDate(r.vencimento) : "—",
         }));
         setFaturas(mapped);
         setLoading(false);
       });
-  }, []);
+  }, [orgId, orgLoading]);
 
-  const totalPendente = raw.filter((f) => f.status === "pendente").reduce((s, f) => s + (f.valor ?? 0), 0);
-  const totalPago = raw.filter((f) => f.status === "pago").reduce((s, f) => s + (f.valor ?? 0), 0);
-  const totalAtrasado = raw.filter((f) => f.status === "atrasado").reduce((s, f) => s + (f.valor ?? 0), 0);
+  const totalPendente = raw.filter((f) => f.status === "pendente").reduce((s, f) => s + (f.valor_final ?? 0), 0);
+  const totalPago = raw.filter((f) => f.status === "pago").reduce((s, f) => s + (f.valor_final ?? 0), 0);
+  const totalAtrasado = raw.filter((f) => f.status === "atrasado").reduce((s, f) => s + (f.valor_final ?? 0), 0);
   const countPendente = raw.filter((f) => f.status === "pendente").length;
   const countAtrasado = raw.filter((f) => f.status === "atrasado").length;
 
@@ -91,7 +96,7 @@ export default function FinanceiroPage() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
-      <PageHeader title="Financeiro" subtitle="Faturas e pagamentos da clínica" />
+      <PageHeader title="Financeiro" subtitle={orgName ? `Faturas e pagamentos — ${orgName}` : "Faturas e pagamentos"} />
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         <KPICard

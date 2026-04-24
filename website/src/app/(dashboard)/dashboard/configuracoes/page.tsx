@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Save, Phone, MessageCircle, Zap, Calendar as CalendarIcon } from "lucide-react";
 import PageHeader from "@/components/dashboard/PageHeader";
+import { createClient } from "@/lib/supabase/client";
+import { useOrg } from "@/lib/supabase/use-org";
 
 function InputField({ label, value, onChange, readOnly = false }: {
   label: string;
@@ -45,12 +47,23 @@ const tabs = [
 const diasSemana = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
 
 export default function ConfiguracoesPage() {
+  const { orgId, orgName, userName } = useOrg();
+  const [email, setEmail] = useState("");
   const [activeTab, setActiveTab] = useState("perfil");
-  const [nome, setNome] = useState("Dr. Ricardo Mendes");
-  const [cargo, setCargo] = useState("Dentista / Proprietário");
-  const [empresa, setEmpresa] = useState("Clínica Sorriso");
-  const [setor, setSetor] = useState("Odontologia");
-  const [endereco, setEndereco] = useState("Av. Paulista, 1000 - São Paulo, SP");
+  const [nome, setNome] = useState("");
+  const [cargo, setCargo] = useState("");
+  const [empresa, setEmpresa] = useState("");
+  const [setor, setSetor] = useState("");
+  const [endereco, setEndereco] = useState("");
+
+  useEffect(() => {
+    setNome(userName);
+    setEmpresa(orgName);
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user?.email) setEmail(user.email);
+    });
+  }, [userName, orgName, orgId]);
   const [vozAtivo, setVozAtivo] = useState(true);
   const [whatsappAtivo, setWhatsappAtivo] = useState(true);
   const [horarios, setHorarios] = useState(
@@ -94,7 +107,7 @@ export default function ConfiguracoesPage() {
             <SectionCard title="Perfil">
               <div className="space-y-4">
                 <InputField label="Nome" value={nome} onChange={setNome} />
-                <InputField label="Email" value="ricardo@clinicasorriso.com.br" readOnly />
+                <InputField label="Email" value={email} readOnly />
                 <InputField label="Cargo" value={cargo} onChange={setCargo} />
               </div>
               <button className="flex items-center gap-2 mt-5 px-4 py-2.5 bg-[#5B9BF3] hover:bg-[#5B9BF3]/80 text-white text-sm font-medium rounded-xl transition-colors">

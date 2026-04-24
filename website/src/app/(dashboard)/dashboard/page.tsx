@@ -16,11 +16,13 @@ import {
 import KPICard from "@/components/dashboard/KPICard";
 import StatusBadge from "@/components/dashboard/StatusBadge";
 import { createClient } from "@/lib/supabase/client";
+import { useOrg } from "@/lib/supabase/use-org";
 
 interface ProvisionedAgent {
   id: string;
   agent_name: string;
   agent_type: string;
+  capabilities: string[] | null;
   status: string;
   phone_number: string | null;
   vapi_assistant_id: string | null;
@@ -49,6 +51,7 @@ const typeColors: Record<string, string> = {
 };
 
 export default function DashboardPage() {
+  const { orgId, loading: orgLoading } = useOrg();
   const [loading, setLoading] = useState(true);
   const [totalLigacoes, setTotalLigacoes] = useState(0);
   const [agentesAtivos, setAgentesAtivos] = useState(0);
@@ -58,13 +61,15 @@ export default function DashboardPage() {
   const [recentActivity, setRecentActivity] = useState<ActivityRow[]>([]);
 
   useEffect(() => {
+    if (orgLoading) return;
+    if (!orgId) { setLoading(false); return; }
     const supabase = createClient();
 
     Promise.all([
-      supabase.from("atendimentos_log").select("id, duracao_segundos"),
-      supabase.from("agent_provisioning").select("id, agent_name, agent_type, status, phone_number, vapi_assistant_id"),
-      supabase.from("tickets").select("id", { count: "exact", head: true }).eq("status", "aberto"),
-      supabase.from("atendimentos_log").select("*, pacientes(nome)").order("criado_em", { ascending: false }).limit(10),
+      supabase.from("atendimentos_log").select("id, duracao_segundos").eq("organization_id", orgId),
+      supabase.from("agent_provisioning").select("id, agent_name, agent_type, capabilities, status, phone_number, vapi_assistant_id").eq("organization_id", orgId),
+      supabase.from("tickets").select("id", { count: "exact", head: true }).eq("status", "aberto").eq("organization_id", orgId),
+      supabase.from("atendimentos_log").select("*, pacientes(nome)").eq("organization_id", orgId).order("criado_em", { ascending: false }).limit(10),
     ]).then(([atendRes, agentsRes, ticketsRes, activityRes]) => {
       const atendimentos = atendRes.data ?? [];
       setTotalLigacoes(atendimentos.length);
@@ -79,7 +84,7 @@ export default function DashboardPage() {
       setRecentActivity((activityRes.data ?? []) as ActivityRow[]);
       setLoading(false);
     });
-  }, []);
+  }, [orgId, orgLoading]);
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.35 }}>
