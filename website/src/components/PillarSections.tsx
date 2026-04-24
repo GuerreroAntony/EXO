@@ -71,14 +71,14 @@ export function PillarSections() {
       {pillars.map((pillar, i) => (
         <motion.section
           key={pillar.tag}
-          className="py-24 lg:py-32"
+          className="py-32 lg:py-44"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: "0px" }}
           transition={{ duration: 0.8 }}
         >
           {/* Divider */}
-          {i > 0 && <div className="line-fade mb-24 lg:mb-32" />}
+          {i > 0 && <div className="line-fade mb-32 lg:mb-44" />}
 
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Left: text content */}
