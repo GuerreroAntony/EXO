@@ -130,7 +130,7 @@ export function PillarSections() {
 
             {/* Right: feature cards */}
             <motion.div
-              className="grid grid-cols-2 gap-4"
+              className="grid grid-cols-2 gap-5"
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -141,19 +141,19 @@ export function PillarSections() {
                 return (
                   <motion.div
                     key={feature.text}
-                    className="bg-muted/50 rounded-2xl p-5 transition-all duration-300 hover:bg-muted"
+                    className="bg-muted/50 rounded-2xl p-8 transition-all duration-300 hover:bg-muted"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: 0.5 + fi * 0.1 }}
                   >
                     <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
+                      className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
                       style={{ background: `${pillar.color}15` }}
                     >
-                      <Icon size={20} style={{ color: pillar.color }} strokeWidth={1.5} />
+                      <Icon size={24} style={{ color: pillar.color }} strokeWidth={1.5} />
                     </div>
-                    <p className="text-sm font-medium text-foreground">{feature.text}</p>
+                    <p className="text-base font-semibold text-foreground leading-snug">{feature.text}</p>
                   </motion.div>
                 );
               })}
