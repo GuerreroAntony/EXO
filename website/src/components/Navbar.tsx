@@ -35,7 +35,6 @@ export default function Navbar() {
 
     const fn = () => {
       setScrolled(window.scrollY > window.innerHeight * 0.8);
-      setShowLogo(window.scrollY > window.innerHeight * 0.5);
     };
     window.addEventListener("scroll", fn);
     return () => window.removeEventListener("scroll", fn);
