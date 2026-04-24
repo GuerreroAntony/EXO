@@ -92,3 +92,27 @@ body {
 .glitch-effect {
   animation: glitch 0.3s ease-in-out;
 }
+
+@property --navbar-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes navbar-border-spin {
+  to {
+    --navbar-angle: 360deg;
+  }
+}
+
+.navbar-gradient-border {
+  background: conic-gradient(
+    from var(--navbar-angle),
+    #6366f1,
+    #0ea5e9,
+    #10b981,
+    #f97316,
+    #6366f1
+  );
+  animation: navbar-border-spin 6s linear infinite;
+}

@@ -47,16 +47,16 @@ export default function Navbar() {
       transition={{ duration: 0.8, delay: 1.5 }}
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-700 p-4"
     >
-      <div
-        className="max-w-7xl mx-auto px-5 h-14 flex items-center justify-between rounded-2xl transition-all duration-700"
-        style={{
-          background: "rgba(250, 250, 250, 0.95)",
-          backdropFilter: "blur(20px) saturate(1.4)",
-          WebkitBackdropFilter: "blur(20px) saturate(1.4)",
-          border: "1px solid rgba(0, 0, 0, 0.10)",
-          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
-        }}
-      >
+      <div className="max-w-7xl mx-auto rounded-2xl p-[1.5px] navbar-gradient-border">
+        <div
+          className="px-5 h-14 flex items-center justify-between rounded-[calc(1rem-1.5px)] transition-all duration-700"
+          style={{
+            background: "rgba(250, 250, 250, 0.95)",
+            backdropFilter: "blur(20px) saturate(1.4)",
+            WebkitBackdropFilter: "blur(20px) saturate(1.4)",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+          }}
+        >
         <Link
           href="/"
           className={`text-2xl font-black tracking-[-0.05em] text-foreground transition-all duration-700 ${
@@ -96,6 +96,7 @@ export default function Navbar() {
         <button onClick={() => setOpen(!open)} className="lg:hidden text-muted-foreground">
           {open ? <X size={20} /> : <Menu size={20} />}
         </button>
+        </div>
       </div>
 
       <AnimatePresence>
