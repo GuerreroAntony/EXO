@@ -21,15 +21,21 @@ import {
   Mic,
   FileText,
 } from "lucide-react";
-import { agentTemplates, buildSystemPrompt, buildFirstMessage } from "@/data/agent-templates";
+import {
+  buildComposedSystemPrompt,
+  buildComposedFirstMessage,
+  getCapability,
+  getDefaultName,
+  type CapabilityType,
+} from "@/data/agent-templates";
 import { createClient } from "@/lib/supabase/client";
 
 /* ───── Types ───── */
-type AgentType = "recepcionista" | "sac" | "cobranca" | "agendamento";
+type AgentType = CapabilityType;
 type Tone = "amigavel" | "profissional" | "formal";
 
 interface FormData {
-  agentType: AgentType | null;
+  capabilities: AgentType[];
   name: string;
   tone: Tone;
   firstMessage: string;
@@ -102,12 +108,12 @@ export default function NovoAgentePage() {
   const [provisionStatus, setProvisionStatus] = useState<string | null>(null);
 
   const [form, setForm] = useState<FormData>({
-    agentType: null,
+    capabilities: [],
     name: "",
     tone: "amigavel",
     firstMessage: "",
-    empresa: "Clínica Sorriso",
-    setor: "Saúde",
+    empresa: "",
+    setor: "Serviços",
     diaInicio: "Segunda",
     diaFim: "Sexta",
     horaInicio: "08:00",
@@ -115,8 +121,6 @@ export default function NovoAgentePage() {
     telefone: "",
     conhecimento: "",
   });
-
-  const template = form.agentType ? agentTemplates.find((t) => t.type === form.agentType) : null;
 
   // Pré-preencher nome da empresa do perfil do cliente
   useEffect(() => {
@@ -149,15 +153,33 @@ export default function NovoAgentePage() {
   const update = useCallback((partial: Partial<FormData>) => {
     setForm((prev) => {
       const next = { ...prev, ...partial };
-      // Auto-fill defaults when type changes
-      if (partial.agentType && partial.agentType !== prev.agentType) {
-        const tpl = agentTemplates.find((t) => t.type === partial.agentType);
-        if (tpl) {
-          next.name = tpl.defaultName;
-          next.firstMessage = tpl.defaultFirstMessage
-            .replace(/\{empresa\}/g, next.empresa || "Empresa")
-            .replace(/\{agente_nome\}/g, tpl.defaultName);
+      if (partial.capabilities && partial.capabilities !== prev.capabilities) {
+        const caps = partial.capabilities;
+        if (caps.length > 0 && !prev.name) {
+          const defaultName = getDefaultName(caps);
+          next.name = defaultName;
+          next.firstMessage = buildComposedFirstMessage(caps, {
+            empresa: next.empresa || "nossa empresa",
+            agente_nome: defaultName,
+          });
         }
+      }
+      return next;
+    });
+  }, []);
+
+  const toggleCapability = useCallback((type: AgentType) => {
+    setForm((prev) => {
+      const has = prev.capabilities.includes(type);
+      const nextCaps = has ? prev.capabilities.filter((c) => c !== type) : [...prev.capabilities, type];
+      const next = { ...prev, capabilities: nextCaps };
+      if (nextCaps.length > 0 && !prev.name) {
+        const defaultName = getDefaultName(nextCaps);
+        next.name = defaultName;
+        next.firstMessage = buildComposedFirstMessage(nextCaps, {
+          empresa: prev.empresa || "nossa empresa",
+          agente_nome: defaultName,
+        });
       }
       return next;
     });
@@ -165,7 +187,7 @@ export default function NovoAgentePage() {
 
   const canNext = (): boolean => {
     switch (step) {
-      case 0: return !!form.agentType;
+      case 0: return form.capabilities.length > 0;
       case 1: return !!form.name && !!form.empresa;
       case 2: return true;
       case 3: return true;
@@ -176,7 +198,7 @@ export default function NovoAgentePage() {
   };
 
   const activate = async () => {
-    if (!template || !form.agentType) return;
+    if (form.capabilities.length === 0) return;
     setActivating(true);
     setProvisionStatus("Criando agente...");
 
@@ -193,7 +215,7 @@ export default function NovoAgentePage() {
 
       const orgId = profile?.organization_id;
 
-      const systemPrompt = buildSystemPrompt(template, {
+      const systemPrompt = buildComposedSystemPrompt(form.capabilities, {
         empresa: form.empresa,
         setor: form.setor,
         agente_nome: form.name,
@@ -202,10 +224,13 @@ export default function NovoAgentePage() {
         conhecimento: form.conhecimento || undefined,
       });
 
-      const firstMessage = buildFirstMessage(template, {
+      const firstMessage = buildComposedFirstMessage(form.capabilities, {
         empresa: form.empresa,
         agente_nome: form.name,
       });
+
+      const agentTypeForDb: AgentType | "custom" =
+        form.capabilities.length === 1 ? form.capabilities[0] : "custom";
 
       setProvisionStatus("Salvando configuração...");
 
@@ -214,7 +239,8 @@ export default function NovoAgentePage() {
         .from("agent_provisioning")
         .insert({
           organization_id: orgId,
-          agent_type: form.agentType,
+          agent_type: agentTypeForDb,
+          capabilities: form.capabilities,
           agent_name: form.name,
           tone: form.tone,
           system_prompt: systemPrompt,
@@ -243,7 +269,8 @@ export default function NovoAgentePage() {
           body: JSON.stringify({
             provisioning_id: provisioning.id,
             organization_id: orgId,
-            agent_type: form.agentType,
+            agent_type: agentTypeForDb,
+            capabilities: form.capabilities,
             agent_name: form.name,
             system_prompt: systemPrompt,
             first_message: firstMessage,
@@ -352,54 +379,64 @@ export default function NovoAgentePage() {
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.25 }}
         >
-          {/* Step 0: Type Selection */}
+          {/* Step 0: Capabilities Selection (multi) */}
           {step === 0 && (
             <div>
-              <h2 className="text-lg font-semibold text-white mb-2">Escolha um template</h2>
-              <p className="text-sm text-[#888] mb-6">Templates pré-configurados para começar rapidamente. Você pode personalizar tudo depois.</p>
+              <h2 className="text-lg font-semibold text-white mb-2">Escolha as capacidades</h2>
+              <p className="text-sm text-[#888] mb-1">Selecione uma ou mais. Marque várias para um agente que faz tudo.</p>
+              <p className="text-xs text-[#666] mb-6">
+                {form.capabilities.length === 0
+                  ? "Nenhuma capacidade selecionada"
+                  : `${form.capabilities.length} selecionada${form.capabilities.length > 1 ? "s" : ""}`}
+              </p>
               <div className="space-y-3">
-                {agentCards.map((a) => (
-                  <button
-                    key={a.type}
-                    onClick={() => update({ agentType: a.type })}
-                    className={`relative w-full text-left p-5 rounded-2xl border transition-all duration-200 ${
-                      form.agentType === a.type
-                        ? `${a.bg} ${a.selectedBorder} ring-1 ring-white/10`
-                        : "bg-[#151515] border-[#333] hover:bg-[#1a1a1a] hover:border-[#2a2a2a]"
-                    }`}
-                  >
-                    {form.agentType === a.type && (
-                      <div className="absolute top-4 right-4 w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                        <Check size={14} className="text-emerald-400" />
+                {agentCards.map((a) => {
+                  const selected = form.capabilities.includes(a.type);
+                  return (
+                    <button
+                      key={a.type}
+                      onClick={() => toggleCapability(a.type)}
+                      className={`relative w-full text-left p-5 rounded-2xl border transition-all duration-200 ${
+                        selected
+                          ? `${a.bg} ${a.selectedBorder} ring-1 ring-white/10`
+                          : "bg-[#151515] border-[#333] hover:bg-[#1a1a1a] hover:border-[#2a2a2a]"
+                      }`}
+                    >
+                      <div className={`absolute top-4 right-4 w-6 h-6 rounded-md flex items-center justify-center border transition-all ${
+                        selected
+                          ? "bg-emerald-500/20 border-emerald-500/50"
+                          : "bg-[#111] border-[#333]"
+                      }`}>
+                        {selected && <Check size={14} className="text-emerald-400" />}
                       </div>
-                    )}
 
-                    <div className="flex items-start gap-4">
-                      <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${a.bg}`}>
-                        <a.Icon size={20} className={a.color} />
-                      </div>
-                      <div className="flex-1 min-w-0 pr-8">
-                        <h3 className="text-[15px] font-semibold text-white mb-1">{a.label}</h3>
-                        <p className="text-[13px] text-[#999] mb-3">{a.longDesc}</p>
-
-                        {/* Skills */}
-                        <div className="flex flex-wrap gap-1.5 mb-3">
-                          {a.skills.map((skill) => (
-                            <span key={skill} className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-[#111] border border-[#333] text-[#888]">
-                              {skill}
-                            </span>
-                          ))}
+                      <div className="flex items-start gap-4">
+                        <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${a.bg}`}>
+                          <a.Icon size={20} className={a.color} />
                         </div>
+                        <div className="flex-1 min-w-0 pr-8">
+                          <h3 className="text-[15px] font-semibold text-white mb-1">{a.label}</h3>
+                          <p className="text-[13px] text-[#999] mb-3">{a.longDesc}</p>
 
-                        {/* Example */}
-                        <div className="bg-[#111] rounded-lg px-3 py-2 border border-[#333]">
-                          <p className="text-[12px] text-[#999] mb-0.5">Exemplo de conversa:</p>
-                          <p className="text-[13px] text-[#666] italic">{a.example}</p>
+                          {/* Skills */}
+                          <div className="flex flex-wrap gap-1.5 mb-3">
+                            {a.skills.map((skill) => (
+                              <span key={skill} className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-[#111] border border-[#333] text-[#888]">
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
+
+                          {/* Example */}
+                          <div className="bg-[#111] rounded-lg px-3 py-2 border border-[#333]">
+                            <p className="text-[12px] text-[#999] mb-0.5">Exemplo de conversa:</p>
+                            <p className="text-[13px] text-[#666] italic">{a.example}</p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -601,7 +638,7 @@ export default function NovoAgentePage() {
                   <div>
                     <h3 className="text-lg font-semibold text-white">1x Agente IA</h3>
                     <p className="text-sm text-[#888] mt-1">
-                      {agentCards.find((c) => c.type === form.agentType)?.label} &mdash; {form.name}
+                      {form.capabilities.map((c) => agentCards.find((a) => a.type === c)?.label).filter(Boolean).join(" + ")} &mdash; {form.name}
                     </p>
                   </div>
                   <div className="text-right">
@@ -657,18 +694,33 @@ export default function NovoAgentePage() {
               <div className="space-y-4">
                 {/* Agent summary card */}
                 <div className="bg-[#151515] border border-[#333] rounded-2xl p-6 ">
-                  <div className="flex items-center gap-4 mb-5">
+                  <div className="flex items-start gap-4 mb-5">
                     {(() => {
-                      const card = agentCards.find((c) => c.type === form.agentType);
-                      if (!card) return null;
+                      const cards = form.capabilities
+                        .map((c) => agentCards.find((a) => a.type === c))
+                        .filter((c): c is typeof agentCards[0] => !!c);
+                      if (cards.length === 0) return null;
+                      const primary = cards[0];
                       return (
                         <>
-                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${card.bg}`}>
-                            <card.Icon size={22} className={card.color} />
+                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${primary.bg}`}>
+                            <primary.Icon size={22} className={primary.color} />
                           </div>
-                          <div>
+                          <div className="flex-1 min-w-0">
                             <h3 className="text-lg font-semibold text-white">{form.name}</h3>
-                            <p className="text-sm text-[#888]">{card.label} &middot; {form.tone}</p>
+                            <p className="text-sm text-[#888]">
+                              {cards.length === 1 ? `${cards[0].label} · ${form.tone}` : `Assistente completo · ${form.tone}`}
+                            </p>
+                            {cards.length > 1 && (
+                              <div className="flex flex-wrap gap-1.5 mt-2">
+                                {cards.map((c) => (
+                                  <span key={c.type} className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium ${c.bg} ${c.color}`}>
+                                    <c.Icon size={11} />
+                                    {c.label}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         </>
                       );
