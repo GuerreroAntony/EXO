@@ -45,49 +45,54 @@ export function CommerceHero() {
     <div className="w-full relative max-w-7xl mx-auto px-6 pt-32 pb-16">
 
       {/* Hero — Anthropic style: title left, description right */}
-      <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start pt-12 pb-24 lg:pb-32">
+      <div className="pt-12 pb-24 lg:pb-32">
+        {/* Title — wide, horizontal like Anthropic */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
+          className="mb-16"
         >
-          <h1 className="text-[clamp(2.5rem,6vw,4.5rem)] font-bold tracking-tight leading-[1.05] text-foreground">
+          <h1 className="text-[clamp(2.8rem,5.5vw,5rem)] font-bold tracking-[-0.02em] leading-[1.1] text-foreground max-w-4xl">
             IA{" "}
-            <span className="underline decoration-[3px] underline-offset-[6px] decoration-foreground/30">
+            <span className="underline decoration-[3px] underline-offset-[8px] decoration-foreground/25">
               aplicada
             </span>{" "}
             e{" "}
-            <span className="underline decoration-[3px] underline-offset-[6px] decoration-foreground/30">
+            <span className="underline decoration-[3px] underline-offset-[8px] decoration-foreground/25">
               agentes
             </span>{" "}
             que expandem operações humanas
           </h1>
         </motion.div>
 
+        {/* Description — right-aligned block */}
         <motion.div
-          className="lg:pt-4"
+          className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
         >
-          <p className="text-lg lg:text-xl text-foreground/70 leading-relaxed max-w-lg">
-            A EXO leva inteligência artificial para operações de vendas, atendimento,
-            marketing e finanças — em qualquer lugar do mundo.
-          </p>
-          <div className="mt-8 flex items-center gap-4">
-            <Link
-              href="/demo"
-              className="group inline-flex items-center gap-2 bg-foreground text-background font-medium text-sm px-6 py-3 rounded-full transition-all duration-300 hover:bg-foreground/90"
-            >
-              Agendar Demo
-              <ArrowUpRight size={15} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </Link>
-            <Link
-              href="/equipe"
-              className="text-sm text-foreground/50 hover:text-foreground transition-colors"
-            >
-              Conhecer a equipe
-            </Link>
+          <div className="lg:max-w-md lg:ml-auto">
+            <p className="text-lg lg:text-xl text-foreground/60 leading-relaxed font-light">
+              A EXO leva inteligência artificial para operações de vendas, atendimento,
+              marketing e finanças — em qualquer lugar do mundo.
+            </p>
+            <div className="mt-8 flex items-center gap-4">
+              <Link
+                href="/demo"
+                className="group inline-flex items-center gap-2 bg-foreground text-background font-medium text-sm px-6 py-3 rounded-full transition-all duration-300 hover:bg-foreground/90"
+              >
+                Agendar Demo
+                <ArrowUpRight size={15} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </Link>
+              <Link
+                href="/equipe"
+                className="text-sm text-foreground/40 hover:text-foreground transition-colors"
+              >
+                Conhecer a equipe
+              </Link>
+            </div>
           </div>
         </motion.div>
       </div>
