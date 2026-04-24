@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -14,6 +15,7 @@ import {
   LogOut,
   X,
 } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 const navGroups = [
   {
@@ -51,9 +53,35 @@ interface SidebarProps {
   onClose: () => void;
 }
 
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 0 || !parts[0]) return "?";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
 export default function Sidebar({ open, onClose }: SidebarProps) {
   const pathname = usePathname();
   const isHubPage = pathname === "/dashboard/hub";
+  const [userName, setUserName] = useState<string>("");
+  const [orgName, setOrgName] = useState<string>("");
+
+  useEffect(() => {
+    const supabase = createClient();
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("full_name, organizations(name)")
+        .eq("id", user.id)
+        .single<{ full_name: string | null; organizations: { name: string } | null }>();
+
+      setUserName(profile?.full_name ?? user.email ?? "");
+      setOrgName(profile?.organizations?.name ?? "");
+    })();
+  }, []);
 
   const isActive = (href: string) => {
     if (href === "/dashboard") return pathname === "/dashboard";
@@ -142,11 +170,11 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
         <div className="p-4">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-8 h-8 rounded-full bg-[#1e1e1e] flex items-center justify-center text-[#888] text-[10px] font-semibold">
-              DR
+              {userName ? getInitials(userName) : "--"}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[13px] text-white font-medium truncate">Dr. Ricardo</p>
-              <p className="text-[10px] text-[#555]">Clínica Sorriso</p>
+              <p className="text-[13px] text-white font-medium truncate">{userName || "—"}</p>
+              <p className="text-[10px] text-[#555] truncate">{orgName || ""}</p>
             </div>
           </div>
           <button

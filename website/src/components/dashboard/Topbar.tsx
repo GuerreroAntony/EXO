@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Bell, Menu, Phone } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 const pageTitles: Record<string, string> = {
   "/dashboard": "Visão Geral",
@@ -19,6 +21,21 @@ interface TopbarProps {
 
 export default function Topbar({ onMenuClick }: TopbarProps) {
   const pathname = usePathname();
+  const [userName, setUserName] = useState<string>("");
+
+  useEffect(() => {
+    const supabase = createClient();
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("id", user.id)
+        .single<{ full_name: string | null }>();
+      setUserName(profile?.full_name ?? user.email ?? "");
+    })();
+  }, []);
 
   // Match exact or prefix for nested routes
   const title = pageTitles[pathname]
@@ -49,7 +66,7 @@ export default function Topbar({ onMenuClick }: TopbarProps) {
           <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-[#5B9BF3] rounded-full" />
         </button>
         <div className="hidden sm:flex items-center gap-2">
-          <span className="text-[13px] text-[#999]">Dr. Ricardo</span>
+          <span className="text-[13px] text-[#999]">{userName || "—"}</span>
         </div>
       </div>
     </header>
