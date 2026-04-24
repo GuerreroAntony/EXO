@@ -45,20 +45,20 @@ export function CommerceHero() {
     <div className="w-full relative max-w-7xl mx-auto px-6 pt-32 pb-16">
 
       {/* Hero — Anthropic style: title left, description right */}
-      {/* Hero — title left, description right, same row */}
-      <div className="grid lg:grid-cols-[3fr_2fr] gap-10 lg:gap-16 items-end pt-12 pb-28 lg:pb-36">
+      {/* Hero — Anthropic exact layout */}
+      <div className="grid lg:grid-cols-[3fr_2fr] gap-10 lg:gap-20 items-end pt-16 lg:pt-24 pb-20 lg:pb-28">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
-          <h1 className="text-[clamp(2.8rem,5.5vw,4.8rem)] font-bold tracking-[-0.025em] leading-[1.08] text-foreground">
+          <h1 className="text-[clamp(3rem,6vw,5.5rem)] font-extrabold tracking-[-0.03em] leading-[1.05] text-foreground">
             IA{" "}
-            <span className="underline decoration-[3px] underline-offset-[8px] decoration-foreground/25">
+            <span className="underline decoration-[3px] underline-offset-[8px] decoration-foreground/30">
               aplicada
             </span>{" "}
             e{" "}
-            <span className="underline decoration-[3px] underline-offset-[8px] decoration-foreground/25">
+            <span className="underline decoration-[3px] underline-offset-[8px] decoration-foreground/30">
               agentes
             </span>{" "}
             que expandem operações humanas
@@ -69,27 +69,12 @@ export function CommerceHero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.15, ease: "easeOut" }}
-          className="lg:pb-2"
+          className="lg:pb-1"
         >
-          <p className="text-lg lg:text-[1.15rem] text-foreground/55 leading-[1.6] font-normal">
+          <p className="text-[clamp(1.1rem,1.8vw,1.4rem)] text-foreground font-semibold leading-[1.5] tracking-[-0.01em]">
             A EXO leva inteligência artificial para operações de vendas, atendimento,
             marketing e finanças — em qualquer lugar do mundo.
           </p>
-          <div className="mt-8 flex items-center gap-4">
-            <Link
-              href="/demo"
-              className="group inline-flex items-center gap-2 bg-foreground text-background font-medium text-sm px-6 py-3 rounded-full transition-all duration-300 hover:bg-foreground/90"
-            >
-              Agendar Demo
-              <ArrowUpRight size={15} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </Link>
-            <Link
-              href="/equipe"
-              className="text-sm text-foreground/35 hover:text-foreground transition-colors"
-            >
-              Conhecer a equipe
-            </Link>
-          </div>
         </motion.div>
       </div>
 
