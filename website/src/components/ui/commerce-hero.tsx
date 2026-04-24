@@ -52,10 +52,11 @@ export function CommerceHero() {
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
           <h1 className="text-[clamp(2.5rem,6vw,4.5rem)] font-bold tracking-tight leading-[1.05] text-foreground">
-            Tornamos empresas{" "}
+            Expandindo{" "}
             <span className="underline decoration-2 underline-offset-[6px] decoration-foreground/30">
-              AI&#8209;first
-            </span>
+              operações
+            </span>{" "}
+            humanas
           </h1>
         </motion.div>
 
