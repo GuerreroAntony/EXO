@@ -60,3 +60,35 @@ body {
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(0,0,0,0.08), transparent);
 }
+
+/* === MORPHING TEXT === */
+@keyframes morphChar {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateY(-5px) scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes glitch {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-2px); }
+  40% { transform: translateX(2px); }
+  60% { transform: translateX(-1px); }
+  80% { transform: translateX(1px); }
+}
+
+.morph-char {
+  animation: morphChar 0.4s ease-out forwards;
+}
+
+.glitch-effect {
+  animation: glitch 0.3s ease-in-out;
+}
