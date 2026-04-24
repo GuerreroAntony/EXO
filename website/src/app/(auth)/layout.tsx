@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,6 +12,13 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           EXO
         </Link>
         {children}
+        <Link
+          href="/"
+          className="flex items-center justify-center gap-2 mt-8 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft size={14} />
+          Voltar para o início
+        </Link>
       </div>
     </div>
   );
