@@ -46,7 +46,7 @@ export function CommerceHero() {
 
       {/* Hero — Anthropic style: title left, description right */}
       {/* Hero — Anthropic layout */}
-      <div className="grid lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-end pt-16 lg:pt-24 pb-20 lg:pb-28">
+      <div className="grid lg:grid-cols-[3fr_2fr] gap-10 lg:gap-20 items-end pt-16 lg:pt-24 pb-20 lg:pb-28">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -69,7 +69,7 @@ export function CommerceHero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.15, ease: "easeOut" }}
-          className="lg:max-w-[360px]"
+          className=""
         >
           <p className="text-[clamp(0.95rem,1.3vw,1.15rem)] text-foreground leading-[1.6] tracking-[-0.01em]">
             A EXO leva inteligência artificial para operações de vendas, atendimento,
