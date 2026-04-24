@@ -22,12 +22,10 @@ export default function Navbar() {
   const pathname = usePathname();
   const isHome = pathname === "/";
 
-  const [showLogo, setShowLogo] = useState(!isHome);
+  const [showLogo, setShowLogo] = useState(true);
 
   useEffect(() => {
-    // On subpages, always show logo; on homepage, show after scrolling past hero
     if (!isHome) {
-      setShowLogo(true);
       const fn = () => {
         setScrolled(window.scrollY > window.innerHeight * 0.8);
       };
