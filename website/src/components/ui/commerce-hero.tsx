@@ -45,14 +45,14 @@ export function CommerceHero() {
     <div className="w-full relative max-w-7xl mx-auto px-6 pt-32 pb-16">
 
       {/* Hero — Anthropic style: title left, description right */}
-      {/* Hero — Anthropic exact layout */}
-      <div className="grid lg:grid-cols-[3fr_2fr] gap-10 lg:gap-20 items-end pt-16 lg:pt-24 pb-20 lg:pb-28">
+      {/* Hero — Anthropic layout */}
+      <div className="grid lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-end pt-16 lg:pt-24 pb-20 lg:pb-28">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
-          <h1 className="text-[clamp(3rem,6vw,5.5rem)] font-extrabold tracking-[-0.03em] leading-[1.05] text-foreground">
+          <h1 className="text-[clamp(2.5rem,5vw,4.2rem)] font-extrabold tracking-[-0.03em] leading-[1.1] text-foreground">
             IA{" "}
             <span className="underline decoration-[3px] underline-offset-[8px] decoration-foreground/30">
               aplicada
@@ -69,9 +69,9 @@ export function CommerceHero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.15, ease: "easeOut" }}
-          className="lg:pb-1"
+          className="lg:max-w-[360px]"
         >
-          <p className="text-[clamp(1.1rem,1.8vw,1.4rem)] text-foreground font-semibold leading-[1.5] tracking-[-0.01em]">
+          <p className="text-[clamp(0.95rem,1.3vw,1.15rem)] text-foreground leading-[1.6] tracking-[-0.01em]">
             A EXO leva inteligência artificial para operações de vendas, atendimento,
             marketing e finanças — em qualquer lugar do mundo.
           </p>
