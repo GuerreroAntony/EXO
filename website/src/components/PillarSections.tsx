@@ -12,10 +12,10 @@ const pillars = [
     morphTexts: ["Automatize processos", "Escale operações", "Reduza custos", "Aumente produtividade"],
     subtitle: "Funcionários digitais autônomos que executam, decidem e aprendem — sem burnout, sem férias, sem limites.",
     features: [
-      { icon: Workflow, text: "Automação end-to-end" },
-      { icon: Clock, text: "Operação 24/7" },
-      { icon: Shield, text: "Compliance nativo" },
-      { icon: TrendingUp, text: "Auto-otimização" },
+      { icon: Workflow, text: "Automação end-to-end", desc: "Do início ao fim do processo, sem intervenção manual." },
+      { icon: Clock, text: "Operação 24/7", desc: "Disponível todos os dias, sem pausas nem paradas." },
+      { icon: Shield, text: "Compliance nativo", desc: "LGPD, auditoria e governança embutidas em cada execução." },
+      { icon: TrendingUp, text: "Auto-otimização", desc: "Aprende com cada execução e melhora sozinho ao longo do tempo." },
     ],
     cta: "Conhecer Digital Workers",
     href: "/digital-workers",
@@ -26,10 +26,10 @@ const pillars = [
     morphTexts: ["Crie conteúdo", "Engaje seguidores", "Escale presença", "Represente sua marca"],
     subtitle: "Personalidades digitais com identidade própria que produzem conteúdo, interagem com público e nunca param.",
     features: [
-      { icon: Sparkles, text: "Personalidade única" },
-      { icon: Image, text: "Conteúdo automatizado" },
-      { icon: MessageCircle, text: "Engajamento 24/7" },
-      { icon: TrendingUp, text: "Escala sem limites" },
+      { icon: Sparkles, text: "Personalidade única", desc: "Identidade visual, tom de voz e história próprios da marca." },
+      { icon: Image, text: "Conteúdo automatizado", desc: "Posts, reels e stories gerados continuamente em escala." },
+      { icon: MessageCircle, text: "Engajamento 24/7", desc: "Responde comentários e DMs em tempo real, sem descanso." },
+      { icon: TrendingUp, text: "Escala sem limites", desc: "Suporta audiências de qualquer tamanho sem perder qualidade." },
     ],
     cta: "Criar meu Influencer",
     href: "/inteligencia-virtual",
@@ -40,10 +40,10 @@ const pillars = [
     morphTexts: ["Consultoria de IA", "Soluções sob medida", "Integração total", "Resultados reais"],
     subtitle: "Nosso laboratório transforma desafios em vantagem competitiva com soluções de IA personalizadas.",
     features: [
-      { icon: Lightbulb, text: "Consultoria estratégica" },
-      { icon: Puzzle, text: "Soluções customizadas" },
-      { icon: Layers, text: "Integração de sistemas" },
-      { icon: Cpu, text: "Treinamento de modelos" },
+      { icon: Lightbulb, text: "Consultoria estratégica", desc: "Diagnóstico e roadmap de IA desenhados para o seu negócio." },
+      { icon: Puzzle, text: "Soluções customizadas", desc: "Desenvolvimento sob medida pra cada caso de uso real." },
+      { icon: Layers, text: "Integração de sistemas", desc: "Conecta a IA à stack e ao fluxo de dados que você já usa." },
+      { icon: Cpu, text: "Treinamento de modelos", desc: "Fine-tuning com seus dados proprietários e conhecimento interno." },
     ],
     cta: "Falar com o Studio",
     href: "/innovation-studio",
@@ -54,10 +54,10 @@ const pillars = [
     morphTexts: ["Logística inteligente", "Manufatura autônoma", "IA embarcada", "Colaboração humano-robô"],
     subtitle: "Automação física inteligente para operações — controlada por IA, integrada ao seu sistema.",
     features: [
-      { icon: Cog, text: "Logística automatizada" },
-      { icon: Workflow, text: "Manufatura inteligente" },
-      { icon: Cpu, text: "IA embarcada" },
-      { icon: Users, text: "Colaboração humano-robô" },
+      { icon: Cog, text: "Logística automatizada", desc: "Armazéns e centros de distribuição operados por robôs autônomos." },
+      { icon: Workflow, text: "Manufatura inteligente", desc: "Linhas de produção com visão computacional e controle adaptativo." },
+      { icon: Cpu, text: "IA embarcada", desc: "Decisão local em tempo real, sem dependência de nuvem." },
+      { icon: Users, text: "Colaboração humano-robô", desc: "Robôs que atuam lado a lado com equipes em segurança." },
     ],
     cta: "Em breve",
     href: "/robotica",
@@ -153,7 +153,8 @@ export function PillarSections() {
                     >
                       <Icon size={24} style={{ color: pillar.color }} strokeWidth={1.5} />
                     </div>
-                    <p className="text-base font-semibold text-foreground leading-snug">{feature.text}</p>
+                    <p className="text-base font-semibold text-foreground leading-snug mb-2">{feature.text}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
                   </motion.div>
                 );
               })}
