@@ -53,11 +53,11 @@ export default function Navbar() {
       <div
         className="max-w-7xl mx-auto px-5 h-14 flex items-center justify-between rounded-2xl transition-all duration-700"
         style={{
-          background: "rgba(255, 255, 255, 0.85)",
+          background: "rgba(250, 250, 250, 0.95)",
           backdropFilter: "blur(20px) saturate(1.4)",
           WebkitBackdropFilter: "blur(20px) saturate(1.4)",
-          border: "1px solid rgba(0, 0, 0, 0.06)",
-          boxShadow: "0 2px 12px rgba(0, 0, 0, 0.06)",
+          border: "1px solid rgba(0, 0, 0, 0.10)",
+          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
         }}
       >
         <Link
@@ -74,7 +74,7 @@ export default function Navbar() {
             <Link
               key={l.href}
               href={l.href}
-              className="text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors duration-300 tracking-[0.08em] uppercase whitespace-nowrap"
+              className="text-[11px] font-semibold text-foreground/60 hover:text-foreground transition-colors duration-300 tracking-[0.08em] uppercase whitespace-nowrap"
             >
               {l.label}
             </Link>
@@ -84,13 +84,13 @@ export default function Navbar() {
         <div className="hidden lg:flex items-center gap-2">
           <Link
             href="/login"
-            className="px-4 py-2 rounded-full text-[11px] font-medium tracking-[0.05em] text-muted-foreground hover:text-foreground transition-all duration-300"
+            className="px-4 py-2 rounded-full text-[11px] font-semibold tracking-[0.05em] text-foreground/60 hover:text-foreground transition-all duration-300"
           >
             Entrar
           </Link>
           <Link
             href="/demo"
-            className="px-5 py-2 rounded-full text-[11px] font-medium tracking-[0.05em] text-muted-foreground border border-border hover:border-foreground/20 hover:text-foreground transition-all duration-500"
+            className="px-5 py-2 rounded-full text-[11px] font-semibold tracking-[0.05em] text-foreground/80 border border-foreground/15 hover:border-foreground/30 hover:text-foreground transition-all duration-500"
           >
             Agendar Demo
           </Link>
