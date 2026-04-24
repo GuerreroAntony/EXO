@@ -1,11 +1,40 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Users, Sparkles, Lightbulb, Cog, ArrowRight, Phone, Workflow, Clock, Shield, TrendingUp, MessageCircle, Image, Puzzle, Layers, Cpu } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import {
+  Users,
+  Sparkles,
+  Lightbulb,
+  Cog,
+  ArrowRight,
+  Workflow,
+  Clock,
+  Shield,
+  TrendingUp,
+  MessageCircle,
+  Image,
+  Puzzle,
+  Layers,
+  Cpu,
+  LucideIcon,
+} from "lucide-react";
 import Link from "next/link";
+import { useRef } from "react";
 import { MorphingTextReveal } from "@/components/ui/morphing-text-reveal";
 
-const pillars = [
+type Feature = { icon: LucideIcon; text: string; desc: string };
+type Pillar = {
+  tag: string;
+  color: string;
+  morphTexts: string[];
+  subtitle: string;
+  features: Feature[];
+  cta: string;
+  href: string;
+  soon?: boolean;
+};
+
+const pillars: Pillar[] = [
   {
     tag: "DIGITAL WORKERS",
     color: "#6366f1",
@@ -65,102 +94,103 @@ const pillars = [
   },
 ];
 
+function PillarCard({ pillar }: { pillar: Pillar }) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "start start"],
+  });
+
+  const inset = useTransform(scrollYProgress, [0, 1], ["2rem", "0rem"]);
+  const radius = useTransform(scrollYProgress, [0, 1], ["48px", "0px"]);
+
+  return (
+    <section ref={sectionRef} className="h-[150vh] relative">
+      <div className="sticky top-0 h-screen overflow-hidden">
+        <motion.div
+          className="absolute overflow-hidden"
+          style={{
+            top: inset,
+            right: inset,
+            bottom: inset,
+            left: inset,
+            borderRadius: radius,
+            backgroundColor: pillar.color,
+          }}
+        >
+          <div className="w-full h-full flex items-center">
+            <div className="max-w-7xl mx-auto w-full px-8 lg:px-16 py-12">
+              <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                {/* Left */}
+                <div>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="h-px w-8 bg-white/80" />
+                    <span className="text-xs font-mono tracking-[0.2em] font-medium text-white">
+                      {pillar.tag}
+                    </span>
+                  </div>
+
+                  <div className="mb-6">
+                    <MorphingTextReveal
+                      texts={pillar.morphTexts}
+                      className="text-2xl md:text-3xl lg:text-4xl font-bold text-white"
+                      interval={3500}
+                      glitchOnHover={true}
+                    />
+                  </div>
+
+                  <p className="text-lg text-white/85 leading-relaxed mb-10 max-w-lg">
+                    {pillar.subtitle}
+                  </p>
+
+                  <Link
+                    href={pillar.href}
+                    className={`group inline-flex items-center gap-2.5 font-medium text-sm px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-0.5 ${
+                      pillar.soon
+                        ? "border border-white/40 text-white/80 cursor-default"
+                        : "bg-white hover:bg-white/90"
+                    }`}
+                    style={!pillar.soon ? { color: pillar.color } : undefined}
+                  >
+                    {pillar.cta}
+                    {!pillar.soon && <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />}
+                  </Link>
+                </div>
+
+                {/* Right — feature cards */}
+                <div className="grid grid-cols-2 gap-4 lg:gap-5">
+                  {pillar.features.map((feature) => {
+                    const Icon = feature.icon;
+                    return (
+                      <div
+                        key={feature.text}
+                        className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 lg:p-7 border border-white/15"
+                      >
+                        <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center mb-4">
+                          <Icon size={22} className="text-white" strokeWidth={1.5} />
+                        </div>
+                        <p className="text-base font-semibold text-white leading-snug mb-1.5">
+                          {feature.text}
+                        </p>
+                        <p className="text-sm text-white/75 leading-relaxed">{feature.desc}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 export function PillarSections() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6">
-      {pillars.map((pillar, i) => (
-        <motion.section
-          key={pillar.tag}
-          className="py-32 lg:py-44"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "0px" }}
-          transition={{ duration: 0.8 }}
-        >
-          {/* Divider */}
-          {i > 0 && <div className="line-fade mb-32 lg:mb-44" />}
-
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Left: text content */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              {/* Tag */}
-              <div className="flex items-center gap-3 mb-6">
-                <div className="h-px w-8" style={{ background: pillar.color }} />
-                <span
-                  className="text-xs font-mono tracking-[0.2em] font-medium"
-                  style={{ color: pillar.color }}
-                >
-                  {pillar.tag}
-                </span>
-              </div>
-
-              {/* Morphing title */}
-              <div className="mb-6">
-                <MorphingTextReveal
-                  texts={pillar.morphTexts}
-                  className="text-2xl md:text-3xl lg:text-4xl font-bold"
-                  interval={3500}
-                  glitchOnHover={true}
-                />
-              </div>
-
-              {/* Subtitle */}
-              <p className="text-lg text-muted-foreground leading-relaxed mb-10 max-w-lg">
-                {pillar.subtitle}
-              </p>
-
-              {/* CTA */}
-              <Link
-                href={pillar.href}
-                className={`group inline-flex items-center gap-2.5 font-medium text-sm px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-0.5 ${
-                  pillar.soon
-                    ? "border border-border text-muted-foreground cursor-default"
-                    : "bg-primary text-primary-foreground hover:bg-primary/90"
-                }`}
-              >
-                {pillar.cta}
-                {!pillar.soon && <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />}
-              </Link>
-            </motion.div>
-
-            {/* Right: feature cards */}
-            <motion.div
-              className="grid grid-cols-2 gap-5"
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              {pillar.features.map((feature, fi) => {
-                const Icon = feature.icon;
-                return (
-                  <motion.div
-                    key={feature.text}
-                    className="bg-muted/50 rounded-2xl p-8 transition-all duration-300 hover:bg-muted"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: 0.5 + fi * 0.1 }}
-                  >
-                    <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
-                      style={{ background: `${pillar.color}15` }}
-                    >
-                      <Icon size={24} style={{ color: pillar.color }} strokeWidth={1.5} />
-                    </div>
-                    <p className="text-base font-semibold text-foreground leading-snug mb-2">{feature.text}</p>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-          </div>
-        </motion.section>
+    <div>
+      {pillars.map((pillar) => (
+        <PillarCard key={pillar.tag} pillar={pillar} />
       ))}
     </div>
   );
