@@ -8,7 +8,7 @@ import { MorphingTextReveal } from "@/components/ui/morphing-text-reveal";
 const pillars = [
   {
     tag: "DIGITAL WORKERS",
-    color: "#a78bfa",
+    color: "#6366f1",
     morphTexts: ["Automatize processos", "Escale operações", "Reduza custos", "Aumente produtividade"],
     subtitle: "Funcionários digitais autônomos que executam, decidem e aprendem — sem burnout, sem férias, sem limites.",
     features: [
@@ -22,7 +22,7 @@ const pillars = [
   },
   {
     tag: "INFLUENCERS VIRTUAIS",
-    color: "#22d3ee",
+    color: "#0ea5e9",
     morphTexts: ["Crie conteúdo", "Engaje seguidores", "Escale presença", "Represente sua marca"],
     subtitle: "Personalidades digitais com identidade própria que produzem conteúdo, interagem com público e nunca param.",
     features: [
@@ -36,7 +36,7 @@ const pillars = [
   },
   {
     tag: "INNOVATION STUDIO",
-    color: "#f59e0b",
+    color: "#f97316",
     morphTexts: ["Consultoria de IA", "Soluções sob medida", "Integração total", "Resultados reais"],
     subtitle: "Nosso laboratório transforma desafios em vantagem competitiva com soluções de IA personalizadas.",
     features: [
@@ -50,7 +50,7 @@ const pillars = [
   },
   {
     tag: "ROBÓTICA",
-    color: "#34d399",
+    color: "#10b981",
     morphTexts: ["Logística inteligente", "Manufatura autônoma", "IA embarcada", "Colaboração humano-robô"],
     subtitle: "Automação física inteligente para operações — controlada por IA, integrada ao seu sistema.",
     features: [
