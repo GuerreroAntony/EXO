@@ -15,25 +15,25 @@ interface CardData {
 const defaultCards: CardData[] = [
   {
     title: "Call Center",
-    desc: "Agentes de voz e WhatsApp com IA que atendem, agendam, cobram e escalam — em portugues natural.",
+    desc: "Agentes de voz e WhatsApp com IA que atendem, agendam, cobram e escalam — em português natural.",
     href: "/callcenter",
     icon: Bot,
   },
   {
     title: "Influencers Virtuais",
-    desc: "Influenciadores digitais com IA para redes sociais, marketing e criacao de conteudo.",
-    href: "/inteligencia-virtual",
+    desc: "Influenciadores digitais com IA para redes sociais, marketing e criação de conteúdo.",
+    href: "https://www.influencersvirtuais.com.br/",
     icon: Brain,
   },
   {
     title: "Digital Workers",
-    desc: "Trabalhadores digitais autonomos que executam processos complexos de ponta a ponta.",
+    desc: "Trabalhadores digitais autônomos que executam processos complexos de ponta a ponta.",
     href: "/digital-workers",
     icon: Users,
   },
   {
-    title: "Robotica",
-    desc: "Automacao fisica inteligente para logistica, manufatura e operacoes industriais.",
+    title: "Robótica",
+    desc: "Automação física inteligente para logística, manufatura e operações industriais.",
     href: "/robotica",
     icon: Cog,
     soon: true,

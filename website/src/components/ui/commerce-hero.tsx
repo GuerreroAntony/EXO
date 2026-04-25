@@ -18,7 +18,7 @@ const categories = [
     desc: "Personalidades digitais que engajam e criam conteúdo 24/7.",
     icon: Sparkles,
     color: "#0ea5e9",
-    href: "/inteligencia-virtual",
+    href: "https://www.influencersvirtuais.com.br/",
     cta: "Conhecer",
   },
   {

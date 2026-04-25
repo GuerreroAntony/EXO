@@ -21,7 +21,7 @@ const footerLinks: FooterSection[] = [
 		label: 'Produtos',
 		links: [
 			{ title: 'Call Center IA', href: '/callcenter', icon: Phone },
-			{ title: 'Influencers Virtuais', href: '/inteligencia-virtual', icon: Users },
+			{ title: 'Influencers Virtuais', href: 'https://www.influencersvirtuais.com.br/', icon: Users },
 			{ title: 'Digital Workers', href: '/digital-workers', icon: Bot },
 			{ title: 'Robótica', href: '/robotica', icon: Cog },
 			{ title: 'Innovation Studio', href: '/innovation-studio' },

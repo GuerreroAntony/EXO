@@ -61,7 +61,7 @@ const pillars: Pillar[] = [
       { icon: TrendingUp, text: "Escala sem limites", desc: "Suporta audiências de qualquer tamanho sem perder qualidade." },
     ],
     cta: "Criar meu Influencer",
-    href: "/inteligencia-virtual",
+    href: "https://www.influencersvirtuais.com.br/",
   },
   {
     tag: "INNOVATION STUDIO",

@@ -8,7 +8,7 @@ import { Menu, X } from "lucide-react";
 
 const links = [
   { label: "Call Center", href: "/callcenter" },
-  { label: "Influencers Virtuais", href: "/inteligencia-virtual" },
+  { label: "Influencers Virtuais", href: "https://www.influencersvirtuais.com.br/" },
   { label: "Digital Workers", href: "/digital-workers" },
   { label: "Robótica", href: "/robotica" },
   { label: "Innovation Studio", href: "/innovation-studio" },

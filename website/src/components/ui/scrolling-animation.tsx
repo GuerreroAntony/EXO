@@ -13,7 +13,7 @@ const RotatingEarth = dynamic(
 /* ───── Pillar Data ───── */
 const pillars = [
   { icon: Phone, label: "Call Center", desc: "Agentes de voz com IA que atendem, agendam e cobram 24/7", href: "/callcenter", color: "#5B9BF3", tw: "text-[#5B9BF3]", bg: "bg-[#5B9BF3]/10", border: "border-[#5B9BF3]/25 hover:border-[#5B9BF3]/50" },
-  { icon: Sparkles, label: "Influencers Virtuais", desc: "Personalidades digitais que engajam e criam conteúdo", href: "/inteligencia-virtual", color: "#22d3ee", tw: "text-cyan-400", bg: "bg-cyan-400/10", border: "border-cyan-400/25 hover:border-cyan-400/50" },
+  { icon: Sparkles, label: "Influencers Virtuais", desc: "Personalidades digitais que engajam e criam conteúdo", href: "https://www.influencersvirtuais.com.br/", color: "#22d3ee", tw: "text-cyan-400", bg: "bg-cyan-400/10", border: "border-cyan-400/25 hover:border-cyan-400/50" },
   { icon: Users, label: "Digital Workers", desc: "Funcionários digitais que automatizam processos complexos", href: "/digital-workers", color: "#a78bfa", tw: "text-violet-400", bg: "bg-violet-400/10", border: "border-violet-400/25 hover:border-violet-400/50" },
   { icon: Cog, label: "Robótica", desc: "Automação física inteligente para operações", href: "/robotica", color: "#34d399", tw: "text-emerald-400", bg: "bg-emerald-400/10", border: "border-emerald-400/25 hover:border-emerald-400/50", soon: true },
   { icon: Lightbulb, label: "Innovation Studio", desc: "Soluções de IA sob medida para sua empresa", href: "/innovation-studio", color: "#f59e0b", tw: "text-amber-400", bg: "bg-amber-400/10", border: "border-amber-400/25 hover:border-amber-400/50" },
@@ -40,7 +40,7 @@ const sections = [
       { icon: Bot, text: "Conteúdo automático" },
       { icon: Cog, text: "Escala sem limites" },
     ],
-    cta: "Conhecer Influencers", href: "/inteligencia-virtual",
+    cta: "Conhecer Influencers", href: "https://www.influencersvirtuais.com.br/",
   },
   {
     tag: "Digital Workers", title: "Funcionários", highlight: "que não param.", color: "#a78bfa",
