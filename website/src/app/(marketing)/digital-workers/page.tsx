@@ -4,10 +4,10 @@ import { motion } from "framer-motion";
 import { Workflow, Clock, Shield, TrendingUp, ArrowRight } from "lucide-react";
 
 const features = [
-  { icon: Workflow, name: "Automacao End-to-End", desc: "Processos completos executados de forma autonoma, sem intervencao humana." },
-  { icon: Clock, name: "Operacao 24/7", desc: "Seus Digital Workers nunca param. Produtividade continua sem burnout." },
-  { icon: Shield, name: "Compliance Nativo", desc: "Cada acao e logada, auditavel e respeita suas politicas internas." },
-  { icon: TrendingUp, name: "Auto-otimizacao", desc: "Aprendem com cada interacao e melhoram continuamente sem retreino." },
+  { icon: Workflow, name: "Automação End-to-End", desc: "Processos completos executados de forma autônoma, sem intervenção humana." },
+  { icon: Clock, name: "Operação 24/7", desc: "Seus Digital Workers nunca param. Produtividade contínua sem burnout." },
+  { icon: Shield, name: "Compliance Nativo", desc: "Cada ação é logada, auditável e respeita suas políticas internas." },
+  { icon: TrendingUp, name: "Auto-otimização", desc: "Aprendem com cada interação e melhoram continuamente sem retreino." },
 ];
 
 export default function DigitalWorkersPage() {
@@ -29,7 +29,7 @@ export default function DigitalWorkersPage() {
               transition={{ duration: 1, delay: 0.1 }}
               className="mt-6 text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[0.95]"
             >
-              A forca de trabalho
+              A força de trabalho
               <br />
               <span className="text-violet-400">do futuro.</span>
             </motion.h1>
@@ -39,8 +39,8 @@ export default function DigitalWorkersPage() {
               transition={{ duration: 0.8, delay: 0.3 }}
               className="mt-8 text-lg text-muted-foreground max-w-xl leading-relaxed"
             >
-              Trabalhadores digitais autonomos que executam, decidem e aprendem.
-              Nao sao bots — sao colegas digitais.
+              Trabalhadores digitais autônomos que executam, decidem e aprendem.
+              Não são bots — são colegas digitais.
             </motion.p>
           </div>
         </section>

@@ -14,7 +14,7 @@ export default function RoboticaPage() {
               transition={{ duration: 0.8 }}
               className="text-[13px] tracking-[0.3em] uppercase text-emerald-400 font-medium"
             >
-              Robotica
+              Robótica
             </motion.p>
             <motion.h1
               initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
@@ -30,8 +30,8 @@ export default function RoboticaPage() {
               transition={{ duration: 0.8, delay: 0.3 }}
               className="mt-8 text-lg text-muted-foreground max-w-md mx-auto leading-relaxed"
             >
-              Automacao fisica inteligente para logistica, manufatura e operacoes.
-              O corpo da evolucao.
+              Automação física inteligente para logística, manufatura e operações.
+              O corpo da evolução.
             </motion.p>
             <motion.div
               initial={{ opacity: 0 }}
@@ -43,7 +43,7 @@ export default function RoboticaPage() {
                 href="/"
                 className="group border border-border text-muted-foreground rounded-full px-8 py-4 text-sm font-medium tracking-wide inline-flex items-center gap-3 transition-all duration-300 hover:border-border hover:text-foreground"
               >
-                Voltar ao inicio
+                Voltar ao início
                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </a>
             </motion.div>

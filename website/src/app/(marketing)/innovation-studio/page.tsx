@@ -8,17 +8,17 @@ const services = [
   {
     icon: Lightbulb,
     name: "Consultoria de IA",
-    desc: "Analisamos sua operacao e identificamos onde a IA pode gerar mais impacto. Do diagnostico ao roadmap de implementacao.",
+    desc: "Analisamos sua operação e identificamos onde a IA pode gerar mais impacto. Do diagnóstico ao roadmap de implementação.",
   },
   {
     icon: Puzzle,
-    name: "Solucoes Sob Medida",
-    desc: "Desenvolvemos agentes e automacoes customizados para resolver problemas especificos do seu negocio.",
+    name: "Soluções Sob Medida",
+    desc: "Desenvolvemos agentes e automações customizados para resolver problemas específicos do seu negócio.",
   },
   {
     icon: Layers,
-    name: "Integracao de Sistemas",
-    desc: "Conectamos IA aos seus sistemas existentes — CRM, ERP, WhatsApp, e-mail — sem interromper sua operacao.",
+    name: "Integração de Sistemas",
+    desc: "Conectamos IA aos seus sistemas existentes — CRM, ERP, WhatsApp, e-mail — sem interromper sua operação.",
   },
   {
     icon: Cpu,
@@ -28,9 +28,9 @@ const services = [
 ];
 
 const process = [
-  { step: "01", title: "Discovery", desc: "Entendemos seu negocio, dores e oportunidades em uma sessao de diagnostico." },
-  { step: "02", title: "Design", desc: "Desenhamos a solucao ideal — arquitetura, fluxos e integracoes necessarias." },
-  { step: "03", title: "Build", desc: "Desenvolvemos, testamos e refinamos ate a solucao estar pronta para producao." },
+  { step: "01", title: "Discovery", desc: "Entendemos seu negócio, dores e oportunidades em uma sessão de diagnóstico." },
+  { step: "02", title: "Design", desc: "Desenhamos a solução ideal — arquitetura, fluxos e integrações necessárias." },
+  { step: "03", title: "Build", desc: "Desenvolvemos, testamos e refinamos até a solução estar pronta para produção." },
   { step: "04", title: "Launch", desc: "Implantamos com acompanhamento e iteramos com base nos resultados reais." },
 ];
 
@@ -60,7 +60,7 @@ export default function InnovationStudioPage() {
           >
             Transformamos ideias
             <br />
-            <span className="text-[#f59e0b]">em solucoes de IA.</span>
+            <span className="text-[#f59e0b]">em soluções de IA.</span>
           </motion.h1>
 
           <motion.p
@@ -69,8 +69,8 @@ export default function InnovationStudioPage() {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="mt-8 text-lg text-muted-foreground max-w-xl leading-relaxed"
           >
-            Nosso laboratorio de inovacao cria solucoes personalizadas de inteligencia artificial
-            para empresas que querem liderar, nao apenas acompanhar.
+            Nosso laboratório de inovação cria soluções personalizadas de inteligência artificial
+            para empresas que querem liderar, não apenas acompanhar.
           </motion.p>
 
           <motion.div
@@ -107,7 +107,7 @@ export default function InnovationStudioPage() {
           >
             <p className="text-xs tracking-[0.25em] uppercase text-[#f59e0b] font-medium mb-4">O que fazemos</p>
             <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground">
-              Solucoes que resolvem
+              Soluções que resolvem
               <br />
               <span className="text-muted-foreground">problemas reais.</span>
             </h2>
@@ -145,7 +145,7 @@ export default function InnovationStudioPage() {
           >
             <p className="text-xs tracking-[0.25em] uppercase text-[#f59e0b] font-medium mb-4">Processo</p>
             <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground">
-              Do problema a solucao
+              Do problema à solução
               <br />
               <span className="text-muted-foreground">em 4 etapas.</span>
             </h2>
@@ -182,10 +182,10 @@ export default function InnovationStudioPage() {
           >
             <Sparkles className="w-8 h-8 text-[#f59e0b] mx-auto mb-6" />
             <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground mb-4">
-              Tem um desafio? Nos temos a solucao.
+              Tem um desafio? Nós temos a solução.
             </h2>
             <p className="text-muted-foreground text-lg mb-10 max-w-lg mx-auto">
-              Conte-nos sobre seu projeto e criaremos algo unico para sua empresa.
+              Conte-nos sobre seu projeto e criaremos algo único para sua empresa.
             </p>
             <Link
               href="/demo"

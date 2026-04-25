@@ -5,9 +5,9 @@ import { useRef } from "react";
 
 const stats = [
   { value: "99.9%", label: "Uptime garantido" },
-  { value: "<1s", label: "Latencia media" },
-  { value: "70%", label: "Reducao de custos" },
-  { value: "24/7", label: "Operacao continua" },
+  { value: "<1s", label: "Latência média" },
+  { value: "70%", label: "Redução de custos" },
+  { value: "24/7", label: "Operação contínua" },
 ];
 
 function StatItem({ stat, index }: { stat: typeof stats[0]; index: number }) {

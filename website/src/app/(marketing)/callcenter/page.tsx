@@ -21,22 +21,22 @@ const includedAgents = [
   { icon: Phone, name: "Recepcionista", desc: "Atende e roteia chamadas" },
   { icon: MessageSquare, name: "SAC", desc: "Suporte ao cliente" },
   { icon: Calendar, name: "Agendamento", desc: "Marca e confirma consultas" },
-  { icon: CreditCard, name: "Cobranca", desc: "Negocia pagamentos" },
+  { icon: CreditCard, name: "Cobrança", desc: "Negocia pagamentos" },
 ];
 
 const features = [
-  "Disponivel 24/7, sem fila de espera",
-  "Portugues brasileiro natural",
-  "Voz + WhatsApp simultaneo",
-  "Escalacao inteligente para humanos",
+  "Disponível 24/7, sem fila de espera",
+  "Português brasileiro natural",
+  "Voz + WhatsApp simultâneo",
+  "Escalação inteligente para humanos",
   "Resposta em menos de 1 segundo",
   "LGPD compliant, dados criptografados",
   "Dashboard de analytics em tempo real",
-  "Gravacao e transcricao de chamadas",
-  "Integracao com CRM via API",
+  "Gravação e transcrição de chamadas",
+  "Integração com CRM via API",
   "Knowledge base customizada",
-  "Relatorios semanais automaticos",
-  "Suporte tecnico prioritario",
+  "Relatórios semanais automáticos",
+  "Suporte técnico prioritário",
 ];
 
 export default function CallCenterPage() {
@@ -74,8 +74,8 @@ export default function CallCenterPage() {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="mt-8 text-lg text-muted-foreground max-w-xl leading-relaxed font-light"
           >
-            Cada agente inclui todos os modulos: recepcao, SAC, agendamento e
-            cobranca. Escolha quantos agentes sua operacao precisa.
+            Cada agente inclui todos os módulos: recepção, SAC, agendamento e
+            cobrança. Escolha quantos agentes sua operação precisa.
           </motion.p>
         </div>
       </section>
@@ -91,7 +91,7 @@ export default function CallCenterPage() {
                   <div className="p-8 sm:p-10">
                     {/* Quantity selector */}
                     <p className="text-[11px] font-mono text-muted-foreground/70 uppercase tracking-wider mb-6">
-                      Quantos agentes voce precisa?
+                      Quantos agentes você precisa?
                     </p>
 
                     <div className="flex items-center justify-center gap-6 py-8">
@@ -174,11 +174,11 @@ export default function CallCenterPage() {
                             <span className="text-4xl font-bold text-foreground">
                               R$ {finalPrice.toLocaleString("pt-BR")}
                             </span>
-                            <span className="text-sm text-muted-foreground/70">/mes</span>
+                            <span className="text-sm text-muted-foreground/70">/mês</span>
                           </div>
                         </div>
                         <p className="mt-1 text-[11px] text-muted-foreground/70 text-right font-mono">
-                          R$ {Math.round(finalPrice / agentCount)}/agente/mes
+                          R$ {Math.round(finalPrice / agentCount)}/agente/mês
                         </p>
                       </div>
 
@@ -187,12 +187,12 @@ export default function CallCenterPage() {
                         href={`/signup?product=callcenter&agents=${agentCount}`}
                         className="mt-8 w-full py-4 rounded-full text-sm font-medium tracking-wide flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-500"
                       >
-                        Comecar agora
+                        Começar agora
                         <ArrowRight size={15} />
                       </Link>
 
                       <p className="mt-4 text-[11px] text-muted-foreground/70 text-center">
-                        7 dias gratis - Cancele quando quiser
+                        7 dias grátis - Cancele quando quiser
                       </p>
                     </div>
                   </div>
@@ -208,7 +208,7 @@ export default function CallCenterPage() {
         <div className="max-w-6xl mx-auto px-6">
           <ScrollReveal>
             <h2 className="text-2xl font-bold text-foreground mb-10 tracking-tight">
-              Tudo incluido.
+              Tudo incluído.
             </h2>
           </ScrollReveal>
 
@@ -232,7 +232,7 @@ export default function CallCenterPage() {
             <h2 className="text-5xl lg:text-6xl font-bold text-foreground tracking-tight">
               Pronto para nunca mais
               <br />
-              <span className="text-muted-foreground/70">perder uma ligacao?</span>
+              <span className="text-muted-foreground/70">perder uma ligação?</span>
             </h2>
             <p className="mt-6 text-muted-foreground/70 font-light">
               Configure em minutos. Resultados imediatos.
@@ -253,7 +253,7 @@ export default function CallCenterPage() {
                 href="/demo"
                 className="px-8 py-4 text-sm text-muted-foreground border border-border rounded-full hover:text-foreground hover:border-border transition-all font-medium"
               >
-                Agendar demonstracao
+                Agendar demonstração
               </Link>
             </div>
           </ScrollReveal>

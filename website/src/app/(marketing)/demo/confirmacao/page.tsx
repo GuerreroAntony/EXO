@@ -16,15 +16,15 @@ export default function DemoConfirmacao() {
         <div className="w-16 h-16 rounded-full bg-muted/50 border border-border flex items-center justify-center mx-auto mb-8">
           <CheckCircle className="w-8 h-8 text-muted-foreground" />
         </div>
-        <h1 className="text-5xl lg:text-6xl font-bold tracking-tight text-foreground">Recebemos sua solicitacao!</h1>
+        <h1 className="text-5xl lg:text-6xl font-bold tracking-tight text-foreground">Recebemos sua solicitação!</h1>
         <p className="mt-4 text-muted-foreground font-light leading-relaxed">
-          Nossa equipe entrara em contato em ate 24 horas para agendar sua demonstracao personalizada.
+          Nossa equipe entrará em contato em até 24 horas para agendar sua demonstração personalizada.
         </p>
         <Link
           href="/"
           className="inline-block mt-8 border border-border text-muted-foreground rounded-full px-8 py-4 text-sm font-medium transition-all duration-300 hover:border-border hover:text-foreground"
         >
-          Voltar ao inicio
+          Voltar ao início
         </Link>
       </motion.div>
     </div>

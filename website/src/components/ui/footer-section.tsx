@@ -23,7 +23,7 @@ const footerLinks: FooterSection[] = [
 			{ title: 'Call Center IA', href: '/callcenter', icon: Phone },
 			{ title: 'Influencers Virtuais', href: '/inteligencia-virtual', icon: Users },
 			{ title: 'Digital Workers', href: '/digital-workers', icon: Bot },
-			{ title: 'Robotica', href: '/robotica', icon: Cog },
+			{ title: 'Robótica', href: '/robotica', icon: Cog },
 			{ title: 'Innovation Studio', href: '/innovation-studio' },
 		],
 	},
@@ -40,7 +40,7 @@ const footerLinks: FooterSection[] = [
 		label: 'Contato',
 		links: [
 			{ title: 'contato@exo.ai', href: 'mailto:contato@exo.ai', icon: Mail },
-			{ title: 'Sao Paulo, Brasil', href: '#', icon: MapPin },
+			{ title: 'São Paulo, Brasil', href: '#', icon: MapPin },
 		],
 	},
 	{
@@ -64,7 +64,7 @@ export function Footer() {
 							EXO
 						</Link>
 						<p className="text-muted-foreground text-sm leading-relaxed max-w-[200px]">
-							Expandindo humanos atraves de agentes de IA.
+							Expandindo humanos através de agentes de IA.
 						</p>
 					</AnimatedContainer>
 

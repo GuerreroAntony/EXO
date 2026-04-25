@@ -3,11 +3,11 @@
 import { motion } from "framer-motion";
 
 const lines = [
-  { text: "O ser humano nao foi feito", highlight: false },
-  { text: "para ser substituido.", highlight: false },
+  { text: "O ser humano não foi feito", highlight: false },
+  { text: "para ser substituído.", highlight: false },
   { text: "Foi feito para evoluir.", highlight: true },
   { text: "", highlight: false },
-  { text: "Robotica para estender o corpo.", highlight: false },
+  { text: "Robótica para estender o corpo.", highlight: false },
   { text: "IA para estender a mente.", highlight: false },
   { text: "Digital Workers para", highlight: false },
   { text: "estender o tempo.", highlight: true },

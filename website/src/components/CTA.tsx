@@ -12,14 +12,14 @@ export default function CTA() {
             {/* Clean card with design tokens */}
             <div className="inline-block bg-muted/50 border border-border rounded-3xl px-12 py-14 lg:px-20 lg:py-16">
               <p className="text-xs text-muted-foreground/70 tracking-[0.2em] uppercase font-medium">
-                Proximo passo
+                Próximo passo
               </p>
 
               <h2 className="mt-6 text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] text-foreground">
-                O futuro nao espera.
+                O futuro não espera.
               </h2>
               <p className="mt-3 text-lg text-muted-foreground">
-                Voce tambem nao deveria.
+                Você também não deveria.
               </p>
 
               <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">

@@ -4,10 +4,10 @@ import { motion } from "framer-motion";
 import { Sparkles, Image, MessageCircle, TrendingUp, ArrowRight } from "lucide-react";
 
 const capabilities = [
-  { icon: Sparkles, name: "Personalidade Unica", desc: "Cada influencer tem uma identidade, tom de voz e estilo visual criados sob medida para a sua marca." },
-  { icon: Image, name: "Conteudo Automatizado", desc: "Posts, stories e respostas geradas por IA que mantem a consistencia e frequencia sem esforco humano." },
-  { icon: MessageCircle, name: "Engajamento 24/7", desc: "Responde comentarios, DMs e interage com seguidores em tempo real, sem pausas." },
-  { icon: TrendingUp, name: "Escala sem Limites", desc: "Um influencer virtual pode estar em multiplas plataformas ao mesmo tempo, crescendo sem restricoes." },
+  { icon: Sparkles, name: "Personalidade Única", desc: "Cada influencer tem uma identidade, tom de voz e estilo visual criados sob medida para a sua marca." },
+  { icon: Image, name: "Conteúdo Automatizado", desc: "Posts, stories e respostas geradas por IA que mantêm a consistência e frequência sem esforço humano." },
+  { icon: MessageCircle, name: "Engajamento 24/7", desc: "Responde comentários, DMs e interage com seguidores em tempo real, sem pausas." },
+  { icon: TrendingUp, name: "Escala sem Limites", desc: "Um influencer virtual pode estar em múltiplas plataformas ao mesmo tempo, crescendo sem restrições." },
 ];
 
 export default function InteligenciaVirtualPage() {
@@ -29,7 +29,7 @@ export default function InteligenciaVirtualPage() {
               transition={{ duration: 1, delay: 0.1 }}
               className="mt-6 text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[0.95]"
             >
-              Influencia
+              Influência
               <br />
               <span className="text-cyan-400">que nunca para.</span>
             </motion.h1>
@@ -39,7 +39,7 @@ export default function InteligenciaVirtualPage() {
               transition={{ duration: 0.8, delay: 0.3 }}
               className="mt-8 text-lg text-muted-foreground max-w-xl leading-relaxed"
             >
-              Crie influencers virtuais com personalidade propria que produzem conteudo,
+              Crie influencers virtuais com personalidade própria que produzem conteúdo,
               engajam seguidores e representam sua marca 24 horas por dia.
             </motion.p>
           </div>

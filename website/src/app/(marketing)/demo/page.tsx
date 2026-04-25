@@ -14,13 +14,13 @@ export default function DemoPage() {
           className="text-center mb-16"
         >
           <p className="text-[11px] font-mono tracking-[0.3em] uppercase text-muted-foreground/70">
-            Agende uma demonstracao
+            Agende uma demonstração
           </p>
           <h1 className="mt-4 text-5xl lg:text-6xl font-bold tracking-tight text-foreground">
-            Veja a EXO em acao.
+            Veja a EXO em ação.
           </h1>
           <p className="mt-4 text-muted-foreground font-light">
-            Preencha o formulario e nossa equipe entrara em contato em ate 24h.
+            Preencha o formulário e nossa equipe entrará em contato em até 24h.
           </p>
         </motion.div>
         <motion.div

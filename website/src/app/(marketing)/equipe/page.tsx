@@ -8,26 +8,53 @@ const team = [
   {
     name: "Jimmy Peixoto",
     role: "CEO & Founder",
-    bio: "Empreendedor serial com passagem por Brasil, EUA e Europa. Reconhecido como um dos 14 empreendedores mais inovadores do Brasil em 2014. Especialista em modelos de negocio escalaveis, desenvolvimento de negocios e lideranca estrategica.",
+    bio: "Empreendedor serial com passagem por Brasil, EUA e Europa. Reconhecido como um dos 14 empreendedores mais inovadores do Brasil em 2014. Especialista em modelos de negócio escaláveis, desenvolvimento de negócios e liderança estratégica.",
     avatar: "JP",
     color: "#5B9BF3",
     linkedin: "https://linkedin.com/in/jimmypeixoto",
     website: "https://jimmypeixoto.com.br",
+  },
+  {
+    name: "Eduardo Tonielo",
+    role: "CTO",
+    bio: "Engenheiro de software com profunda experiência em sistemas distribuídos e inteligência artificial. Lidera a arquitetura técnica da EXO, garantindo escala, performance e confiabilidade em cada produto.",
+    avatar: "ET",
+    color: "#10b981",
+    linkedin: "",
+    website: "",
+  },
+  {
+    name: "André Abootre",
+    role: "Head of Operations",
+    bio: "Especialista em operações e crescimento, com histórico em estruturar times de alta performance. Responsável por orquestrar a operação da EXO e transformar visão em execução consistente.",
+    avatar: "AA",
+    color: "#f97316",
+    linkedin: "",
+    website: "",
+  },
+  {
+    name: "Fefa Moreira",
+    role: "Head of Design",
+    bio: "Designer obcecada por experiências que combinam beleza e função. Define a linguagem visual e a identidade da EXO, garantindo que cada interação seja intuitiva e memorável.",
+    avatar: "FM",
+    color: "#a855f7",
+    linkedin: "",
+    website: "",
   },
 ];
 
 const values = [
   {
     title: "Humanos primeiro",
-    desc: "A tecnologia existe para expandir o potencial humano, nao para substitui-lo.",
+    desc: "A tecnologia existe para expandir o potencial humano, não para substituí-lo.",
   },
   {
-    title: "Execucao > ideias",
-    desc: "Ideias sao baratas. O que importa e a capacidade de transformar visao em realidade.",
+    title: "Execução > ideias",
+    desc: "Ideias são baratas. O que importa é a capacidade de transformar visão em realidade.",
   },
   {
-    title: "Transparencia radical",
-    desc: "Sem letras miudas, sem promessas vazias. Construimos confianca com clareza.",
+    title: "Transparência radical",
+    desc: "Sem letras miúdas, sem promessas vazias. Construímos confiança com clareza.",
   },
 ];
 
@@ -51,9 +78,9 @@ export default function EquipePage() {
             transition={{ duration: 1, delay: 0.1 }}
             className="mt-6 text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[0.95]"
           >
-            As pessoas por tras
+            As pessoas por trás
             <br />
-            <span className="text-[#5B9BF3]">da revolucao.</span>
+            <span className="text-[#5B9BF3]">da revolução.</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -61,7 +88,7 @@ export default function EquipePage() {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="mt-8 text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed"
           >
-            Uma equipe obcecada por construir o futuro das operacoes empresariais com inteligencia artificial.
+            Uma equipe obcecada por construir o futuro das operações empresariais com inteligência artificial.
           </motion.p>
         </div>
       </section>
