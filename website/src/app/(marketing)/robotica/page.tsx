@@ -28,14 +28,14 @@ export default function RoboticaPage() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mt-10"
           >
-            <Card className="w-full h-[600px] bg-black/[0.96] relative overflow-hidden border-neutral-800 rounded-3xl">
+            <Card className="w-full h-auto md:h-[720px] bg-black/[0.96] relative overflow-hidden border-neutral-800 rounded-3xl">
               <Spotlight
                 className="-top-40 left-0 md:left-60 md:-top-20"
                 fill="rgb(52,211,153)"
               />
 
               <div className="flex flex-col md:flex-row h-full">
-                <div className="flex-1 p-8 sm:p-12 relative z-10 flex flex-col justify-center">
+                <div className="md:flex-1 p-8 sm:p-12 relative z-10 flex flex-col justify-center">
                   <span className="inline-flex items-center gap-2 self-start rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[11px] font-mono uppercase tracking-[0.2em] text-emerald-300 mb-6">
                     <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     Em breve
@@ -64,7 +64,7 @@ export default function RoboticaPage() {
                   </div>
                 </div>
 
-                <div className="flex-1 relative min-h-[280px] md:min-h-0">
+                <div className="md:flex-[1.2] relative w-full min-h-[420px] md:min-h-0">
                   <SplineScene
                     scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
                     className="w-full h-full"
