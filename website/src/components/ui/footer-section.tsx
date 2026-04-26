@@ -2,7 +2,7 @@
 import React from 'react';
 import type { ComponentProps, ReactNode } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
-import { Bot, Phone, Users, Cog, Mail, MapPin, Globe, Link2 } from 'lucide-react';
+import { Bot, Phone, Users, Cog } from 'lucide-react';
 import Link from 'next/link';
 
 interface FooterLink {
@@ -36,20 +36,6 @@ const footerLinks: FooterSection[] = [
 			{ title: 'Criar Conta', href: '/signup' },
 		],
 	},
-	{
-		label: 'Contato',
-		links: [
-			{ title: 'contato@exo.ai', href: 'mailto:contato@exo.ai', icon: Mail },
-			{ title: 'São Paulo, Brasil', href: '#', icon: MapPin },
-		],
-	},
-	{
-		label: 'Social',
-		links: [
-			{ title: 'Instagram', href: '#', icon: Globe },
-			{ title: 'LinkedIn', href: '#', icon: Link2 },
-		],
-	},
 ];
 
 export function Footer() {
@@ -57,7 +43,7 @@ export function Footer() {
 		<footer className="relative w-full bg-muted/50 border-t border-border">
 			<div className="max-w-6xl mx-auto px-6 py-16 lg:py-20">
 				{/* Main grid — links */}
-				<div className="grid grid-cols-2 md:grid-cols-5 gap-10 lg:gap-16">
+				<div className="grid grid-cols-2 md:grid-cols-3 gap-10 lg:gap-16">
 					{/* Brand column */}
 					<AnimatedContainer className="col-span-2 md:col-span-1 space-y-4">
 						<Link href="/" className="text-2xl font-black tracking-[-0.05em] text-foreground">

@@ -1,8 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
 
 import { TeamCarousel, type TeamMember } from "@/components/ui/team-carousel";
 
@@ -79,21 +77,6 @@ const team: TeamMember[] = [
   },
 ];
 
-const values = [
-  {
-    title: "Humanos primeiro",
-    desc: "A tecnologia existe para expandir o potencial humano, não para substituí-lo.",
-  },
-  {
-    title: "Execução > ideias",
-    desc: "Ideias são baratas. O que importa é a capacidade de transformar visão em realidade.",
-  },
-  {
-    title: "Transparência radical",
-    desc: "Sem letras miúdas, sem promessas vazias. Construímos confiança com clareza.",
-  },
-];
-
 export default function EquipePage() {
   return (
     <main className="min-h-screen">
@@ -142,64 +125,6 @@ export default function EquipePage() {
         </motion.div>
       </section>
 
-      {/* Values */}
-      <section className="py-32">
-        <div className="max-w-6xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <p className="text-xs tracking-[0.25em] uppercase text-[#5B9BF3] font-medium mb-4">
-              Nossos valores
-            </p>
-            <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground">
-              No que acreditamos.
-            </h2>
-          </motion.div>
-
-          <div className="grid sm:grid-cols-3 gap-6">
-            {values.map((v, i) => (
-              <motion.div
-                key={v.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="text-center"
-              >
-                <h3 className="text-lg font-semibold text-foreground mb-3">{v.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{v.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-32 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-6xl mx-auto px-6"
-        >
-          <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground mb-4">
-            Quer fazer parte?
-          </h2>
-          <p className="text-muted-foreground text-lg mb-10 max-w-lg mx-auto">
-            Estamos sempre buscando pessoas excepcionais para expandir o futuro conosco.
-          </p>
-          <Link
-            href="/demo"
-            className="group inline-flex items-center gap-3 bg-primary text-primary-foreground font-medium rounded-full px-8 py-4 text-sm transition-all duration-300 hover:bg-primary/90 hover:-translate-y-0.5"
-          >
-            Entre em contato
-            <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </motion.div>
-      </section>
     </main>
   );
 }
