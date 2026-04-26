@@ -1,10 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Link2, Globe, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-const team = [
+import { TeamCarousel, type TeamMember } from "@/components/ui/team-carousel";
+
+const team: TeamMember[] = [
   {
     name: "Jimmy Peixoto",
     role: "Founder & CEO",
@@ -127,73 +129,17 @@ export default function EquipePage() {
         </div>
       </section>
 
-      {/* Team Cards */}
-      <section className="py-20">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="grid sm:grid-cols-2 gap-6">
-            {team.map((person, i) => (
-              <motion.div
-                key={person.name}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.15 }}
-                className="bg-muted/50 border border-border rounded-2xl p-8 hover:bg-muted hover:border-border transition-all duration-300"
-              >
-                {/* Avatar */}
-                <div
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-xl font-bold"
-                  style={{ background: `${person.color}15`, color: person.color }}
-                >
-                  {person.avatar}
-                </div>
-
-                {/* Info */}
-                <h3 className="text-xl font-bold text-foreground">{person.name}</h3>
-                <p className="text-sm font-medium mt-1 mb-4" style={{ color: person.color }}>
-                  {person.role}
-                </p>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                  {person.bio}
-                </p>
-
-                {/* Pilares */}
-                <div className="mb-6 pt-4 border-t border-border/50">
-                  <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/60 font-medium mb-1.5">
-                    Pilares
-                  </p>
-                  <p className="text-xs font-medium" style={{ color: person.color }}>
-                    {person.pillars}
-                  </p>
-                </div>
-
-                {/* Links */}
-                <div className="flex items-center gap-4">
-                  {person.linkedin && (
-                    <a
-                      href={person.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-muted-foreground/70 hover:text-foreground transition-colors"
-                    >
-                      <Link2 size={18} />
-                    </a>
-                  )}
-                  {person.website && (
-                    <a
-                      href={person.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-muted-foreground/70 hover:text-foreground transition-colors"
-                    >
-                      <Globe size={18} />
-                    </a>
-                  )}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
+      {/* Team Carousel */}
+      <section className="py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="max-w-6xl mx-auto px-6"
+        >
+          <TeamCarousel members={team} />
+        </motion.div>
       </section>
 
       {/* Values */}
