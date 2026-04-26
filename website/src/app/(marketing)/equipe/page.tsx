@@ -7,37 +7,71 @@ import Link from "next/link";
 const team = [
   {
     name: "Jimmy Peixoto",
-    role: "CEO & Founder",
-    bio: "Empreendedor serial com passagem por Brasil, EUA e Europa. Reconhecido como um dos 14 empreendedores mais inovadores do Brasil em 2014. Especialista em modelos de negócio escaláveis, desenvolvimento de negócios e liderança estratégica.",
+    role: "Founder & CEO",
+    bio: "Visionário e serial entrepreneur. Harvard, MIT, BYU. Histórico comprovado em escala e inovação. Lidera operação, infraestrutura e direção geral da EXO.",
     avatar: "JP",
     color: "#5B9BF3",
+    pillars: "Liderança Geral, Operação, Infraestrutura",
     linkedin: "https://linkedin.com/in/jimmypeixoto",
     website: "https://jimmypeixoto.com.br",
   },
   {
-    name: "Eduardo Tonielo",
-    role: "CTO",
-    bio: "Engenheiro de software com profunda experiência em sistemas distribuídos e inteligência artificial. Lidera a arquitetura técnica da EXO, garantindo escala, performance e confiabilidade em cada produto.",
-    avatar: "ET",
-    color: "#10b981",
-    linkedin: "",
-    website: "",
-  },
-  {
-    name: "André Abootre",
-    role: "Head of Operations",
-    bio: "Especialista em operações e crescimento, com histórico em estruturar times de alta performance. Responsável por orquestrar a operação da EXO e transformar visão em execução consistente.",
+    name: "André Aboutre",
+    role: "Influência & Entretenimento",
+    bio: "30+ anos no show business. Network estratégico com artistas, celebridades e mercado publicitário. Conecta a EXO ao ecossistema cultural e de influência.",
     avatar: "AA",
-    color: "#f97316",
+    color: "#a855f7",
+    pillars: "Influencers Virtuais, Comunicação",
     linkedin: "",
     website: "",
   },
   {
-    name: "Fefa Moreira",
-    role: "Head of Design",
-    bio: "Designer obcecada por experiências que combinam beleza e função. Define a linguagem visual e a identidade da EXO, garantindo que cada interação seja intuitiva e memorável.",
-    avatar: "FM",
-    color: "#a855f7",
+    name: "Fefa Fernandes",
+    role: "Creators & Posicionamento",
+    bio: "Referência em transformar pessoas e empresários em geradores de conteúdo. Venture Capital e empreendedora serial. Estrutura a camada de criadores e posicionamento de marca.",
+    avatar: "FF",
+    color: "#ec4899",
+    pillars: "Influencers Virtuais, Comunicação, Estratégia",
+    linkedin: "",
+    website: "",
+  },
+  {
+    name: "Emilinho Surita",
+    role: "Negócios & Mídia",
+    bio: "Comunicador e empresário. Conexão com grandes marcas, mídia e ambiente político. Articula a presença da EXO no ecossistema midiático e institucional.",
+    avatar: "ES",
+    color: "#10b981",
+    pillars: "Política & Governos, Comunicação",
+    linkedin: "",
+    website: "",
+  },
+  {
+    name: "André Silva",
+    role: "Expansão de Marcas",
+    bio: "16+ anos em expansão de marcas e franquias. Especialista em crescimento e estrutura de negócios. Lidera a expansão multissetorial e o go-to-market da EXO.",
+    avatar: "AS",
+    color: "#f97316",
+    pillars: "Design & Marketing Intelligence, Estratégia",
+    linkedin: "",
+    website: "",
+  },
+  {
+    name: "Tiago Henrique",
+    role: "Legal & Governança",
+    bio: "Advogado especialista em proteção de dados e IA. Vice-Presidente de Direito Digital da OAB Cotia. Constrói a base jurídica e de governança da EXO.",
+    avatar: "TH",
+    color: "#0ea5e9",
+    pillars: "Legal, Infraestrutura, Governança",
+    linkedin: "",
+    website: "",
+  },
+  {
+    name: "Eduardo Toniello Meirelles",
+    role: "Relações com Investidores",
+    bio: "Experiência em bancos, corretoras e mercados internacionais. RI e conexão com fundos e capital. Lidera a captação e o relacionamento com investidores estratégicos.",
+    avatar: "ET",
+    color: "#eab308",
+    pillars: "Relações com Investidores, Capital",
     linkedin: "",
     website: "",
   },
@@ -119,9 +153,19 @@ export default function EquipePage() {
                 <p className="text-sm font-medium mt-1 mb-4" style={{ color: person.color }}>
                   {person.role}
                 </p>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
                   {person.bio}
                 </p>
+
+                {/* Pilares */}
+                <div className="mb-6 pt-4 border-t border-border/50">
+                  <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/60 font-medium mb-1.5">
+                    Pilares
+                  </p>
+                  <p className="text-xs font-medium" style={{ color: person.color }}>
+                    {person.pillars}
+                  </p>
+                </div>
 
                 {/* Links */}
                 <div className="flex items-center gap-4">
