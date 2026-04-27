@@ -251,12 +251,13 @@ export default function AgentesPage() {
                       Testar
                     </a>
                   )}
-                  <button
+                  <Link
+                    href={`/dashboard/agentes/${agent.id}`}
                     className="flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-[#888] bg-[#151515] border border-[#333] rounded-lg hover:bg-[#1e1e1e] transition-colors"
                   >
                     <Pencil size={12} />
                     Editar
-                  </button>
+                  </Link>
                 </div>
               </motion.div>
             );

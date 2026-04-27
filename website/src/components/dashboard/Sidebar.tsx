@@ -9,6 +9,7 @@ import {
   Users,
   Phone,
   MessageCircle,
+  BookOpen,
   CalendarDays,
   CreditCard,
   MessageSquare,
@@ -32,6 +33,7 @@ const navGroups = [
       { label: "Agentes", icon: Users, href: "/dashboard/agentes" },
       { label: "Ligações", icon: Phone, href: "/dashboard/atendimentos" },
       { label: "Conversas", icon: MessageCircle, href: "/dashboard/conversas" },
+      { label: "Conhecimento", icon: BookOpen, href: "/dashboard/conhecimento" },
     ],
   },
   {

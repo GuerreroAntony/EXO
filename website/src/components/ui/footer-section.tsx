@@ -81,8 +81,9 @@ export function Footer() {
 						&copy; {new Date().getFullYear()} EXO. Todos os direitos reservados.
 					</p>
 					<div className="flex items-center gap-6">
-						<Link href="#" className="text-muted-foreground/70 hover:text-muted-foreground text-xs transition-colors">Privacidade</Link>
-						<Link href="#" className="text-muted-foreground/70 hover:text-muted-foreground text-xs transition-colors">Termos</Link>
+						<Link href="/privacidade" className="text-muted-foreground/70 hover:text-muted-foreground text-xs transition-colors">Privacidade</Link>
+						<Link href="/termos" className="text-muted-foreground/70 hover:text-muted-foreground text-xs transition-colors">Termos</Link>
+						<Link href="/data-deletion" className="text-muted-foreground/70 hover:text-muted-foreground text-xs transition-colors">Excluir meus dados</Link>
 					</div>
 				</div>
 			</div>

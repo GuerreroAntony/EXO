@@ -8,6 +8,7 @@ import type {
   TextMessage,
 } from "@/lib/whatsapp/types";
 import { findAgentByPhoneNumberId, type RoutedAgent } from "@/lib/agents/router";
+import { buildSystemPromptWithKnowledge } from "@/lib/agents/prompt-builder";
 import { generateReply } from "@/lib/anthropic/client";
 import {
   isWamidProcessed,
@@ -167,7 +168,12 @@ async function handleInboundMessage(
 
   try {
     const history = await getRecentHistory(conversation.id, 20);
-    const result = await generateReply(agent.system_prompt, history);
+    const fullPrompt = await buildSystemPromptWithKnowledge(
+      agent.id,
+      agent.organization_id,
+      agent.system_prompt,
+    );
+    const result = await generateReply(fullPrompt, history);
     replyText = result.text || FALLBACK_REPLY;
     metrics = {
       inputTokens: result.inputTokens + result.cacheReadTokens + result.cacheCreationTokens,
