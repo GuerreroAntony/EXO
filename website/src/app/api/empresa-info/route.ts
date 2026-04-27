@@ -7,38 +7,22 @@ export const dynamic = "force-dynamic";
 
 interface CompanyInfo {
   nome_fantasia?: string;
-  razao_social?: string;
-  cnpj?: string;
-  setor?: string;
   descricao?: string;
   endereco?: string;
-  telefone?: string;
-  whatsapp?: string;
-  email?: string;
-  site?: string;
   horario_funcionamento?: string;
   formas_pagamento?: string;
   politica_cancelamento?: string;
   faq?: string;
-  observacoes?: string;
 }
 
 const FIELD_LABELS: Record<keyof CompanyInfo, string> = {
   nome_fantasia: "Nome fantasia",
-  razao_social: "Razão social",
-  cnpj: "CNPJ",
-  setor: "Setor / ramo de atividade",
   descricao: "O que a empresa faz / oferece",
   endereco: "Endereço",
-  telefone: "Telefone",
-  whatsapp: "WhatsApp",
-  email: "E-mail de contato",
-  site: "Site",
   horario_funcionamento: "Horário de funcionamento",
   formas_pagamento: "Formas de pagamento aceitas",
   politica_cancelamento: "Política de cancelamento e reembolso",
   faq: "Perguntas frequentes",
-  observacoes: "Observações adicionais",
 };
 
 function buildExtractedText(info: CompanyInfo): string {

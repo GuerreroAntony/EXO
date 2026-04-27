@@ -5,38 +5,22 @@ import { Save, Loader2, CheckCircle2, AlertCircle, Building2 } from "lucide-reac
 
 interface CompanyInfo {
   nome_fantasia: string;
-  razao_social: string;
-  cnpj: string;
-  setor: string;
   descricao: string;
   endereco: string;
-  telefone: string;
-  whatsapp: string;
-  email: string;
-  site: string;
   horario_funcionamento: string;
   formas_pagamento: string;
   politica_cancelamento: string;
   faq: string;
-  observacoes: string;
 }
 
 const EMPTY: CompanyInfo = {
   nome_fantasia: "",
-  razao_social: "",
-  cnpj: "",
-  setor: "",
   descricao: "",
   endereco: "",
-  telefone: "",
-  whatsapp: "",
-  email: "",
-  site: "",
   horario_funcionamento: "",
   formas_pagamento: "",
   politica_cancelamento: "",
   faq: "",
-  observacoes: "",
 };
 
 export default function CompanyInfoForm() {
@@ -95,8 +79,9 @@ export default function CompanyInfoForm() {
           <h3 className="text-white text-sm font-semibold mb-1">Como seus agentes usam isso</h3>
           <p className="text-[#888] text-xs leading-relaxed">
             Tudo que você preencher aqui é injetado automaticamente no contexto dos seus agentes na hora
-            de responder mensagens. Seus agentes vão saber quem é a empresa, o que ela vende, horário,
-            preços e políticas. Quanto mais campos preenchidos, melhor a qualidade das respostas.
+            de responder mensagens. Quanto mais campos preenchidos, melhor a qualidade das respostas —
+            principalmente quando o cliente pergunta sobre horário, formas de pagamento, política, ou
+            algo da FAQ.
           </p>
           <p className="text-[#666] text-[11px] mt-2">{filledCount} de {totalFields} campos preenchidos</p>
         </div>
@@ -112,41 +97,12 @@ export default function CompanyInfoForm() {
             className="input"
           />
         </Field>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Razão social">
-            <input
-              type="text"
-              value={info.razao_social}
-              onChange={(e) => update("razao_social", e.target.value)}
-              placeholder="Ex: Clínica Sorriso LTDA"
-              className="input"
-            />
-          </Field>
-          <Field label="CNPJ">
-            <input
-              type="text"
-              value={info.cnpj}
-              onChange={(e) => update("cnpj", e.target.value)}
-              placeholder="00.000.000/0000-00"
-              className="input"
-            />
-          </Field>
-        </div>
-        <Field label="Setor / ramo" hint="Em qual segmento atua">
-          <input
-            type="text"
-            value={info.setor}
-            onChange={(e) => update("setor", e.target.value)}
-            placeholder="Ex: Saúde — odontologia estética"
-            className="input"
-          />
-        </Field>
       </Section>
 
       <Section title="Sobre a empresa">
         <Field
           label="O que oferece"
-          hint="Descrição clara do que a empresa vende ou faz. Esse texto vai aparecer no contexto da Sofia."
+          hint="Descrição clara do que a empresa vende ou faz. Esse texto vai direto no contexto da Sofia."
         >
           <textarea
             value={info.descricao}
@@ -156,9 +112,6 @@ export default function CompanyInfoForm() {
             className="input resize-y"
           />
         </Field>
-      </Section>
-
-      <Section title="Contato">
         <Field label="Endereço">
           <input
             type="text"
@@ -168,52 +121,12 @@ export default function CompanyInfoForm() {
             className="input"
           />
         </Field>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="Telefone">
-            <input
-              type="text"
-              value={info.telefone}
-              onChange={(e) => update("telefone", e.target.value)}
-              placeholder="(11) 3000-0000"
-              className="input"
-            />
-          </Field>
-          <Field label="WhatsApp">
-            <input
-              type="text"
-              value={info.whatsapp}
-              onChange={(e) => update("whatsapp", e.target.value)}
-              placeholder="(11) 91234-5678"
-              className="input"
-            />
-          </Field>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="E-mail">
-            <input
-              type="email"
-              value={info.email}
-              onChange={(e) => update("email", e.target.value)}
-              placeholder="contato@empresa.com.br"
-              className="input"
-            />
-          </Field>
-          <Field label="Site">
-            <input
-              type="text"
-              value={info.site}
-              onChange={(e) => update("site", e.target.value)}
-              placeholder="empresa.com.br"
-              className="input"
-            />
-          </Field>
-        </div>
       </Section>
 
       <Section title="Operação">
         <Field
           label="Horário de funcionamento"
-          hint="Texto livre — os agentes vão usar isso pra responder 'qual horário?'"
+          hint="Texto livre — os agentes usam pra responder 'qual horário?'"
         >
           <textarea
             value={info.horario_funcionamento}
@@ -254,23 +167,8 @@ export default function CompanyInfoForm() {
           <textarea
             value={info.faq}
             onChange={(e) => update("faq", e.target.value)}
-            rows={8}
+            rows={10}
             placeholder={`Exemplo:\n\nP: Vocês atendem crianças?\nR: Sim, temos uma odontopediatra especializada.\n\nP: Quanto custa uma limpeza?\nR: A consulta de avaliação é gratuita. Limpeza simples R$ 150.`}
-            className="input resize-y"
-          />
-        </Field>
-      </Section>
-
-      <Section title="Observações">
-        <Field
-          label="Outras informações importantes"
-          hint="Qualquer regra específica do negócio que os agentes devem saber"
-        >
-          <textarea
-            value={info.observacoes}
-            onChange={(e) => update("observacoes", e.target.value)}
-            rows={4}
-            placeholder="Não fechamos para almoço. Atendimento de emergência fora do horário pelo WhatsApp. Estacionamento gratuito por 2 horas."
             className="input resize-y"
           />
         </Field>
