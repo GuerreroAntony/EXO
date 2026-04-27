@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Save, Phone, MessageCircle, Zap, Calendar as CalendarIcon } from "lucide-react";
 import PageHeader from "@/components/dashboard/PageHeader";
+import CompanyInfoForm from "@/components/dashboard/CompanyInfoForm";
 import { createClient } from "@/lib/supabase/client";
 import { useOrg } from "@/lib/supabase/use-org";
 
@@ -40,6 +41,7 @@ function SectionCard({ title, children }: { title: string; children: React.React
 
 const tabs = [
   { id: "perfil", label: "Perfil" },
+  { id: "empresa", label: "Empresa" },
   { id: "canais", label: "Canais" },
   { id: "integracoes", label: "Integrações" },
 ];
@@ -100,7 +102,14 @@ export default function ConfiguracoesPage() {
         ))}
       </div>
 
-      <div className="space-y-6 max-w-2xl">
+      <div className="space-y-6">
+        {/* Tab: Empresa */}
+        {activeTab === "empresa" && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <CompanyInfoForm />
+          </motion.div>
+        )}
+
         {/* Tab: Perfil */}
         {activeTab === "perfil" && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">

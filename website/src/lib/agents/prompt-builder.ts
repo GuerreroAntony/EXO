@@ -23,9 +23,10 @@ export async function buildSystemPromptWithKnowledge(
   const supabase = createAdminClient();
   const { data, error } = await supabase
     .from("knowledge_sources")
-    .select("title, extracted_text, agent_id")
+    .select("title, extracted_text, agent_id, kind")
     .eq("organization_id", organizationId)
     .or(`agent_id.is.null,agent_id.eq.${agentId}`)
+    .order("kind", { ascending: false })
     .order("criado_em", { ascending: true });
 
   if (error) {
