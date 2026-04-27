@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { MessageCircle, Bot, Hand, AlertTriangle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useOrg } from "@/lib/supabase/use-org";
+
+const POLL_INTERVAL_MS = 4000;
 
 interface ConversationRow {
   id: string;
@@ -46,52 +48,56 @@ export default function ConversationsList() {
   const [conversations, setConversations] = useState<ConversationListItem[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (orgLoading || !orgId) return;
+  const fetchAll = useCallback(async () => {
+    if (!orgId) return;
     const supabase = createClient();
 
-    const fetchAll = async () => {
-      const { data: convs } = await supabase
-        .from("conversations")
-        .select("id, contact_phone, contact_name, status, auto_reply, last_message_at, unread_count")
-        .eq("organization_id", orgId)
-        .order("last_message_at", { ascending: false });
+    const { data: convs } = await supabase
+      .from("conversations")
+      .select("id, contact_phone, contact_name, status, auto_reply, last_message_at, unread_count")
+      .eq("organization_id", orgId)
+      .order("last_message_at", { ascending: false });
 
-      if (!convs || convs.length === 0) {
-        setConversations([]);
-        setLoading(false);
-        return;
-      }
-
-      const ids = convs.map((c: { id: string }) => c.id);
-      const { data: lastMsgs } = await supabase
-        .from("messages")
-        .select("conversation_id, content, direction, created_at")
-        .in("conversation_id", ids)
-        .order("created_at", { ascending: false });
-
-      const previewMap = new Map<string, { preview: string; direction: string }>();
-      (lastMsgs ?? []).forEach((m: { conversation_id: string; content: string | null; direction: string }) => {
-        if (!previewMap.has(m.conversation_id)) {
-          previewMap.set(m.conversation_id, {
-            preview: m.content ?? "",
-            direction: m.direction,
-          });
-        }
-      });
-
-      const enriched: ConversationListItem[] = (convs as ConversationRow[]).map((c) => ({
-        ...c,
-        last_message_preview: previewMap.get(c.id)?.preview ?? null,
-        last_message_direction: previewMap.get(c.id)?.direction ?? null,
-      }));
-
-      setConversations(enriched);
+    if (!convs || convs.length === 0) {
+      setConversations([]);
       setLoading(false);
-    };
+      return;
+    }
+
+    const ids = convs.map((c: { id: string }) => c.id);
+    const { data: lastMsgs } = await supabase
+      .from("messages")
+      .select("conversation_id, content, direction, created_at")
+      .in("conversation_id", ids)
+      .order("created_at", { ascending: false });
+
+    const previewMap = new Map<string, { preview: string; direction: string }>();
+    (lastMsgs ?? []).forEach((m: { conversation_id: string; content: string | null; direction: string }) => {
+      if (!previewMap.has(m.conversation_id)) {
+        previewMap.set(m.conversation_id, {
+          preview: m.content ?? "",
+          direction: m.direction,
+        });
+      }
+    });
+
+    const enriched: ConversationListItem[] = (convs as ConversationRow[]).map((c) => ({
+      ...c,
+      last_message_preview: previewMap.get(c.id)?.preview ?? null,
+      last_message_direction: previewMap.get(c.id)?.direction ?? null,
+    }));
+
+    setConversations(enriched);
+    setLoading(false);
+  }, [orgId]);
+
+  useEffect(() => {
+    if (orgLoading || !orgId) return;
 
     fetchAll();
+    const interval = setInterval(fetchAll, POLL_INTERVAL_MS);
 
+    const supabase = createClient();
     const channel = supabase
       .channel(`conversations-${orgId}`)
       .on(
@@ -107,9 +113,10 @@ export default function ConversationsList() {
       .subscribe();
 
     return () => {
+      clearInterval(interval);
       supabase.removeChannel(channel);
     };
-  }, [orgId, orgLoading]);
+  }, [orgId, orgLoading, fetchAll]);
 
   if (loading || orgLoading) {
     return <div className="text-[#666] text-sm">Carregando...</div>;

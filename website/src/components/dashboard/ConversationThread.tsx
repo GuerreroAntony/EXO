@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Bot, Hand, Send, AlertTriangle, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -21,6 +21,8 @@ interface MessageRow {
   status: string;
   created_at: string;
 }
+
+const POLL_INTERVAL_MS = 3000;
 
 function formatTime(iso: string): string {
   const d = new Date(iso);
@@ -44,62 +46,50 @@ export default function ConversationThread({ conversationId }: { conversationId:
   const [error, setError] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
+  const fetchAll = useCallback(async () => {
     const supabase = createClient();
+    const [{ data: conv }, { data: msgs }] = await Promise.all([
+      supabase
+        .from("conversations")
+        .select("id, contact_phone, contact_name, status, auto_reply")
+        .eq("id", conversationId)
+        .maybeSingle<ConversationDetail>(),
+      supabase
+        .from("messages")
+        .select("id, direction, sender_type, content, status, created_at")
+        .eq("conversation_id", conversationId)
+        .order("created_at", { ascending: true }),
+    ]);
 
-    const fetchAll = async () => {
-      const [{ data: conv }, { data: msgs }] = await Promise.all([
-        supabase
-          .from("conversations")
-          .select("id, contact_phone, contact_name, status, auto_reply")
-          .eq("id", conversationId)
-          .maybeSingle<ConversationDetail>(),
-        supabase
-          .from("messages")
-          .select("id, direction, sender_type, content, status, created_at")
-          .eq("conversation_id", conversationId)
-          .order("created_at", { ascending: true }),
-      ]);
+    setConversation(conv ?? null);
+    setMessages((msgs ?? []) as MessageRow[]);
+    setLoading(false);
+  }, [conversationId]);
 
-      setConversation(conv ?? null);
-      setMessages((msgs ?? []) as MessageRow[]);
-      setLoading(false);
-    };
-
+  useEffect(() => {
     fetchAll();
+    const interval = setInterval(fetchAll, POLL_INTERVAL_MS);
 
+    const supabase = createClient();
     const channel = supabase
       .channel(`thread-${conversationId}`)
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages", filter: `conversation_id=eq.${conversationId}` },
-        (payload) => {
-          setMessages((prev) => {
-            const next = payload.new as MessageRow;
-            if (prev.some((m) => m.id === next.id)) return prev;
-            return [...prev, next];
-          });
-        },
-      )
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "messages", filter: `conversation_id=eq.${conversationId}` },
-        (payload) => {
-          const updated = payload.new as MessageRow;
-          setMessages((prev) => prev.map((m) => (m.id === updated.id ? updated : m)));
-        },
+        { event: "*", schema: "public", table: "messages", filter: `conversation_id=eq.${conversationId}` },
+        () => fetchAll(),
       )
       .on(
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "conversations", filter: `id=eq.${conversationId}` },
-        (payload) => setConversation(payload.new as ConversationDetail),
+        () => fetchAll(),
       )
       .subscribe();
 
     return () => {
+      clearInterval(interval);
       supabase.removeChannel(channel);
     };
-  }, [conversationId]);
+  }, [conversationId, fetchAll]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -107,12 +97,19 @@ export default function ConversationThread({ conversationId }: { conversationId:
 
   async function handleToggleAutoReply() {
     if (!conversation || toggling) return;
+    const previous = conversation.auto_reply;
+    const next = !previous;
+    setConversation({ ...conversation, auto_reply: next });
     setToggling(true);
     setError(null);
-    const action = conversation.auto_reply ? "pause" : "resume";
+    const action = previous ? "pause" : "resume";
     try {
       const res = await fetch(`/api/conversas/${conversationId}/${action}`, { method: "POST" });
-      if (!res.ok) throw new Error(await res.text());
+      if (!res.ok) {
+        setConversation({ ...conversation, auto_reply: previous });
+        throw new Error(await res.text());
+      }
+      fetchAll();
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
@@ -133,6 +130,7 @@ export default function ConversationThread({ conversationId }: { conversationId:
       });
       if (!res.ok) throw new Error(await res.text());
       setDraft("");
+      fetchAll();
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
