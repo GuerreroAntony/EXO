@@ -8,6 +8,7 @@ import {
   LayoutGrid,
   Users,
   Phone,
+  MessageCircle,
   CalendarDays,
   CreditCard,
   MessageSquare,
@@ -30,6 +31,7 @@ const navGroups = [
       { label: "Visão Geral", icon: Home, href: "/dashboard" },
       { label: "Agentes", icon: Users, href: "/dashboard/agentes" },
       { label: "Ligações", icon: Phone, href: "/dashboard/atendimentos" },
+      { label: "Conversas", icon: MessageCircle, href: "/dashboard/conversas" },
     ],
   },
   {
