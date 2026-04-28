@@ -141,6 +141,14 @@ export default function ConnectWhatsAppButton({
 
   const isConfigured = Boolean(appId && configId);
 
+  if (!isConfigured) {
+    return (
+      <div className="px-3 py-2.5 bg-[#1e1e1e] border border-[#333] rounded-xl text-xs text-[#888]">
+        Número do WhatsApp provisionado pela equipe EXO. Fale com seu gerente de conta para ativar ou substituir o número do seu agente.
+      </div>
+    );
+  }
+
   return (
     <>
       <Script
@@ -153,7 +161,7 @@ export default function ConnectWhatsAppButton({
         <button
           type="button"
           onClick={launchSignup}
-          disabled={loading || !sdkReady || !isConfigured}
+          disabled={loading || !sdkReady}
           className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-500 hover:bg-emerald-600 disabled:bg-[#1e1e1e] disabled:text-[#555] disabled:cursor-not-allowed text-white text-sm font-medium rounded-xl transition-colors"
         >
           {loading ? (
@@ -168,16 +176,6 @@ export default function ConnectWhatsAppButton({
             </>
           )}
         </button>
-
-        {!isConfigured && (
-          <div className="flex items-start gap-2 px-3 py-2 bg-yellow-500/10 border border-yellow-500/20 rounded-lg text-xs text-yellow-400">
-            <AlertCircle size={14} className="mt-0.5 shrink-0" />
-            <span>
-              Configure as variáveis NEXT_PUBLIC_META_APP_ID e NEXT_PUBLIC_META_CONFIG_ID no Vercel
-              pra habilitar a conexão.
-            </span>
-          </div>
-        )}
 
         {result?.ok && (
           <div className="flex items-start gap-2 px-3 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-xs text-emerald-400">
