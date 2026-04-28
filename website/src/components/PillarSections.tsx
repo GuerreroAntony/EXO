@@ -41,7 +41,7 @@ const pillars: Pillar[] = [
     morphTexts: ["Automatize processos", "Escale operações", "Reduza custos", "Aumente produtividade"],
     subtitle: "Funcionários digitais autônomos que executam, decidem e aprendem — sem burnout, sem férias, sem limites.",
     features: [
-      { icon: Workflow, text: "Automação end-to-end", desc: "Do início ao fim do processo, sem intervenção manual." },
+      { icon: MessageCircle, text: "Atendimento WhatsApp Cloud API", desc: "Agentes inteligentes que atendem seus clientes via WhatsApp Business oficial da Meta — do primeiro contato ao fechamento, sem intervenção manual." },
       { icon: Clock, text: "Operação 24/7", desc: "Disponível todos os dias, sem pausas nem paradas." },
       { icon: Shield, text: "Compliance nativo", desc: "LGPD, auditoria e governança embutidas em cada execução." },
       { icon: TrendingUp, text: "Auto-otimização", desc: "Aprende com cada execução e melhora sozinho ao longo do tempo." },
