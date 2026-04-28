@@ -163,17 +163,29 @@ export default function AgentEditor({ agentId }: { agentId: string }) {
           <p className="text-[11px] text-[#555] mt-1">{(agent.system_prompt ?? "").length} caracteres</p>
         </Field>
 
-        {agent.whatsapp_phone_number_id && (
-          <Field label="WhatsApp conectado" hint="Por enquanto edição via SQL. UI multi-tenant vem depois do Access Verification da Meta.">
-            <div className="flex items-center gap-2 bg-[#0a0a0a] border border-[#222] rounded-lg px-3 py-2 text-sm">
+        <Field
+          label="WhatsApp"
+          hint="Conecte o WhatsApp Business deste agente em Configurações → Canais."
+        >
+          {agent.whatsapp_phone_number_id ? (
+            <div className="flex items-center gap-2 bg-emerald-500/5 border border-emerald-500/20 rounded-lg px-3 py-2 text-sm">
               <MessageCircle size={14} className="text-emerald-400" />
-              <span className="text-[#888] font-mono text-xs">{agent.whatsapp_phone_number_id}</span>
+              <span className="text-emerald-400 font-medium text-xs">Conectado</span>
               {agent.whatsapp_display_name && (
-                <span className="text-[#666]">· {agent.whatsapp_display_name}</span>
+                <span className="text-[#888]">· {agent.whatsapp_display_name}</span>
               )}
+              <span className="text-[#444] font-mono text-[10px] ml-auto">{agent.whatsapp_phone_number_id}</span>
             </div>
-          </Field>
-        )}
+          ) : (
+            <Link
+              href="/dashboard/configuracoes?tab=canais"
+              className="flex items-center gap-2 bg-[#0a0a0a] border border-[#222] rounded-lg px-3 py-2 text-sm text-[#888] hover:border-emerald-500/30 hover:text-emerald-400 transition-colors"
+            >
+              <MessageCircle size={14} />
+              <span>Conectar WhatsApp →</span>
+            </Link>
+          )}
+        </Field>
 
         {error && (
           <div className="flex items-start gap-2 px-3 py-2 bg-red-500/10 border border-red-500/20 rounded-lg text-xs text-red-400">

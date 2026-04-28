@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Save, Phone, MessageCircle, Zap, Calendar as CalendarIcon } from "lucide-react";
 import PageHeader from "@/components/dashboard/PageHeader";
 import CompanyInfoForm from "@/components/dashboard/CompanyInfoForm";
+import ConnectWhatsAppButton from "@/components/dashboard/ConnectWhatsAppButton";
 import { createClient } from "@/lib/supabase/client";
 import { useOrg } from "@/lib/supabase/use-org";
 
@@ -58,6 +59,12 @@ export default function ConfiguracoesPage() {
   const [setor, setSetor] = useState("");
   const [endereco, setEndereco] = useState("");
 
+  const [waConnection, setWaConnection] = useState<{
+    id: string;
+    display_name: string | null;
+    phone_number_id: string;
+  } | null>(null);
+
   useEffect(() => {
     setNome(userName);
     setEmpresa(orgName);
@@ -66,8 +73,46 @@ export default function ConfiguracoesPage() {
       if (user?.email) setEmail(user.email);
     });
   }, [userName, orgName, orgId]);
+
+  useEffect(() => {
+    if (!orgId) return;
+    const supabase = createClient();
+    supabase
+      .from("agent_provisioning")
+      .select("id, whatsapp_display_name, whatsapp_phone_number_id")
+      .eq("organization_id", orgId)
+      .not("whatsapp_phone_number_id", "is", null)
+      .limit(1)
+      .maybeSingle<{ id: string; whatsapp_display_name: string | null; whatsapp_phone_number_id: string }>()
+      .then(({ data }) => {
+        if (data) {
+          setWaConnection({
+            id: data.id,
+            display_name: data.whatsapp_display_name,
+            phone_number_id: data.whatsapp_phone_number_id,
+          });
+        }
+      });
+  }, [orgId]);
+
+  async function handleDisconnectWhatsApp() {
+    if (!waConnection) return;
+    if (!confirm("Desconectar o WhatsApp? O número vai parar de receber/enviar mensagens pelo agente.")) return;
+    const supabase = createClient();
+    await supabase
+      .from("agent_provisioning")
+      .update({
+        waba_id: null,
+        whatsapp_phone_number_id: null,
+        whatsapp_display_name: null,
+        tenant_access_token_encrypted: null,
+        status: "pending",
+      })
+      .eq("id", waConnection.id);
+    setWaConnection(null);
+  }
+
   const [vozAtivo, setVozAtivo] = useState(true);
-  const [whatsappAtivo, setWhatsappAtivo] = useState(true);
   const [horarios, setHorarios] = useState(
     diasSemana.map((dia, i) => ({
       dia,
@@ -245,7 +290,7 @@ export default function ConfiguracoesPage() {
               </div>
 
               {/* WhatsApp */}
-              <div className="bg-[#151515] border border-[#333] rounded-2xl p-5  opacity-50">
+              <div className="bg-[#151515] border border-[#333] rounded-2xl p-5">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center">
@@ -253,13 +298,48 @@ export default function ConfiguracoesPage() {
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-white">WhatsApp</p>
-                      <p className="text-[11px] text-[#999]">Em breve</p>
+                      <p className="text-[11px] text-[#999]">WhatsApp Cloud API · Meta oficial</p>
                     </div>
                   </div>
+                  {waConnection && (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-[10px] font-mono uppercase text-emerald-400 tracking-wider">
+                      Conectado
+                    </span>
+                  )}
                 </div>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#1e1e1e] text-[10px] font-mono uppercase text-[#999] tracking-wider">
-                  Em breve
-                </span>
+                {waConnection ? (
+                  <div className="space-y-3">
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between text-[#888]">
+                        <span>Nome de exibição</span>
+                        <span className="text-[#ccc]">{waConnection.display_name ?? "—"}</span>
+                      </div>
+                      <div className="flex justify-between text-[#888]">
+                        <span>Phone Number ID</span>
+                        <span className="text-[#666] font-mono text-xs">{waConnection.phone_number_id}</span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleDisconnectWhatsApp}
+                      className="w-full px-4 py-2 bg-transparent hover:bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-medium rounded-xl transition-colors"
+                    >
+                      Desconectar WhatsApp
+                    </button>
+                  </div>
+                ) : (
+                  <ConnectWhatsAppButton
+                    onConnected={(r) => {
+                      if (r.ok && r.phone_number_id) {
+                        setWaConnection({
+                          id: "",
+                          display_name: r.display_name ?? null,
+                          phone_number_id: r.phone_number_id,
+                        });
+                      }
+                    }}
+                  />
+                )}
               </div>
             </div>
           </motion.div>
