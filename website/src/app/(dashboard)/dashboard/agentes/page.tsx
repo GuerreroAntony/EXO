@@ -43,6 +43,9 @@ interface ProvisionedAgent {
   tone: string | null;
   vapi_assistant_id: string | null;
   twilio_phone_sid: string | null;
+  whatsapp_phone_number_id: string | null;
+  whatsapp_display_name: string | null;
+  whatsapp_phone_number: string | null;
   created_at: string;
   updated_at: string;
   [key: string]: unknown;
@@ -218,6 +221,21 @@ export default function AgentesPage() {
 
                 {/* Details */}
                 <div className="space-y-2 mb-4">
+                  {agent.whatsapp_phone_number_id && (
+                    <div className="flex items-start gap-2 text-sm">
+                      <MessageCircle size={14} className="text-emerald-400 shrink-0 mt-0.5" />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[13px] text-[#888]">
+                          WhatsApp{agent.whatsapp_display_name ? ` · ${agent.whatsapp_display_name}` : ""}
+                        </p>
+                        {agent.whatsapp_phone_number && (
+                          <p className="text-[12px] font-mono text-[#666]">
+                            {agent.whatsapp_phone_number}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
                   {agent.phone_number && (
                     <div className="flex items-center gap-2 text-sm text-[#666]">
                       <span className="text-base leading-none">🇧🇷</span>
