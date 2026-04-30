@@ -23,6 +23,9 @@ import {
   Upload,
   X as XIcon,
   File as FileIcon,
+  MessageCircle,
+  CheckCircle2,
+  AlertCircle,
 } from "lucide-react";
 import {
   buildComposedSystemPrompt,
@@ -99,9 +102,14 @@ const stepsMeta = [
   { label: "Perfil", icon: User },
   { label: "Voz & Tom", icon: Mic },
   { label: "Conhecimento", icon: FileText },
-  { label: "Pagamento", icon: DollarSign },
   { label: "Revisar", icon: Rocket },
 ];
+
+function formatPairingCode(code: string): string {
+  const clean = code.replace(/[^A-Z0-9]/gi, "").toUpperCase();
+  if (clean.length === 8) return `${clean.slice(0, 4)}-${clean.slice(4)}`;
+  return clean;
+}
 
 /* ───── Component ───── */
 interface UploadedSource {
@@ -124,6 +132,13 @@ export default function NovoAgentePage() {
   const [provisionStatus, setProvisionStatus] = useState<string | null>(null);
   const [uploadedSources, setUploadedSources] = useState<UploadedSource[]>([]);
   const [pendingUploads, setPendingUploads] = useState<PendingUpload[]>([]);
+
+  // Evolution API pairing — conexão do WhatsApp do cliente via código de pareamento
+  const [evoProvisioningId, setEvoProvisioningId] = useState<string | null>(null);
+  const [evoInstance, setEvoInstance] = useState<string | null>(null);
+  const [evoPairing, setEvoPairing] = useState<string | null>(null);
+  const [evoState, setEvoState] = useState<"idle" | "creating" | "waiting" | "open" | "error">("idle");
+  const [evoError, setEvoError] = useState<string | null>(null);
 
   const [form, setForm] = useState<FormData>({
     capabilities: [],
@@ -266,37 +281,87 @@ export default function NovoAgentePage() {
     setUploadedSources((u) => u.filter((s) => s.source_id !== sourceId));
   };
 
+  const generatePairingCode = async () => {
+    setEvoError(null);
+    setEvoState("creating");
+    try {
+      const res = await fetch("/api/whatsapp/evolution/pair", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          phone: form.telefone,
+          agentName: form.name,
+          capabilities: form.capabilities,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || "Falha ao gerar código");
+      setEvoProvisioningId(data.provisioningId);
+      setEvoInstance(data.instanceName);
+      setEvoPairing(data.pairingCode);
+      setEvoState("waiting");
+    } catch (err) {
+      setEvoError(err instanceof Error ? err.message : String(err));
+      setEvoState("error");
+    }
+  };
+
+  const resetPairing = () => {
+    setEvoProvisioningId(null);
+    setEvoInstance(null);
+    setEvoPairing(null);
+    setEvoState("idle");
+    setEvoError(null);
+  };
+
+  // Polling status da conexão até state=open
+  useEffect(() => {
+    if (!evoInstance || evoState !== "waiting") return;
+    let cancelled = false;
+    const poll = async () => {
+      if (cancelled) return;
+      try {
+        const res = await fetch(`/api/whatsapp/evolution/status?instance=${encodeURIComponent(evoInstance)}`);
+        const data = await res.json();
+        if (!cancelled && data.ok && data.state === "open") {
+          setEvoState("open");
+        }
+      } catch {
+        // mantém polling em caso de erro transitório
+      }
+    };
+    poll();
+    const id = setInterval(poll, 2500);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, [evoInstance, evoState]);
+
   const canNext = (): boolean => {
     switch (step) {
       case 0: return form.capabilities.length > 0;
-      case 1: return !!form.name && !!form.empresa;
+      case 1: return !!form.name && !!form.empresa && evoState === "open";
       case 2: return true;
       case 3: return pendingUploads.filter((p) => p.status === "uploading").length === 0;
       case 4: return true;
-      case 5: return true;
       default: return false;
     }
   };
 
   const activate = async () => {
     if (form.capabilities.length === 0) return;
+    if (!evoProvisioningId || evoState !== "open") {
+      setProvisionStatus("Erro: WhatsApp não conectado. Volte ao passo Perfil e conclua o pareamento.");
+      return;
+    }
     setActivating(true);
-    setProvisionStatus("Criando agente...");
+    setProvisionStatus("Salvando configuração...");
 
     try {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Não autenticado");
 
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("organization_id")
-        .eq("id", user.id)
-        .single();
-
-      const orgId = profile?.organization_id;
-
-      // Build composed knowledge from uploaded sources + manual text
+      // Compor conhecimento (uploads + notas manuais)
       let knowledgeBlob = form.conhecimento || "";
       if (uploadedSources.length > 0) {
         const { data: sources } = await supabase
@@ -328,20 +393,17 @@ export default function NovoAgentePage() {
       const agentTypeForDb: AgentType | "custom" =
         form.capabilities.length === 1 ? form.capabilities[0] : "custom";
 
-      setProvisionStatus("Salvando configuração...");
-
-      // Insert provisioning record
-      const { data: provisioning, error } = await supabase
+      // Atualiza a linha draft criada no pairing — agora finaliza como active
+      const { error } = await supabase
         .from("agent_provisioning")
-        .insert({
-          organization_id: orgId,
+        .update({
           agent_type: agentTypeForDb,
           capabilities: form.capabilities,
           agent_name: form.name,
           tone: form.tone,
           system_prompt: systemPrompt,
           first_message: firstMessage,
-          status: "pending",
+          status: "active",
           config_json: {
             empresa: form.empresa,
             setor: form.setor,
@@ -349,81 +411,20 @@ export default function NovoAgentePage() {
             conhecimento: form.conhecimento,
           },
         })
-        .select()
-        .single();
+        .eq("id", evoProvisioningId);
 
       if (error) throw error;
 
-      // Link uploaded knowledge sources to the created agent
+      // Vincular conhecimentos à linha draft
       if (uploadedSources.length > 0) {
         await supabase
           .from("knowledge_sources")
-          .update({ agent_id: provisioning.id })
+          .update({ agent_id: evoProvisioningId })
           .in("id", uploadedSources.map((s) => s.source_id));
       }
 
-      setProvisionStatus("Provisionando no Vapi...");
-
-      // Call provision edge function
-      const provisionRes = await fetch(
-        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/provision-agent`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            provisioning_id: provisioning.id,
-            organization_id: orgId,
-            agent_type: agentTypeForDb,
-            capabilities: form.capabilities,
-            agent_name: form.name,
-            system_prompt: systemPrompt,
-            first_message: firstMessage,
-            voice_id: null,
-            tone: form.tone,
-            channels: ["voz"],
-          }),
-        }
-      );
-
-      if (provisionRes.ok) {
-        // Poll for status
-        let attempts = 0;
-        const maxAttempts = 30;
-        const pollInterval = setInterval(async () => {
-          attempts++;
-          const { data } = await supabase
-            .from("agent_provisioning")
-            .select("status, phone_number, vapi_assistant_id, error_message")
-            .eq("id", provisioning.id)
-            .single();
-
-          if (data?.status === "active") {
-            clearInterval(pollInterval);
-            setProvisionStatus("Agente ativo!");
-            setTimeout(() => router.push("/dashboard/agentes"), 1500);
-          } else if (data?.status === "error") {
-            clearInterval(pollInterval);
-            setProvisionStatus(`Erro: ${data.error_message || "Falha no provisionamento"}`);
-            setActivating(false);
-          } else if (attempts >= maxAttempts) {
-            clearInterval(pollInterval);
-            // Even without the edge function, save as pending and redirect
-            setProvisionStatus("Agente salvo! Provisionamento em andamento...");
-            setTimeout(() => router.push("/dashboard/agentes"), 1500);
-          } else {
-            const statusMsg: Record<string, string> = {
-              creating: "Criando assistente de IA...",
-              configuring_phone: "Configurando telefone...",
-              pending: "Na fila de provisionamento...",
-            };
-            setProvisionStatus(statusMsg[data?.status ?? ""] || "Processando...");
-          }
-        }, 2000);
-      } else {
-        // Edge function not deployed yet — save as pending anyway
-        setProvisionStatus("Agente salvo! Ativação pendente.");
-        setTimeout(() => router.push("/dashboard/agentes"), 2000);
-      }
+      setProvisionStatus("Agente ativo!");
+      setTimeout(() => router.push("/dashboard/agentes"), 1200);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Erro desconhecido";
       setProvisionStatus(`Erro: ${msg}`);
@@ -646,19 +647,98 @@ export default function NovoAgentePage() {
                 <div className="mt-4">
                   <label className="block text-sm font-medium text-[#888] mb-2">
                     <Phone size={14} className="inline mr-1.5" />
-                    Número de telefone do agente
+                    Número de WhatsApp do agente
                   </label>
                   <div className="bg-[#151515] border border-[#333] rounded-xl p-4">
                     <input
                       type="tel"
                       value={form.telefone}
-                      onChange={(e) => update({ telefone: e.target.value })}
+                      onChange={(e) => {
+                        update({ telefone: e.target.value });
+                        if (evoState !== "idle") resetPairing();
+                      }}
+                      disabled={evoState === "creating" || evoState === "waiting" || evoState === "open"}
                       placeholder="+55 (11) 99999-9999"
-                      className="w-full bg-[#111] border border-[#333] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-[#555] focus:border-[#5B9BF3]/50 outline-none transition-all"
+                      className="w-full bg-[#111] border border-[#333] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-[#555] focus:border-[#5B9BF3]/50 outline-none transition-all disabled:opacity-60"
                     />
                     <p className="text-[12px] text-[#666] mt-3">
-                      Opcional — deixe vazio e geraremos um número dedicado na ativação.
+                      Obrigatório — número onde o WhatsApp está instalado. Vamos parear esse número com o agente.
                     </p>
+
+                    {/* Pairing trigger */}
+                    {evoState === "idle" && (
+                      <button
+                        type="button"
+                        onClick={generatePairingCode}
+                        disabled={!form.telefone || !form.name || !form.empresa}
+                        className="mt-4 w-full bg-[#5B9BF3] hover:bg-[#4A8AE0] disabled:bg-[#222] disabled:text-[#555] text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-all flex items-center justify-center gap-2"
+                      >
+                        <MessageCircle size={16} />
+                        Gerar código de pareamento
+                      </button>
+                    )}
+
+                    {evoState === "creating" && (
+                      <div className="mt-4 flex items-center gap-2 text-sm text-[#888]">
+                        <Loader2 size={14} className="animate-spin" />
+                        Criando instância na Evolution...
+                      </div>
+                    )}
+
+                    {(evoState === "waiting" || evoState === "open") && evoPairing && (
+                      <div className="mt-4 space-y-3">
+                        <div className="bg-[#0d0d0d] border border-[#5B9BF3]/30 rounded-xl p-5 text-center">
+                          <p className="text-[11px] uppercase tracking-wider text-[#5B9BF3] mb-2">Código de pareamento</p>
+                          <p className="text-3xl font-mono font-bold text-white tracking-[0.3em]">
+                            {formatPairingCode(evoPairing)}
+                          </p>
+                        </div>
+
+                        <ol className="text-[13px] text-[#aaa] space-y-1.5 pl-4 list-decimal">
+                          <li>Abra o WhatsApp no celular</li>
+                          <li>Toque em <strong className="text-white">⋮ → Aparelhos conectados</strong></li>
+                          <li>Toque em <strong className="text-white">Conectar com número de telefone</strong></li>
+                          <li>Digite o código acima</li>
+                        </ol>
+
+                        {evoState === "waiting" && (
+                          <div className="flex items-center gap-2 text-sm text-[#888]">
+                            <Loader2 size={14} className="animate-spin" />
+                            Aguardando conexão...
+                            <button
+                              type="button"
+                              onClick={resetPairing}
+                              className="ml-auto text-xs text-[#666] hover:text-white underline"
+                            >
+                              cancelar
+                            </button>
+                          </div>
+                        )}
+
+                        {evoState === "open" && (
+                          <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg px-3 py-2 text-sm text-emerald-400">
+                            <CheckCircle2 size={16} />
+                            WhatsApp conectado
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {evoState === "error" && (
+                      <div className="mt-4 space-y-3">
+                        <div className="flex items-start gap-2 bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2.5 text-sm text-red-400">
+                          <AlertCircle size={16} className="shrink-0 mt-0.5" />
+                          <span>{evoError || "Falha ao gerar código de pareamento"}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={resetPairing}
+                          className="text-xs text-[#888] hover:text-white underline"
+                        >
+                          tentar novamente
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -819,66 +899,8 @@ export default function NovoAgentePage() {
             </div>
           )}
 
-          {/* Step 4: Payment */}
+          {/* Step 4: Review */}
           {step === 4 && (
-            <div>
-              <h2 className="text-lg font-semibold text-white mb-2">Pagamento</h2>
-              <p className="text-sm text-[#888] mb-6">Escolha o plano para ativar seu agente.</p>
-
-              <div className="bg-[#151515] border border-[#333] rounded-2xl p-6  mb-4">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h3 className="text-lg font-semibold text-white">1x Agente IA</h3>
-                    <p className="text-sm text-[#888] mt-1">
-                      {form.capabilities.map((c) => agentCards.find((a) => a.type === c)?.label).filter(Boolean).join(" + ")} &mdash; {form.name}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-2xl font-bold text-white">R$ 500</p>
-                    <p className="text-xs text-[#888]">/mês</p>
-                  </div>
-                </div>
-
-                <div className="border-t border-[#333] pt-4 space-y-3">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-[#999]">Agente de IA 24/7</span>
-                    <Check size={16} className="text-emerald-400" />
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-[#999]">Número de telefone dedicado</span>
-                    <Check size={16} className="text-emerald-400" />
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-[#999]">Chamadas ilimitadas</span>
-                    <Check size={16} className="text-emerald-400" />
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-[#999]">Transferência entre agentes</span>
-                    <Check size={16} className="text-emerald-400" />
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-[#999]">Dashboard com métricas</span>
-                    <Check size={16} className="text-emerald-400" />
-                  </div>
-                </div>
-
-                <div className="border-t border-[#333] mt-4 pt-4 flex items-center justify-between">
-                  <span className="text-white font-semibold">Total mensal</span>
-                  <span className="text-xl font-bold text-white">R$ 500<span className="text-sm font-normal text-[#888]">/mês</span></span>
-                </div>
-              </div>
-
-              <div className="bg-[#5B9BF3]/5 border border-[#5B9BF3]/20 rounded-xl p-4 flex items-center gap-3">
-                <Sparkles size={18} className="text-[#5B9BF3] shrink-0" />
-                <p className="text-sm text-[#888]">
-                  <strong className="text-white">7 dias grátis</strong> &mdash; cancele a qualquer momento. Após o trial, a cobrança é mensal via cartão ou Pix.
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* Step 5: Review */}
-          {step === 5 && (
             <div>
               <h2 className="text-lg font-semibold text-white mb-2">Revisar e ativar</h2>
               <p className="text-sm text-[#888] mb-6">Confira as configurações do seu agente antes de ativar.</p>

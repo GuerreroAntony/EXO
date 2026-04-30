@@ -35,6 +35,20 @@ export async function isWamidProcessed(wamid: string): Promise<boolean> {
   return data != null;
 }
 
+export async function isExternalMessageProcessed(
+  transport: "meta" | "evolution",
+  externalMessageId: string,
+): Promise<boolean> {
+  const supabase = createAdminClient();
+  const { data } = await supabase
+    .from("messages")
+    .select("id")
+    .eq("transport", transport)
+    .eq("external_message_id", externalMessageId)
+    .maybeSingle<{ id: string }>();
+  return data != null;
+}
+
 export async function findOrCreateConversation(params: {
   organizationId: string;
   agentId: string;
@@ -108,6 +122,42 @@ export async function insertInboundMessage(params: {
   return data;
 }
 
+export async function insertInboundMessageGeneric(params: {
+  conversationId: string;
+  content: string;
+  transport: "meta" | "evolution";
+  externalMessageId: string;
+}): Promise<MessageRow> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from("messages")
+    .insert({
+      conversation_id: params.conversationId,
+      direction: "inbound",
+      sender_type: "contact",
+      content: params.content,
+      transport: params.transport,
+      external_message_id: params.externalMessageId,
+      // wamid populado também quando transport=meta para back-compat com queries existentes
+      wamid: params.transport === "meta" ? params.externalMessageId : null,
+      status: "received",
+    })
+    .select("*")
+    .single<MessageRow>();
+
+  if (error || !data) throw new Error(`insertInboundMessageGeneric failed: ${error?.message}`);
+
+  await supabase
+    .from("conversations")
+    .update({
+      last_message_at: new Date().toISOString(),
+      unread_count: await incrementUnread(params.conversationId),
+    })
+    .eq("id", params.conversationId);
+
+  return data;
+}
+
 async function incrementUnread(conversationId: string): Promise<number> {
   const supabase = createAdminClient();
   const { data } = await supabase
@@ -157,6 +207,24 @@ export async function setOutboundMessageSent(messageId: string, wamid: string): 
   if (error) throw new Error(`setOutboundMessageSent failed: ${error.message}`);
 }
 
+export async function setOutboundMessageSentGeneric(
+  messageId: string,
+  transport: "meta" | "evolution",
+  externalMessageId: string,
+): Promise<void> {
+  const supabase = createAdminClient();
+  const { error } = await supabase
+    .from("messages")
+    .update({
+      transport,
+      external_message_id: externalMessageId,
+      wamid: transport === "meta" ? externalMessageId : null,
+      status: "sent",
+    })
+    .eq("id", messageId);
+  if (error) throw new Error(`setOutboundMessageSentGeneric failed: ${error.message}`);
+}
+
 export async function setOutboundMessageFailed(messageId: string, errorMessage: string): Promise<void> {
   const supabase = createAdminClient();
   await supabase
@@ -168,6 +236,19 @@ export async function setOutboundMessageFailed(messageId: string, errorMessage: 
 export async function updateMessageStatusByWamid(wamid: string, status: string): Promise<void> {
   const supabase = createAdminClient();
   await supabase.from("messages").update({ status }).eq("wamid", wamid);
+}
+
+export async function updateMessageStatusByExternalId(
+  transport: "meta" | "evolution",
+  externalMessageId: string,
+  status: string,
+): Promise<void> {
+  const supabase = createAdminClient();
+  await supabase
+    .from("messages")
+    .update({ status })
+    .eq("transport", transport)
+    .eq("external_message_id", externalMessageId);
 }
 
 export async function getRecentHistory(conversationId: string, limit = 20): Promise<ChatTurn[]> {
