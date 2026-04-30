@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Save, Loader2, CheckCircle2, AlertCircle, Building2 } from "lucide-react";
+import CompanyDocuments from "./CompanyDocuments";
 
 interface CompanyInfo {
   nome_fantasia: string;
@@ -216,6 +217,10 @@ export default function CompanyInfoForm() {
             className="input resize-y"
           />
         </Field>
+      </Section>
+
+      <Section title="Documentos da empresa">
+        <CompanyDocuments />
       </Section>
 
       <Section title="FAQ — perguntas frequentes">
