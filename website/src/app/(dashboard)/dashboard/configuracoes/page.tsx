@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { Save, Phone, MessageCircle, Zap, Calendar as CalendarIcon } from "lucide-react";
 import PageHeader from "@/components/dashboard/PageHeader";
 import CompanyInfoForm from "@/components/dashboard/CompanyInfoForm";
-import ConnectWhatsAppButton from "@/components/dashboard/ConnectWhatsAppButton";
 import { createClient } from "@/lib/supabase/client";
 import { useOrg } from "@/lib/supabase/use-org";
 
@@ -59,11 +58,16 @@ export default function ConfiguracoesPage() {
   const [setor, setSetor] = useState("");
   const [endereco, setEndereco] = useState("");
 
-  const [waConnection, setWaConnection] = useState<{
+  interface ConnectedAgent {
     id: string;
+    agent_name: string;
+    transport: "meta" | "evolution";
+    phone_label: string;
     display_name: string | null;
-    phone_number_id: string;
-  } | null>(null);
+    state: "open" | "close" | "connecting" | "active";
+  }
+
+  const [connectedAgents, setConnectedAgents] = useState<ConnectedAgent[]>([]);
 
   useEffect(() => {
     setNome(userName);
@@ -79,40 +83,41 @@ export default function ConfiguracoesPage() {
     const supabase = createClient();
     supabase
       .from("agent_provisioning")
-      .select("id, whatsapp_display_name, whatsapp_phone_number_id")
+      .select("id, agent_name, transport, status, whatsapp_display_name, whatsapp_phone_number, whatsapp_phone_number_id, evolution_jid, evolution_connection_state")
       .eq("organization_id", orgId)
-      .not("whatsapp_phone_number_id", "is", null)
-      .limit(1)
-      .maybeSingle<{ id: string; whatsapp_display_name: string | null; whatsapp_phone_number_id: string }>()
+      .in("status", ["active", "draft"])
       .then(({ data }) => {
-        if (data) {
-          setWaConnection({
-            id: data.id,
-            display_name: data.whatsapp_display_name,
-            phone_number_id: data.whatsapp_phone_number_id,
-          });
-        }
+        if (!data) return;
+        const rows = (data as Array<{
+          id: string;
+          agent_name: string;
+          transport: "meta" | "evolution" | null;
+          status: string;
+          whatsapp_display_name: string | null;
+          whatsapp_phone_number: string | null;
+          whatsapp_phone_number_id: string | null;
+          evolution_jid: string | null;
+          evolution_connection_state: string | null;
+        }>).filter((r) => {
+          if (r.transport === "evolution") return !!r.whatsapp_phone_number || !!r.evolution_jid;
+          return !!r.whatsapp_phone_number_id;
+        });
+        const mapped: ConnectedAgent[] = rows.map((r) => ({
+          id: r.id,
+          agent_name: r.agent_name,
+          transport: (r.transport ?? "meta") as "meta" | "evolution",
+          phone_label: r.transport === "evolution"
+            ? (r.whatsapp_phone_number ?? (r.evolution_jid ? `+${r.evolution_jid.split("@")[0]}` : "—"))
+            : (r.whatsapp_phone_number ?? "—"),
+          display_name: r.whatsapp_display_name,
+          state: r.transport === "evolution"
+            ? ((r.evolution_connection_state as "open" | "close" | "connecting" | null) ?? (r.status === "active" ? "open" : "connecting"))
+            : (r.status === "active" ? "open" : "connecting"),
+        }));
+        setConnectedAgents(mapped);
       });
   }, [orgId]);
 
-  async function handleDisconnectWhatsApp() {
-    if (!waConnection) return;
-    if (!confirm("Desconectar o WhatsApp? O número vai parar de receber/enviar mensagens pelo agente.")) return;
-    const supabase = createClient();
-    await supabase
-      .from("agent_provisioning")
-      .update({
-        waba_id: null,
-        whatsapp_phone_number_id: null,
-        whatsapp_display_name: null,
-        tenant_access_token_encrypted: null,
-        status: "pending",
-      })
-      .eq("id", waConnection.id);
-    setWaConnection(null);
-  }
-
-  const [vozAtivo, setVozAtivo] = useState(true);
   const [horarios, setHorarios] = useState(
     diasSemana.map((dia, i) => ({
       dia,
@@ -236,110 +241,100 @@ export default function ConfiguracoesPage() {
                 Salvar
               </button>
             </SectionCard>
-
-            <SectionCard title="Plano">
-              <div className="flex items-center gap-3">
-                <span className="inline-flex items-center px-3 py-1 rounded-full bg-[#5B9BF3]/15 text-[#5B9BF3] text-sm font-medium">
-                  Starter
-                </span>
-                <span className="text-sm text-[#888]">R$ 500/agente/mês</span>
-              </div>
-              <a href="#" className="inline-block mt-4 text-sm text-[#5B9BF3] hover:text-[#5B9BF3]/80 transition-colors">
-                Fazer upgrade &rarr;
-              </a>
-            </SectionCard>
           </motion.div>
         )}
 
         {/* Tab: Canais */}
         {activeTab === "canais" && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Voz */}
-              <div className="bg-[#151515] border border-[#333] rounded-2xl p-5 ">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-violet-500/15 flex items-center justify-center">
-                      <Phone size={18} className="text-violet-400" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-white">Voz</p>
-                      <p className="text-[11px] text-[#999]">Twilio + Vapi</p>
-                    </div>
+            {/* WhatsApp — lista todos os agentes conectados (Meta + Evolution) */}
+            <div className="bg-[#151515] border border-[#333] rounded-2xl p-5">
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center">
+                    <MessageCircle size={18} className="text-emerald-400" />
                   </div>
-                  <button
-                    type="button"
-                    role="switch"
-                    aria-checked={vozAtivo}
-                    onClick={() => setVozAtivo(!vozAtivo)}
-                    className={`relative w-11 h-6 rounded-full transition-colors ${vozAtivo ? "bg-emerald-500" : "bg-[#333]"}`}
-                  >
-                    <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${vozAtivo ? "translate-x-5" : "translate-x-0"}`} />
-                  </button>
-                </div>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between text-[#888]">
-                    <span>Número</span>
-                    <span className="text-[#666]">+1 (681) 281-2439</span>
-                  </div>
-                  <div className="flex justify-between text-[#888]">
-                    <span>Status</span>
-                    <span className={vozAtivo ? "text-emerald-400" : "text-[#666]"}>{vozAtivo ? "Ativo" : "Inativo"}</span>
+                  <div>
+                    <p className="text-sm font-semibold text-white">WhatsApp</p>
+                    <p className="text-[11px] text-[#999]">
+                      {connectedAgents.length > 0
+                        ? `${connectedAgents.filter((a) => a.state === "open").length} de ${connectedAgents.length} agente(s) conectado(s)`
+                        : "Nenhum agente conectado"}
+                    </p>
                   </div>
                 </div>
+                <a
+                  href="/dashboard/agentes/novo"
+                  className="px-3 py-1.5 bg-[#5B9BF3] hover:bg-[#5B9BF3]/80 text-white text-xs font-medium rounded-lg transition-colors"
+                >
+                  + Novo agente
+                </a>
               </div>
 
-              {/* WhatsApp */}
-              <div className="bg-[#151515] border border-[#333] rounded-2xl p-5">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center">
-                      <MessageCircle size={18} className="text-emerald-400" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-white">WhatsApp</p>
-                      <p className="text-[11px] text-[#999]">WhatsApp Cloud API · Meta oficial</p>
-                    </div>
-                  </div>
-                  {waConnection && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-[10px] font-mono uppercase text-emerald-400 tracking-wider">
-                      Conectado
-                    </span>
-                  )}
+              {connectedAgents.length === 0 ? (
+                <div className="border border-dashed border-[#333] rounded-xl p-6 text-center">
+                  <p className="text-sm text-[#888] mb-1">Você ainda não conectou nenhum WhatsApp.</p>
+                  <p className="text-[12px] text-[#666]">Crie um agente novo e conecte um número via pareamento.</p>
                 </div>
-                {waConnection ? (
-                  <div className="space-y-3">
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between text-[#888]">
-                        <span>Nome de exibição</span>
-                        <span className="text-[#ccc]">{waConnection.display_name ?? "—"}</span>
+              ) : (
+                <div className="space-y-2">
+                  {connectedAgents.map((agent) => (
+                    <div key={agent.id} className="flex items-center justify-between bg-[#111] border border-[#2a2a2a] rounded-xl px-4 py-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
+                          <MessageCircle size={14} className="text-emerald-400" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm text-white truncate">{agent.agent_name}</p>
+                          <p className="text-[11px] text-[#666] font-mono truncate">
+                            {agent.display_name ? `${agent.display_name} · ` : ""}{agent.phone_label}
+                          </p>
+                        </div>
                       </div>
-                      <div className="flex justify-between text-[#888]">
-                        <span>Phone Number ID</span>
-                        <span className="text-[#666] font-mono text-xs">{waConnection.phone_number_id}</span>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded bg-[#1e1e1e] text-[9px] font-mono uppercase text-[#999] tracking-wider">
+                          {agent.transport === "evolution" ? "Evolution" : "Meta Cloud"}
+                        </span>
+                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider ${
+                          agent.state === "open"
+                            ? "bg-emerald-500/15 text-emerald-400"
+                            : agent.state === "connecting"
+                            ? "bg-amber-500/15 text-amber-400"
+                            : "bg-red-500/15 text-red-400"
+                        }`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${
+                            agent.state === "open" ? "bg-emerald-400" : agent.state === "connecting" ? "bg-amber-400" : "bg-red-400"
+                          }`} />
+                          {agent.state === "open" ? "Conectado" : agent.state === "connecting" ? "Pareando" : "Offline"}
+                        </span>
                       </div>
                     </div>
-                    <button
-                      type="button"
-                      onClick={handleDisconnectWhatsApp}
-                      className="w-full px-4 py-2 bg-transparent hover:bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-medium rounded-xl transition-colors"
-                    >
-                      Desconectar WhatsApp
-                    </button>
+                  ))}
+                </div>
+              )}
+
+              <div className="mt-5 pt-4 border-t border-[#222] flex flex-wrap gap-3 text-[11px] text-[#666]">
+                <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> Conectado</span>
+                <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-amber-400" /> Pareamento em andamento</span>
+                <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-red-400" /> Sessão caída — reabrir no celular</span>
+              </div>
+            </div>
+
+            {/* Voz — em breve */}
+            <div className="bg-[#111] border border-[#333] rounded-2xl p-5 opacity-60">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center">
+                    <Phone size={18} className="text-violet-400" />
                   </div>
-                ) : (
-                  <ConnectWhatsAppButton
-                    onConnected={(r) => {
-                      if (r.ok && r.phone_number_id) {
-                        setWaConnection({
-                          id: "",
-                          display_name: r.display_name ?? null,
-                          phone_number_id: r.phone_number_id,
-                        });
-                      }
-                    }}
-                  />
-                )}
+                  <div>
+                    <p className="text-sm font-semibold text-[#ccc]">Voz</p>
+                    <p className="text-[11px] text-[#999]">Atendimento por chamadas telefônicas</p>
+                  </div>
+                </div>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#1e1e1e] text-[10px] font-mono uppercase text-[#999] tracking-wider">
+                  Em breve
+                </span>
               </div>
             </div>
           </motion.div>
