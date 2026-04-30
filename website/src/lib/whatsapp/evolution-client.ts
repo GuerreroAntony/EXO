@@ -34,14 +34,12 @@ async function evoFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
 }
 
 export interface EvolutionInstanceCreated {
-  instance: { instanceName: string; status: string };
-  pairingCode?: string;
-  qrcode?: { code?: string; base64?: string };
+  instance: { instanceName: string; instanceId?: string; status: string };
+  hash?: string;
 }
 
 export async function createInstance(
   instanceName: string,
-  phoneE164NoPlus: string,
 ): Promise<EvolutionInstanceCreated> {
   const publicAppUrl = requireEnv("PUBLIC_APP_URL", PUBLIC_APP_URL);
   const webhookToken = requireEnv("EVOLUTION_WEBHOOK_TOKEN", WEBHOOK_TOKEN);
@@ -50,7 +48,6 @@ export async function createInstance(
     method: "POST",
     body: JSON.stringify({
       instanceName,
-      number: phoneE164NoPlus,
       qrcode: false,
       integration: "WHATSAPP-BAILEYS",
       webhook: {
@@ -60,6 +57,21 @@ export async function createInstance(
       },
     }),
   });
+}
+
+export interface EvolutionPairingResult {
+  pairingCode: string;
+  code?: string;
+  base64?: string;
+}
+
+export async function connectInstance(
+  instanceName: string,
+  phoneE164NoPlus: string,
+): Promise<EvolutionPairingResult> {
+  return evoFetch<EvolutionPairingResult>(
+    `/instance/connect/${encodeURIComponent(instanceName)}?number=${encodeURIComponent(phoneE164NoPlus)}`,
+  );
 }
 
 export interface EvolutionConnectionState {

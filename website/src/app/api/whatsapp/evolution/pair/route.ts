@@ -1,7 +1,7 @@
 import { type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { createInstance, deleteInstance } from "@/lib/whatsapp/evolution-client";
+import { createInstance, connectInstance, deleteInstance } from "@/lib/whatsapp/evolution-client";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -82,16 +82,28 @@ export async function POST(request: NextRequest) {
 
   let pairingCode: string;
   try {
-    const result = await createInstance(instanceName, phoneE164NoPlus);
-    if (!result.pairingCode) {
-      throw new Error("Evolution não retornou pairingCode");
-    }
-    pairingCode = result.pairingCode;
+    await createInstance(instanceName);
   } catch (err) {
     console.error("[evolution/pair] createInstance failed", err);
     await admin.from("agent_provisioning").delete().eq("id", draft.id);
     return Response.json(
       { ok: false, error: "Falha ao criar instância na Evolution" },
+      { status: 502 },
+    );
+  }
+
+  try {
+    const result = await connectInstance(instanceName, phoneE164NoPlus);
+    if (!result.pairingCode) {
+      throw new Error("Evolution não retornou pairingCode");
+    }
+    pairingCode = result.pairingCode;
+  } catch (err) {
+    console.error("[evolution/pair] connectInstance failed", err);
+    await deleteInstance(instanceName).catch(() => undefined);
+    await admin.from("agent_provisioning").delete().eq("id", draft.id);
+    return Response.json(
+      { ok: false, error: "Falha ao gerar pairing code" },
       { status: 502 },
     );
   }
