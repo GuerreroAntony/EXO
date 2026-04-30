@@ -2,6 +2,7 @@ import { type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createInstance, connectInstance, deleteInstance } from "@/lib/whatsapp/evolution-client";
+import { sendPairingEmail } from "@/lib/email/resend-client";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -10,6 +11,7 @@ interface PairRequestBody {
   phone?: string;
   agentName?: string;
   capabilities?: string[];
+  email?: string;
 }
 
 const VALID_CAPABILITIES = new Set(["recepcionista", "sac", "cobranca", "agendamento"]);
@@ -126,12 +128,33 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  let emailSent: { id: string } | null = null;
+  let emailError: string | null = null;
+  const recipientEmail = (body.email ?? "").trim();
+  if (recipientEmail) {
+    try {
+      emailSent = await sendPairingEmail({
+        to: recipientEmail,
+        agentName,
+        pairingCode,
+        phoneE164: `+${phoneE164NoPlus}`,
+        expiresAt,
+      });
+    } catch (err) {
+      emailError = err instanceof Error ? err.message : String(err);
+      console.warn("[evolution/pair] sendPairingEmail failed", emailError);
+    }
+  }
+
   return Response.json({
     ok: true,
     provisioningId: draft.id,
     instanceName,
     pairingCode,
     expiresAt,
+    email: recipientEmail
+      ? { sent: !!emailSent, id: emailSent?.id ?? null, error: emailError }
+      : null,
   });
 }
 

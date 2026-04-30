@@ -52,6 +52,7 @@ interface FormData {
   horaInicio: string;
   horaFim: string;
   telefone: string;
+  emailDono: string;
   conhecimento: string;
 }
 
@@ -139,6 +140,7 @@ export default function NovoAgentePage() {
   const [evoPairing, setEvoPairing] = useState<string | null>(null);
   const [evoState, setEvoState] = useState<"idle" | "creating" | "waiting" | "open" | "error">("idle");
   const [evoError, setEvoError] = useState<string | null>(null);
+  const [evoEmailStatus, setEvoEmailStatus] = useState<"none" | "sent" | "failed">("none");
 
   const [form, setForm] = useState<FormData>({
     capabilities: [],
@@ -152,6 +154,7 @@ export default function NovoAgentePage() {
     horaInicio: "08:00",
     horaFim: "18:00",
     telefone: "",
+    emailDono: "",
     conhecimento: "",
   });
 
@@ -284,6 +287,7 @@ export default function NovoAgentePage() {
   const generatePairingCode = async () => {
     setEvoError(null);
     setEvoState("creating");
+    setEvoEmailStatus("none");
     try {
       const res = await fetch("/api/whatsapp/evolution/pair", {
         method: "POST",
@@ -292,6 +296,7 @@ export default function NovoAgentePage() {
           phone: form.telefone,
           agentName: form.name,
           capabilities: form.capabilities,
+          email: form.emailDono || undefined,
         }),
       });
       const data = await res.json();
@@ -300,6 +305,7 @@ export default function NovoAgentePage() {
       setEvoInstance(data.instanceName);
       setEvoPairing(data.pairingCode);
       setEvoState("waiting");
+      if (data.email) setEvoEmailStatus(data.email.sent ? "sent" : "failed");
     } catch (err) {
       setEvoError(err instanceof Error ? err.message : String(err));
       setEvoState("error");
@@ -312,6 +318,7 @@ export default function NovoAgentePage() {
     setEvoPairing(null);
     setEvoState("idle");
     setEvoError(null);
+    setEvoEmailStatus("none");
   };
 
   // Polling status da conexão até state=open
@@ -665,6 +672,25 @@ export default function NovoAgentePage() {
                       Obrigatório — número onde o WhatsApp está instalado. Vamos parear esse número com o agente.
                     </p>
 
+                    {/* Email do dono */}
+                    {evoState === "idle" && (
+                      <div className="mt-4">
+                        <label className="block text-[12px] text-[#888] mb-1.5">
+                          Email do dono do número <span className="text-[#666]">(opcional, mas recomendado)</span>
+                        </label>
+                        <input
+                          type="email"
+                          value={form.emailDono}
+                          onChange={(e) => update({ emailDono: e.target.value })}
+                          placeholder="dono@empresa.com.br"
+                          className="w-full bg-[#111] border border-[#333] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-[#555] focus:border-[#5B9BF3]/50 outline-none transition-all"
+                        />
+                        <p className="text-[11px] text-[#666] mt-1.5">
+                          Vamos mandar o código pra esse email — assim a pessoa não precisa receber por WhatsApp.
+                        </p>
+                      </div>
+                    )}
+
                     {/* Pairing trigger */}
                     {evoState === "idle" && (
                       <button
@@ -693,6 +719,19 @@ export default function NovoAgentePage() {
                             {formatPairingCode(evoPairing)}
                           </p>
                         </div>
+
+                        {evoEmailStatus === "sent" && form.emailDono && (
+                          <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg px-3 py-2 text-sm text-emerald-400">
+                            <CheckCircle2 size={14} />
+                            <span>Código enviado pra <strong>{form.emailDono}</strong></span>
+                          </div>
+                        )}
+                        {evoEmailStatus === "failed" && (
+                          <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2 text-xs text-amber-400">
+                            <AlertCircle size={14} />
+                            <span>Não conseguimos enviar o email. Use o código acima ou cancele e tente de novo.</span>
+                          </div>
+                        )}
 
                         <ol className="text-[13px] text-[#aaa] space-y-1.5 pl-4 list-decimal">
                           <li>Abra o WhatsApp no celular</li>
