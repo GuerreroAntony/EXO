@@ -11,6 +11,10 @@ interface CompanyInfo {
   formas_pagamento: string;
   politica_cancelamento: string;
   faq: string;
+  escalonamento_humano: string;
+  restricoes: string;
+  contato_humano: string;
+  tom_marca: string;
 }
 
 const EMPTY: CompanyInfo = {
@@ -21,6 +25,10 @@ const EMPTY: CompanyInfo = {
   formas_pagamento: "",
   politica_cancelamento: "",
   faq: "",
+  escalonamento_humano: "",
+  restricoes: "",
+  contato_humano: "",
+  tom_marca: "",
 };
 
 export default function CompanyInfoForm() {
@@ -154,6 +162,57 @@ export default function CompanyInfoForm() {
             onChange={(e) => update("politica_cancelamento", e.target.value)}
             rows={3}
             placeholder="Cancelamento gratuito até 24h antes do horário marcado. Após esse prazo, cobramos 50% da consulta."
+            className="input resize-y"
+          />
+        </Field>
+      </Section>
+
+      <Section title="Atendimento e limites">
+        <Field
+          label="Quando chamar humano"
+          hint="Liste assuntos que disparam handoff automático. O agente vai escalar nesses casos em vez de tentar responder."
+        >
+          <textarea
+            value={info.escalonamento_humano}
+            onChange={(e) => update("escalonamento_humano", e.target.value)}
+            rows={4}
+            placeholder={`Reclamações graves ou ameaças.\nPedidos de desconto acima de 20%.\nProblemas de cobrança duplicada ou estorno.\nCliente visivelmente irritado pedindo gerente.\nTermos jurídicos / processo / advogado.\nMudanças de endereço / dados sensíveis.`}
+            className="input resize-y"
+          />
+        </Field>
+        <Field
+          label="Restrições — o que o agente NUNCA deve fazer"
+          hint="Regras absolutas. Vão entrar como guardrails no prompt — o agente não desobedece."
+        >
+          <textarea
+            value={info.restricoes}
+            onChange={(e) => update("restricoes", e.target.value)}
+            rows={4}
+            placeholder={`Nunca prometa prazo sem confirmar com humano.\nNunca dê opinião sobre concorrentes.\nNunca compartilhe preços negociados de outros clientes.\nNunca confirme agendamento sem ver na agenda real.\nNunca peça dados de cartão por mensagem.\nNunca invente informação que não está aqui na base.`}
+            className="input resize-y"
+          />
+        </Field>
+        <Field
+          label="Contato humano de plantão"
+          hint="Quem o agente avisa quando escalar. Pode ser nome + WhatsApp ou nome + email."
+        >
+          <input
+            type="text"
+            value={info.contato_humano}
+            onChange={(e) => update("contato_humano", e.target.value)}
+            placeholder="Ex: Maria — +55 11 98765-4321 (WhatsApp)"
+            className="input"
+          />
+        </Field>
+        <Field
+          label="Tom de voz e personalidade da marca"
+          hint="Como a marca fala — diferente do tom do agente individual. Define a voz que todos os agentes da empresa compartilham."
+        >
+          <textarea
+            value={info.tom_marca}
+            onChange={(e) => update("tom_marca", e.target.value)}
+            rows={4}
+            placeholder={`Ex: Trate o cliente como você. Linguagem informal mas educada, sem gírias regionais. Sempre cumprimente pelo nome quando souber. Quando errar, assuma diretamente sem rodeios. Frases curtas, sem floreio.`}
             className="input resize-y"
           />
         </Field>

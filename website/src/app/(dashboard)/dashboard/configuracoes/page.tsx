@@ -85,7 +85,7 @@ export default function ConfiguracoesPage() {
       .from("agent_provisioning")
       .select("id, agent_name, transport, status, whatsapp_display_name, whatsapp_phone_number, whatsapp_phone_number_id, evolution_jid, evolution_connection_state")
       .eq("organization_id", orgId)
-      .in("status", ["active", "draft"])
+      .eq("status", "active")
       .then(({ data }) => {
         if (!data) return;
         const rows = (data as Array<{

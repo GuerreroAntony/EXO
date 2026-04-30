@@ -13,6 +13,10 @@ interface CompanyInfo {
   formas_pagamento?: string;
   politica_cancelamento?: string;
   faq?: string;
+  escalonamento_humano?: string;
+  restricoes?: string;
+  contato_humano?: string;
+  tom_marca?: string;
 }
 
 const FIELD_LABELS: Record<keyof CompanyInfo, string> = {
@@ -23,6 +27,10 @@ const FIELD_LABELS: Record<keyof CompanyInfo, string> = {
   formas_pagamento: "Formas de pagamento aceitas",
   politica_cancelamento: "Política de cancelamento e reembolso",
   faq: "Perguntas frequentes",
+  escalonamento_humano: "Quando chamar humano (escalonamento)",
+  restricoes: "Restrições — o que o agente NUNCA deve fazer",
+  contato_humano: "Contato humano de plantão",
+  tom_marca: "Tom de voz e personalidade da marca",
 };
 
 function buildExtractedText(info: CompanyInfo): string {

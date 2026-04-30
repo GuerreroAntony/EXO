@@ -115,7 +115,7 @@ export default function AgentesPage() {
     const supabase = createClient();
     Promise.all([
       supabase.from("agents").select("*").eq("organization_id", orgId).order("criado_em"),
-      supabase.from("agent_provisioning").select("*").eq("organization_id", orgId).order("criado_em", { ascending: false }),
+      supabase.from("agent_provisioning").select("*").eq("organization_id", orgId).neq("status", "draft").order("criado_em", { ascending: false }),
     ]).then(([legacyRes, provRes]) => {
       setAgents(legacyRes.data ?? []);
       setProvisioned(provRes.data ?? []);
