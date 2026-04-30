@@ -4,11 +4,27 @@ import { useEffect, useState } from "react";
 import { Save, Loader2, CheckCircle2, AlertCircle, Building2 } from "lucide-react";
 import CompanyDocuments from "./CompanyDocuments";
 
+interface HorarioDia {
+  dia: string;
+  ativo: boolean;
+  inicio: string;
+  fim: string;
+}
+
+const DIAS_SEMANA = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
+
+const HORARIO_DEFAULT: HorarioDia[] = DIAS_SEMANA.map((dia, i) => ({
+  dia,
+  ativo: i < 5,
+  inicio: "08:00",
+  fim: "18:00",
+}));
+
 interface CompanyInfo {
   nome_fantasia: string;
   descricao: string;
   endereco: string;
-  horario_funcionamento: string;
+  horario_funcionamento_dias: HorarioDia[];
   formas_pagamento: string;
   politica_cancelamento: string;
   faq: string;
@@ -22,7 +38,7 @@ const EMPTY: CompanyInfo = {
   nome_fantasia: "",
   descricao: "",
   endereco: "",
-  horario_funcionamento: "",
+  horario_funcionamento_dias: HORARIO_DEFAULT,
   formas_pagamento: "",
   politica_cancelamento: "",
   faq: "",
@@ -75,11 +91,14 @@ export default function CompanyInfoForm() {
 
   if (loading) return <div className="text-[#666] text-sm">Carregando...</div>;
 
-  const filledCount = Object.values(info).filter((v) => v.trim().length > 0).length;
+  const filledCount = Object.entries(info).filter(([k, v]) => {
+    if (k === "horario_funcionamento_dias") return Array.isArray(v) && v.some((d: HorarioDia) => d.ativo);
+    return typeof v === "string" && v.trim().length > 0;
+  }).length;
   const totalFields = Object.keys(info).length;
 
   return (
-    <div className="space-y-5 max-w-3xl">
+    <div className="space-y-5 max-w-6xl">
       <div className="bg-[#0d0d0d] border border-[#1e1e1e] rounded-2xl p-5 flex items-start gap-4">
         <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center shrink-0">
           <Building2 size={18} className="text-emerald-400" />
@@ -96,6 +115,8 @@ export default function CompanyInfoForm() {
         </div>
       </div>
 
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
       <Section title="Identificação">
         <Field label="Nome fantasia" hint="Como a empresa é conhecida no mercado">
           <input
@@ -111,7 +132,7 @@ export default function CompanyInfoForm() {
       <Section title="Sobre a empresa">
         <Field
           label="O que oferece"
-          hint="Descrição clara do que a empresa vende ou faz. Esse texto vai direto no contexto da Sofia."
+          hint="Descrição clara do que a empresa vende ou faz. Esse texto vai direto no contexto dos agentes."
         >
           <textarea
             value={info.descricao}
@@ -135,15 +156,55 @@ export default function CompanyInfoForm() {
       <Section title="Operação">
         <Field
           label="Horário de funcionamento"
-          hint="Texto livre — os agentes usam pra responder 'qual horário?'"
+          hint="Os agentes usam isso pra responder 'qual horário?' e pra saber quando estão em fora do expediente."
         >
-          <textarea
-            value={info.horario_funcionamento}
-            onChange={(e) => update("horario_funcionamento", e.target.value)}
-            rows={3}
-            placeholder="Segunda a sexta das 8h às 18h. Sábado das 8h às 12h. Fechado domingos e feriados."
-            className="input resize-y"
-          />
+          <div className="space-y-2">
+            {info.horario_funcionamento_dias.map((h, idx) => (
+              <div key={h.dia} className="flex items-center gap-3">
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={h.ativo}
+                  onClick={() => {
+                    const next = [...info.horario_funcionamento_dias];
+                    next[idx] = { ...next[idx], ativo: !next[idx].ativo };
+                    update("horario_funcionamento_dias", next);
+                  }}
+                  className={`relative w-9 h-5 rounded-full transition-colors shrink-0 ${h.ativo ? "bg-[#5B9BF3]" : "bg-[#333]"}`}
+                >
+                  <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${h.ativo ? "translate-x-4" : "translate-x-0"}`} />
+                </button>
+                <span className={`text-sm w-20 ${h.ativo ? "text-[#ccc]" : "text-[#666]"}`}>{h.dia}</span>
+                {h.ativo ? (
+                  <div className="flex items-center gap-2 text-sm">
+                    <input
+                      type="time"
+                      value={h.inicio}
+                      onChange={(e) => {
+                        const next = [...info.horario_funcionamento_dias];
+                        next[idx] = { ...next[idx], inicio: e.target.value };
+                        update("horario_funcionamento_dias", next);
+                      }}
+                      className="bg-[#0a0a0a] border border-[#222] rounded-md px-2 py-1 text-white"
+                    />
+                    <span className="text-[#666]">até</span>
+                    <input
+                      type="time"
+                      value={h.fim}
+                      onChange={(e) => {
+                        const next = [...info.horario_funcionamento_dias];
+                        next[idx] = { ...next[idx], fim: e.target.value };
+                        update("horario_funcionamento_dias", next);
+                      }}
+                      className="bg-[#0a0a0a] border border-[#222] rounded-md px-2 py-1 text-white"
+                    />
+                  </div>
+                ) : (
+                  <span className="text-sm text-[#666]">Fechado</span>
+                )}
+              </div>
+            ))}
+          </div>
         </Field>
         <Field label="Formas de pagamento aceitas">
           <textarea
@@ -219,14 +280,14 @@ export default function CompanyInfoForm() {
         </Field>
       </Section>
 
-      <Section title="Documentos da empresa">
+      <Section title="Documentos da empresa" className="lg:col-span-2">
         <CompanyDocuments />
       </Section>
 
-      <Section title="FAQ — perguntas frequentes">
+      <Section title="FAQ — perguntas frequentes" className="lg:col-span-2">
         <Field
           label="Liste as dúvidas mais comuns dos clientes e suas respostas"
-          hint="Formato livre. Pode usar P:/R: ou bullets. Quanto mais detalhado, mais autônoma a Sofia."
+          hint="Formato livre. Pode usar P:/R: ou bullets. Quanto mais detalhado, mais autônomos os agentes."
         >
           <textarea
             value={info.faq}
@@ -237,6 +298,8 @@ export default function CompanyInfoForm() {
           />
         </Field>
       </Section>
+
+      </div>
 
       {error && (
         <div className="flex items-start gap-2 px-3 py-2 bg-red-500/10 border border-red-500/20 rounded-lg text-xs text-red-400">
@@ -284,9 +347,9 @@ export default function CompanyInfoForm() {
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) {
   return (
-    <div className="bg-[#111] border border-[#1e1e1e] rounded-2xl p-6">
+    <div className={`bg-[#111] border border-[#1e1e1e] rounded-2xl p-6 ${className ?? ""}`}>
       <h3 className="text-white text-base font-semibold mb-4">{title}</h3>
       <div className="space-y-4">{children}</div>
     </div>

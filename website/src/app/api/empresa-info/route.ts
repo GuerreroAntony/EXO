@@ -5,11 +5,18 @@ import { clearPromptCache } from "@/lib/agents/prompt-builder";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+interface HorarioDia {
+  dia: string;
+  ativo: boolean;
+  inicio: string;
+  fim: string;
+}
+
 interface CompanyInfo {
   nome_fantasia?: string;
   descricao?: string;
   endereco?: string;
-  horario_funcionamento?: string;
+  horario_funcionamento_dias?: HorarioDia[];
   formas_pagamento?: string;
   politica_cancelamento?: string;
   faq?: string;
@@ -23,7 +30,7 @@ const FIELD_LABELS: Record<keyof CompanyInfo, string> = {
   nome_fantasia: "Nome fantasia",
   descricao: "O que a empresa faz / oferece",
   endereco: "Endereço",
-  horario_funcionamento: "Horário de funcionamento",
+  horario_funcionamento_dias: "Horário de funcionamento",
   formas_pagamento: "Formas de pagamento aceitas",
   politica_cancelamento: "Política de cancelamento e reembolso",
   faq: "Perguntas frequentes",
@@ -33,10 +40,25 @@ const FIELD_LABELS: Record<keyof CompanyInfo, string> = {
   tom_marca: "Tom de voz e personalidade da marca",
 };
 
+function formatHorarioText(dias: HorarioDia[]): string {
+  return dias
+    .map((d) => d.ativo ? `${d.dia}: ${d.inicio} às ${d.fim}` : `${d.dia}: Fechado`)
+    .join("\n");
+}
+
 function buildExtractedText(info: CompanyInfo): string {
   const lines: string[] = ["# Informações da empresa\n"];
   for (const key of Object.keys(FIELD_LABELS) as (keyof CompanyInfo)[]) {
-    const value = info[key]?.trim();
+    const raw = info[key];
+    let value = "";
+    if (key === "horario_funcionamento_dias") {
+      const dias = raw as HorarioDia[] | undefined;
+      if (Array.isArray(dias) && dias.some((d) => d.ativo)) {
+        value = formatHorarioText(dias);
+      }
+    } else if (typeof raw === "string") {
+      value = raw.trim();
+    }
     if (!value) continue;
     lines.push(`## ${FIELD_LABELS[key]}\n${value}\n`);
   }
@@ -84,8 +106,15 @@ export async function POST(request: NextRequest) {
 
   const cleaned: CompanyInfo = {};
   for (const key of Object.keys(FIELD_LABELS) as (keyof CompanyInfo)[]) {
-    const v = body[key]?.trim();
-    if (v) cleaned[key] = v;
+    const raw = body[key];
+    if (key === "horario_funcionamento_dias") {
+      if (Array.isArray(raw)) {
+        cleaned.horario_funcionamento_dias = raw as HorarioDia[];
+      }
+    } else if (typeof raw === "string") {
+      const v = raw.trim();
+      if (v) (cleaned[key] as string) = v;
+    }
   }
 
   const extractedText = buildExtractedText(cleaned);

@@ -46,8 +46,6 @@ const tabs = [
   { id: "integracoes", label: "Integrações" },
 ];
 
-const diasSemana = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
-
 export default function ConfiguracoesPage() {
   const { orgId, orgName, userName } = useOrg();
   const [email, setEmail] = useState("");
@@ -118,15 +116,6 @@ export default function ConfiguracoesPage() {
       });
   }, [orgId]);
 
-  const [horarios, setHorarios] = useState(
-    diasSemana.map((dia, i) => ({
-      dia,
-      ativo: i < 6,
-      inicio: "08:00",
-      fim: i === 5 ? "12:00" : "18:00",
-    }))
-  );
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -187,60 +176,6 @@ export default function ConfiguracoesPage() {
               </button>
             </SectionCard>
 
-            <SectionCard title="Horário de Funcionamento">
-              <p className="text-sm text-[#888] mb-4">Defina quando os agentes devem atender.</p>
-              <div className="space-y-3">
-                {horarios.map((h, idx) => (
-                  <div key={h.dia} className="flex items-center gap-3">
-                    <button
-                      type="button"
-                      role="switch"
-                      aria-checked={h.ativo}
-                      onClick={() => {
-                        const next = [...horarios];
-                        next[idx] = { ...next[idx], ativo: !next[idx].ativo };
-                        setHorarios(next);
-                      }}
-                      className={`relative w-9 h-5 rounded-full transition-colors shrink-0 ${h.ativo ? "bg-[#5B9BF3]" : "bg-[#333]"}`}
-                    >
-                      <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${h.ativo ? "translate-x-4" : "translate-x-0"}`} />
-                    </button>
-                    <span className={`text-sm w-20 ${h.ativo ? "text-[#666]" : "text-[#999]"}`}>{h.dia}</span>
-                    {h.ativo ? (
-                      <div className="flex items-center gap-2 text-sm text-[#999]">
-                        <input
-                          type="time"
-                          value={h.inicio}
-                          onChange={(e) => {
-                            const next = [...horarios];
-                            next[idx] = { ...next[idx], inicio: e.target.value };
-                            setHorarios(next);
-                          }}
-                          className="bg-[#151515] border border-[#333] rounded-lg px-2 py-1 text-white text-sm"
-                        />
-                        <span className="text-[#999]">até</span>
-                        <input
-                          type="time"
-                          value={h.fim}
-                          onChange={(e) => {
-                            const next = [...horarios];
-                            next[idx] = { ...next[idx], fim: e.target.value };
-                            setHorarios(next);
-                          }}
-                          className="bg-[#151515] border border-[#333] rounded-lg px-2 py-1 text-white text-sm"
-                        />
-                      </div>
-                    ) : (
-                      <span className="text-sm text-[#999]">Fechado</span>
-                    )}
-                  </div>
-                ))}
-              </div>
-              <button className="flex items-center gap-2 mt-5 px-4 py-2.5 bg-[#5B9BF3] hover:bg-[#5B9BF3]/80 text-white text-sm font-medium rounded-xl transition-colors">
-                <Save size={16} />
-                Salvar
-              </button>
-            </SectionCard>
           </motion.div>
         )}
 
