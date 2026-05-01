@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Save, Loader2, CheckCircle2, AlertCircle, Building2 } from "lucide-react";
+import { Save, Loader2, CheckCircle2, AlertCircle, Building2, Plus, X as XIcon } from "lucide-react";
 import CompanyDocuments from "./CompanyDocuments";
 
 interface HorarioDia {
@@ -30,7 +30,7 @@ interface CompanyInfo {
   faq: string;
   escalonamento_humano: string;
   restricoes: string;
-  contato_humano: string;
+  contatos_humanos: string[];
   tom_marca: string;
 }
 
@@ -44,7 +44,7 @@ const EMPTY: CompanyInfo = {
   faq: "",
   escalonamento_humano: "",
   restricoes: "",
-  contato_humano: "",
+  contatos_humanos: [""],
   tom_marca: "",
 };
 
@@ -93,6 +93,7 @@ export default function CompanyInfoForm() {
 
   const filledCount = Object.entries(info).filter(([k, v]) => {
     if (k === "horario_funcionamento_dias") return Array.isArray(v) && v.some((d: HorarioDia) => d.ativo);
+    if (k === "contatos_humanos") return Array.isArray(v) && v.some((c: string) => c.trim().length > 0);
     return typeof v === "string" && v.trim().length > 0;
   }).length;
   const totalFields = Object.keys(info).length;
@@ -255,16 +256,47 @@ export default function CompanyInfoForm() {
           />
         </Field>
         <Field
-          label="Contato humano de plantão"
-          hint="Quem o agente avisa quando escalar. Pode ser nome + WhatsApp ou nome + email."
+          label="Contatos humanos de plantão"
+          hint="Quem o agente avisa quando escalar. Pode ter mais de um — nome + WhatsApp ou email."
         >
-          <input
-            type="text"
-            value={info.contato_humano}
-            onChange={(e) => update("contato_humano", e.target.value)}
-            placeholder="Ex: Maria — +55 11 98765-4321 (WhatsApp)"
-            className="input"
-          />
+          <div className="space-y-2">
+            {info.contatos_humanos.map((contato, idx) => (
+              <div key={idx} className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={contato}
+                  onChange={(e) => {
+                    const next = [...info.contatos_humanos];
+                    next[idx] = e.target.value;
+                    update("contatos_humanos", next);
+                  }}
+                  placeholder="Ex: Maria — +55 11 98765-4321 (WhatsApp)"
+                  className="input flex-1"
+                />
+                {info.contatos_humanos.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const next = info.contatos_humanos.filter((_, i) => i !== idx);
+                      update("contatos_humanos", next.length ? next : [""]);
+                    }}
+                    aria-label="Remover contato"
+                    className="p-2 rounded-lg text-[#666] hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-colors shrink-0"
+                  >
+                    <XIcon size={14} />
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() => update("contatos_humanos", [...info.contatos_humanos, ""])}
+              className="flex items-center gap-1.5 text-xs text-[#5B9BF3] hover:text-[#7AB1F5] transition-colors mt-1"
+            >
+              <Plus size={14} />
+              Adicionar mais um contato
+            </button>
+          </div>
         </Field>
         <Field
           label="Tom de voz e personalidade da marca"
@@ -328,19 +360,26 @@ export default function CompanyInfoForm() {
       <style jsx>{`
         .input {
           width: 100%;
-          background-color: #0a0a0a;
-          border: 1px solid #222;
-          border-radius: 0.5rem;
-          padding: 0.5rem 0.75rem;
+          background-color: #0d0d0d;
+          border: 1px solid #2a2a2a;
+          border-radius: 0.625rem;
+          padding: 0.625rem 0.875rem;
           font-size: 0.875rem;
-          color: white;
+          color: #f0f0f0;
+          transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
         }
         .input::placeholder {
-          color: #555;
+          color: #4a4a4a;
+        }
+        .input:hover:not(:focus) {
+          border-color: #3a3a3a;
+          background-color: #101010;
         }
         .input:focus {
           outline: none;
-          border-color: #444;
+          border-color: #5B9BF3;
+          background-color: #0f0f0f;
+          box-shadow: 0 0 0 3px rgba(91, 155, 243, 0.12);
         }
       `}</style>
     </div>
@@ -349,9 +388,10 @@ export default function CompanyInfoForm() {
 
 function Section({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) {
   return (
-    <div className={`bg-[#111] border border-[#1e1e1e] rounded-2xl p-6 ${className ?? ""}`}>
-      <h3 className="text-white text-base font-semibold mb-4">{title}</h3>
-      <div className="space-y-4">{children}</div>
+    <div className={`bg-[#141414] border border-[#262626] rounded-2xl p-6 shadow-[0_1px_0_0_rgba(255,255,255,0.02)] ${className ?? ""}`}>
+      <h3 className="text-white text-base font-semibold mb-1.5">{title}</h3>
+      <div className="h-px bg-[#222] -mx-6 mb-5" />
+      <div className="space-y-5">{children}</div>
     </div>
   );
 }
@@ -359,8 +399,8 @@ function Section({ title, children, className }: { title: string; children: Reac
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-sm text-white font-medium mb-1">{label}</label>
-      {hint && <p className="text-xs text-[#666] mb-1.5">{hint}</p>}
+      <label className="block text-[13px] text-white font-medium mb-1">{label}</label>
+      {hint && <p className="text-[12px] text-[#7a7a7a] mb-2 leading-relaxed">{hint}</p>}
       {children}
     </div>
   );

@@ -22,7 +22,7 @@ interface CompanyInfo {
   faq?: string;
   escalonamento_humano?: string;
   restricoes?: string;
-  contato_humano?: string;
+  contatos_humanos?: string[];
   tom_marca?: string;
 }
 
@@ -36,7 +36,7 @@ const FIELD_LABELS: Record<keyof CompanyInfo, string> = {
   faq: "Perguntas frequentes",
   escalonamento_humano: "Quando chamar humano (escalonamento)",
   restricoes: "Restrições — o que o agente NUNCA deve fazer",
-  contato_humano: "Contato humano de plantão",
+  contatos_humanos: "Contatos humanos de plantão",
   tom_marca: "Tom de voz e personalidade da marca",
 };
 
@@ -56,6 +56,9 @@ function buildExtractedText(info: CompanyInfo): string {
       if (Array.isArray(dias) && dias.some((d) => d.ativo)) {
         value = formatHorarioText(dias);
       }
+    } else if (key === "contatos_humanos") {
+      const contatos = (raw as string[] | undefined)?.map((c) => c.trim()).filter(Boolean) ?? [];
+      if (contatos.length > 0) value = contatos.map((c) => `- ${c}`).join("\n");
     } else if (typeof raw === "string") {
       value = raw.trim();
     }
@@ -110,6 +113,11 @@ export async function POST(request: NextRequest) {
     if (key === "horario_funcionamento_dias") {
       if (Array.isArray(raw)) {
         cleaned.horario_funcionamento_dias = raw as HorarioDia[];
+      }
+    } else if (key === "contatos_humanos") {
+      if (Array.isArray(raw)) {
+        const cleanedArr = (raw as string[]).map((c) => c.trim()).filter(Boolean);
+        if (cleanedArr.length > 0) cleaned.contatos_humanos = cleanedArr;
       }
     } else if (typeof raw === "string") {
       const v = raw.trim();
